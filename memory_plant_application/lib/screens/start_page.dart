@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:memory_plant_application/screens/name_input_page.dart';
 
 class StartPage extends StatefulWidget {
+  static var selectedLanguage = 'ko';
+
   const StartPage({super.key});
 
   @override
@@ -8,61 +11,110 @@ class StartPage extends StatefulWidget {
 }
 
 class _StartPageState extends State<StartPage> {
-  String selectedLanguage = 'ko'; //나중에 우리 클린한거에서 받아올예정
+  bool isLoginButtonVisible = false; // 구글 로그인 버튼의 표시 여부
+  int currentButtonIndex = 0; // 현재 버튼 인덱스
+
+  final List<List<String>> buttonTexts = [
+    ['한국어', 'English'], // 첫 번째 버튼 텍스트
+    ['Sign in with Google', 'Sign in with Apple'], // 두 번째 버튼 텍스트
+  ];
+
+  void changeButton() {
+    setState(() {
+      if (currentButtonIndex < buttonTexts.length - 1) {
+        currentButtonIndex++; // 인덱스를 증가시켜 다음 버튼으로 변경
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: Text('Memory Plant'),
-        ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Center(
               child: Text(
-                selectedLanguage == 'ko' ? '기억 발전소' : 'Memory Plant',
-                style: TextStyle(
-                  fontSize: 30,
+                StartPage.selectedLanguage == 'ko' ? '기억 발전소' : 'Memory Plant',
+                style: const TextStyle(
+                  fontSize: 50,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            SizedBox(height: 50), // 간격 추가
+            const SizedBox(height: 30), // 간격 추가
             Column(
               children: [
-                ElevatedButton(
+                OutlinedButton(
                   onPressed: () {
-                    setState(() {
-                      selectedLanguage = 'ko'; // 한국어로 설정
-                    });
+                    // 버튼 클릭 시 동작
+                    if (currentButtonIndex == 0) {
+                      setState(() {
+                        StartPage.selectedLanguage = 'ko';
+                      });
+                    } else if (currentButtonIndex == 1) {
+                      // 구글 로그인
+                      setState(() {});
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const NameInputPage()),
+                      );
+                    }
+                    changeButton();
                   },
-                  child: Text('한국어'),
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size(250, 50),
+                  ),
+                  child: Text(buttonTexts[currentButtonIndex][0]),
                 ),
-                ElevatedButton(
+                const SizedBox(height: 20), // 간격 추가
+                OutlinedButton(
                   onPressed: () {
-                    setState(() {
-                      selectedLanguage = 'en'; // 영어로 설정
-                    });
+                    // 버튼 클릭 시 동작
+                    if (currentButtonIndex == 0) {
+                      setState(() {
+                        StartPage.selectedLanguage = 'en'; // 영어로 설정
+                      });
+                    } else if (currentButtonIndex == 1) {
+                      // 애플 로그인
+                      setState(() {});
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const NameInputPage()),
+                      );
+                    }
+                    changeButton(); // 버튼 인덱스 변경
                   },
-                  child: Text('English'),
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size(250, 50),
+                  ),
+                  child: Text(buttonTexts[currentButtonIndex][1]),
                 ),
               ],
             ),
-            SizedBox(height: 20), // 간격 추가
-            Text(
+            const SizedBox(height: 20), // 간격 추가
+            const Text(
               '언어를 선택해주세요',
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w300,
               ),
             ),
-            Text(
+            const Text(
               'Select your preferred languages',
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w300,
               ),
+            ),
+            const SizedBox(height: 20), // 간격 추가
+            Image.asset(
+              'assets/images/wind_power.png',
+              height: 150,
+              width: 150,
             )
           ],
         ),
