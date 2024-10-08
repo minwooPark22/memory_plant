@@ -29,95 +29,93 @@ class _StartPageState extends State<StartPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Center(
-              child: Text(
-                StartPage.selectedLanguage == 'ko' ? '기억 발전소' : 'Memory Plant',
-                style: const TextStyle(
-                  fontSize: 50,
-                  fontWeight: FontWeight.bold,
-                ),
+    return Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Center(
+            child: Text(
+              StartPage.selectedLanguage == 'ko' ? '기억 발전소' : 'Memory Plant',
+              style: const TextStyle(
+                fontSize: 50,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 30), // 간격 추가
-            Column(
-              children: [
-                OutlinedButton(
-                  onPressed: () {
-                    // 버튼 클릭 시 동작
-                    if (currentButtonIndex == 0) {
-                      setState(() {
-                        StartPage.selectedLanguage = 'ko';
-                      });
-                    } else if (currentButtonIndex == 1) {
-                      // 구글 로그인
-                      setState(() {});
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const NameInputPage()),
-                      );
-                    }
-                    changeButton();
-                  },
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: const Size(250, 50),
-                  ),
-                  child: Text(buttonTexts[currentButtonIndex][0]),
+          ),
+          const SizedBox(height: 30), // 간격 추가
+          Column(
+            children: [
+              OutlinedButton(
+                onPressed: () {
+                  // 버튼 클릭 시 동작
+                  if (currentButtonIndex == 0) {
+                    setState(() {
+                      StartPage.selectedLanguage = 'ko';
+                    });
+                  } else if (currentButtonIndex == 1) {
+                    // 구글 로그인
+                    setState(() {});
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const NameInputPage()),
+                    );
+                  }
+                  changeButton();
+                },
+                style: OutlinedButton.styleFrom(
+                  minimumSize: const Size(250, 50),
                 ),
-                const SizedBox(height: 20), // 간격 추가
-                OutlinedButton(
-                  onPressed: () {
-                    // 버튼 클릭 시 동작
-                    if (currentButtonIndex == 0) {
-                      setState(() {
-                        StartPage.selectedLanguage = 'en'; // 영어로 설정
-                      });
-                    } else if (currentButtonIndex == 1) {
-                      // 애플 로그인
-                      setState(() {});
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const NameInputPage()),
-                      );
-                    }
-                    changeButton(); // 버튼 인덱스 변경
-                  },
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: const Size(250, 50),
-                  ),
-                  child: Text(buttonTexts[currentButtonIndex][1]),
+                child: Text(buttonTexts[currentButtonIndex][0]),
+              ),
+              const SizedBox(height: 20), // 간격 추가
+              OutlinedButton(
+                onPressed: () {
+                  // 버튼 클릭 시 동작
+                  if (currentButtonIndex == 0) {
+                    setState(() {
+                      StartPage.selectedLanguage = 'en'; // 영어로 설정
+                    });
+                  } else if (currentButtonIndex == 1) {
+                    // 애플 로그인
+                    setState(() {});
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const NameInputPage()),
+                    );
+                  }
+                  changeButton(); // 버튼 인덱스 변경
+                },
+                style: OutlinedButton.styleFrom(
+                  minimumSize: const Size(250, 50),
                 ),
-              ],
-            ),
-            const SizedBox(height: 20), // 간격 추가
-            const Text(
-              '언어를 선택해주세요',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w300,
+                child: Text(buttonTexts[currentButtonIndex][1]),
               ),
+            ],
+          ),
+          const SizedBox(height: 20), // 간격 추가
+          const Text(
+            '언어를 선택해주세요',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w300,
             ),
-            const Text(
-              'Select your preferred languages',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w300,
-              ),
+          ),
+          const Text(
+            'Select your preferred languages',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w300,
             ),
-            const SizedBox(height: 20), // 간격 추가
-            Image.asset(
-              'assets/images/wind_power.png',
-              height: 150,
-              width: 150,
-            )
-          ],
-        ),
+          ),
+          const SizedBox(height: 20), // 간격 추가
+          Image.asset(
+            'assets/images/wind_power.png',
+            height: 150,
+            width: 150,
+          )
+        ],
       ),
     );
   }
