@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:memory_plant_application/screens/home_page.dart';
+import 'package:memory_plant_application/screens/setting_page.dart';
 
 class AddPage extends StatefulWidget {
   const AddPage({super.key});
@@ -30,7 +31,14 @@ class _AddPageState extends State<AddPage> {
           title: Text("기억저장소"),
           actions: [
             IconButton(
-                onPressed: () {}, // search 버튼 눌리면 이동할 곳
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SettingPage(),
+                    ),
+                  );
+                }, // search 버튼 눌리면 이동할 곳
                 icon: const Icon(FluentSystemIcons.ic_fluent_settings_regular)),
           ],
         ),
