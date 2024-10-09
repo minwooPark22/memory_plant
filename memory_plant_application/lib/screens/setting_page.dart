@@ -21,12 +21,12 @@ class SettingPage extends StatelessWidget {
 
           title: Text(isKorean ? "⚙️️설정" : "⚙️Settings"), //일단 임티로 대체
         ),
-        body: Stack(
+        body: const Stack(
           children: [
-            const BlueBox(),
+            BlueBox(),
             Padding(
-              padding: const EdgeInsets.only(top: 32.0),
-              child: const SettingsList(),
+              padding: EdgeInsets.only(top: 32.0),
+              child: SettingsList(),
             ),
           ],
         ),

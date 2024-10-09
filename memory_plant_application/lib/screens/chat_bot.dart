@@ -53,14 +53,15 @@ class _ChatbotState extends State<Chatbot> {
         _saveMessages(); // 메시지를 저장
       }
 
-      // 메시지 전송 후 키보드 닫기
-      FocusScope.of(context).unfocus();
+      // 전송 후에도 키보드 포커스 유지
+      FocusScope.of(context).requestFocus(_focusNode);
     }
   }
 
   Future<void> _clearMessages() async {
     setState(() {
       messages.clear(); // 채팅 기록을 지우고
+      _controller.clear(); // '/c' 입력도 함께 지우기
     });
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('messages'); // 저장된 기록 삭제
@@ -162,7 +163,7 @@ class _ChatbotState extends State<Chatbot> {
                     },
                     onSubmitted: (_) => _sendMessage(), // Enter 키 눌렀을 때 메시지 전송
                     decoration: const InputDecoration(
-                      hintText: 'Enter your message...',
+                      hintText: 'Enter your message... (Type "/c" to clear chat)', // 힌트 텍스트 수정
                       border: OutlineInputBorder(),
                     ),
                   ),
