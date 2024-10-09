@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fluentui_icons/fluentui_icons.dart';
-import 'chat_bot.dart'; // 혹은 import 'package:memory_plant_application/screens/home_page.dart';
+import 'chat_bot.dart'; // 또는 import 'package:memory_plant_application/screens/home_page.dart';
 import 'package:memory_plant_application/screens/home_page.dart';
+import 'package:memory_plant_application/screens/setting_page.dart';
 
 class AddPage extends StatefulWidget {
   const AddPage({super.key});
@@ -28,11 +29,20 @@ class _AddPageState extends State<AddPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _selectedIndex == 2 ? null : AppBar( // "Chatting" 선택 시 appBar 숨기기
-        title: Text("기억저장소"),
+      appBar: _selectedIndex == 2
+          ? null
+          : AppBar( // "Chatting" 선택 시 appBar 숨기기
+        title: const Text("기억저장소"),
         actions: [
           IconButton(
-            onPressed: () {}, // search 버튼 눌리면 이동할 곳
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SettingPage(),
+                ),
+              );
+            }, // search 버튼 눌리면 이동할 곳
             icon: const Icon(FluentSystemIcons.ic_fluent_settings_regular),
           ),
         ],
