@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluentui_icons/fluentui_icons.dart';
-import 'chat_bot.dart';
+import 'chat_bot.dart'; // 혹은 import 'package:memory_plant_application/screens/home_page.dart';
+import 'package:memory_plant_application/screens/home_page.dart';
 
 class AddPage extends StatefulWidget {
   const AddPage({super.key});
@@ -11,7 +12,7 @@ class AddPage extends StatefulWidget {
 
 class _AddPageState extends State<AddPage> {
   final appScreens = [
-    const Center(child: Text("Home")), // 여기가 저장소 class를 불러올꺼
+    const HomePage(), // 여기가 저장소 class를 불러올꺼
     const Center(child: Text("Add")),
     Center(child: Chatbot()), // Chatbot 화면
   ];
