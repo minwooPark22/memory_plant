@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:memory_plant_application/screens/add_page.dart';
+import 'package:memory_plant_application/screens/bottom_nav_page.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
 
 class StartPageAfterLogin extends StatefulWidget {
@@ -23,7 +23,7 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const AddPage()),
+              MaterialPageRoute(builder: (context) => const BottomNavPage()),
             );
           },
           child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:memory_plant_application/screens/add_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -10,7 +9,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   @override
-
   int nodata = 0;
 
   @override
@@ -49,17 +47,16 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
-                /* 나중에 구현되면 이걸로 변경
+              /* 나중에 구현되면 이걸로 변경
                 // 새로운 데이터를 추가할 수 있는 페이지로 이동
                 Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => const AddPage()),
                 );
                 */
-                setState(() {
-                    nodata += 10;
-                });  
-                
+              setState(() {
+                nodata += 10;
+              });
             },
             child: const Text('추가하기'),
           ),
@@ -106,7 +103,8 @@ class _HomePageState extends State<HomePage> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => DetailPage(index: index)),
+                    MaterialPageRoute(
+                        builder: (context) => DetailPage(index: index)),
                   );
                 },
               ),
