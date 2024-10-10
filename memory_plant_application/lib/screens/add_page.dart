@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fluentui_icons/fluentui_icons.dart';
-import 'package:memory_plant_application/screens/home_page.dart';
-import 'package:memory_plant_application/screens/setting_page.dart';
+import 'package:flutter/services.dart';
+import 'package:memory_plant_application/screens/write_page.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class AddPage extends StatefulWidget {
   const AddPage({super.key});
@@ -11,57 +11,62 @@ class AddPage extends StatefulWidget {
 }
 
 class _AddPageState extends State<AddPage> {
-  final appScreens = [
-    const HomePage(), // 여기가 저장소 class를 불러올꺼
-    const Center(child: Text("Add")),
-    const Center(child: Text("chatting"))
-  ];
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
 
-  int _selectedIndex = 0;
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  @override
+  void initState() {
+    super.initState();
+    _selectedDay = DateTime.now(); // 기본적으로 오늘 날짜가 선택된 상태로 시작
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("기억저장소"),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const SettingPage(),
-                    ),
-                  );
-                }, // search 버튼 눌리면 이동할 곳
-                icon: const Icon(FluentSystemIcons.ic_fluent_settings_regular)),
-          ],
+        body: Column(
+      children: [
+        const Text(
+          "날짜를 선택해주세요",
+          style: TextStyle(fontSize: 40, fontWeight: FontWeight.w500),
         ),
-        body: appScreens[_selectedIndex],
-        bottomNavigationBar: BottomNavigationBar(
-            currentIndex: _selectedIndex,
-            onTap: _onItemTapped,
-            selectedItemColor: Colors.blueGrey,
-            unselectedItemColor: const Color(0xFF526400),
-            showSelectedLabels: false,
-            items: const [
-              BottomNavigationBarItem(
-                  icon: Icon(FluentSystemIcons.ic_fluent_home_regular),
-                  activeIcon: Icon(FluentSystemIcons.ic_fluent_home_filled),
-                  label: "Home"),
-              BottomNavigationBarItem(
-                  icon: Icon(FluentSystemIcons.ic_fluent_add_regular),
-                  activeIcon: Icon(FluentSystemIcons.ic_fluent_add_filled),
-                  label: "Add"),
-              BottomNavigationBarItem(
-                  icon: Icon(FluentSystemIcons.ic_fluent_chat_regular),
-                  activeIcon: Icon(FluentSystemIcons.ic_fluent_chat_filled),
-                  label: "Chatting"),
-            ]));
+        TableCalendar(
+          firstDay: DateTime.utc(2000, 1, 1),
+          lastDay: DateTime.utc(2100, 12, 31),
+          focusedDay: _focusedDay,
+          selectedDayPredicate: (day) {
+            return isSameDay(_selectedDay, day);
+          },
+          onDaySelected: (selectedDay, focusedDay) {
+            setState(() {
+              _selectedDay = selectedDay;
+              _focusedDay = focusedDay;
+            });
+          },
+          calendarStyle: const CalendarStyle(
+            todayDecoration: BoxDecoration(
+              color: Colors.transparent, // 오늘 날짜의 색상을 투명하게 처리
+            ),
+            todayTextStyle: TextStyle(
+              color: Colors.black, // 오늘 날짜 텍스트 색상 유지
+            ),
+            selectedDecoration: BoxDecoration(
+              color: Colors.blue,
+              shape: BoxShape.circle,
+            ),
+          ),
+        ),
+        ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => WritePage(
+                        selected_date: _selectedDay ?? DateTime.now())),
+              );
+              // 일기 입력페이지로 이동
+            },
+            child: Text("선택하기"))
+      ],
+    ));
   }
 }
