@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memory_plant_application/screens/start_page.dart';
 
 class SettingsList extends StatelessWidget {
   const SettingsList({super.key});
@@ -6,7 +7,7 @@ class SettingsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final locale = Localizations.localeOf(context);
-    final isKorean = locale.languageCode == 'ko';
+    final isKorean = StartPage.selectedLanguage == 'ko';
 
     return Container(
       decoration: BoxDecoration(
