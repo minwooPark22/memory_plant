@@ -1,7 +1,4 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
-import 'package:memory_plant_application/screens/home_page.dart';
 
 class WritePage extends StatefulWidget {
   final DateTime selected_date;
