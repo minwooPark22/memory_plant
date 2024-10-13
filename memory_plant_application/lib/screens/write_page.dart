@@ -1,7 +1,4 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
-import 'package:memory_plant_application/screens/home_page.dart';
 
 class WritePage extends StatefulWidget {
   final DateTime selected_date;
@@ -12,6 +9,14 @@ class WritePage extends StatefulWidget {
 }
 
 class _WritePageState extends State<WritePage> {
+  // 제목과 내용을 입력받기 위한 컨트롤러
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _contentController = TextEditingController();
+
+  Future<String> _getFilePath() async {
+    return 'lib/utils/memory.json';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +25,8 @@ class _WritePageState extends State<WritePage> {
           Container(
             padding: const EdgeInsets.all(16.0),
             child: TextField(
-              decoration: InputDecoration(
+              controller: _titleController, // 제목 컨트롤러 연결
+              decoration: const InputDecoration(
                 hintText: 'Title', // 라벨 텍스트
                 border: InputBorder.none, // 경계선 없앰
               ),
@@ -40,9 +46,10 @@ class _WritePageState extends State<WritePage> {
               borderRadius: BorderRadius.circular(12.0),
             ),
             child: TextField(
+              controller: _contentController, // 내용 컨트롤러 연결
               maxLines: null,
               minLines: 6,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: '내용을 입력하세요...',
                 border: InputBorder.none,
               ),
@@ -50,11 +57,9 @@ class _WritePageState extends State<WritePage> {
           ),
           ElevatedButton(
               onPressed: () {
-                // 여기에 누르면 json으로 저장하거나 그런식으로 처리해야함
                 Navigator.of(context).pop();
-                // 홈으로가기가 어렵네 ㅅㅂ
-              },
-              child: Text("저장"))
+              }, // 저장 함수 호출
+              child: const Text("저장"))
         ],
       ),
     );
