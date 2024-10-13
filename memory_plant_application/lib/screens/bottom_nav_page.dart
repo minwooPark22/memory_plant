@@ -15,9 +15,9 @@ class BottomNavPage extends StatefulWidget {
 
 class _BottomNavPageState extends State<BottomNavPage> {
   final appScreens = [
-    const HomePage(), // 여기가 저장소 class를 불러올꺼
+    const HomePage(),
     const AddPage(),
-    const Chatbot()
+    const Chatbot() // Chatbot 페이지는 자체 AppBar를 사용
   ];
 
   int _selectedIndex = 0;
@@ -30,41 +30,49 @@ class _BottomNavPageState extends State<BottomNavPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("기억저장소"),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const SettingPage(),
-                    ),
-                  );
-                }, // search 버튼 눌리면 이동할 곳
-                icon: const Icon(FluentSystemIcons.ic_fluent_settings_regular)),
-          ],
-        ),
-        body: appScreens[_selectedIndex],
-        bottomNavigationBar: BottomNavigationBar(
-            currentIndex: _selectedIndex,
-            onTap: _onItemTapped,
-            selectedItemColor: Colors.blueGrey,
-            unselectedItemColor: const Color(0xFF526400),
-            showSelectedLabels: false,
-            items: const [
-              BottomNavigationBarItem(
-                  icon: Icon(FluentSystemIcons.ic_fluent_home_regular),
-                  activeIcon: Icon(FluentSystemIcons.ic_fluent_home_filled),
-                  label: "Home"),
-              BottomNavigationBarItem(
-                  icon: Icon(FluentSystemIcons.ic_fluent_add_regular),
-                  activeIcon: Icon(FluentSystemIcons.ic_fluent_add_filled),
-                  label: "Add"),
-              BottomNavigationBarItem(
-                  icon: Icon(FluentSystemIcons.ic_fluent_chat_regular),
-                  activeIcon: Icon(FluentSystemIcons.ic_fluent_chat_filled),
-                  label: "Chatting"),
-            ]));
+      appBar: _selectedIndex == 2 // Chatbot 페이지에서는 AppBar를 숨김
+          ? null
+          : AppBar(
+        title: const Text("기억저장소"),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SettingPage(),
+                ),
+              );
+            },
+            icon: const Icon(FluentSystemIcons.ic_fluent_settings_regular),
+          ),
+        ],
+      ),
+      body: appScreens[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        selectedItemColor: Colors.blueGrey,
+        unselectedItemColor: const Color(0xFF526400),
+        showSelectedLabels: false,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(FluentSystemIcons.ic_fluent_home_regular),
+            activeIcon: Icon(FluentSystemIcons.ic_fluent_home_filled),
+            label: "Home",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(FluentSystemIcons.ic_fluent_add_regular),
+            activeIcon: Icon(FluentSystemIcons.ic_fluent_add_filled),
+            label: "Add",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(FluentSystemIcons.ic_fluent_chat_regular),
+            activeIcon: Icon(FluentSystemIcons.ic_fluent_chat_filled),
+            label: "Chatting",
+          ),
+        ],
+      ),
+    );
   }
 }
