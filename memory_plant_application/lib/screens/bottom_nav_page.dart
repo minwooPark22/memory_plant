@@ -4,6 +4,8 @@ import 'package:memory_plant_application/screens/add_page.dart';
 import 'package:memory_plant_application/screens/home_page.dart';
 import 'package:memory_plant_application/screens/setting_page.dart';
 
+import 'chattingbot.dart';
+
 class BottomNavPage extends StatefulWidget {
   const BottomNavPage({super.key});
 
@@ -15,7 +17,7 @@ class _BottomNavPageState extends State<BottomNavPage> {
   final appScreens = [
     const HomePage(), // 여기가 저장소 class를 불러올꺼
     const AddPage(),
-    const Center(child: Text("chatting"))
+    const Chatbot()
   ];
 
   int _selectedIndex = 0;
