@@ -1,8 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class SettingsList extends StatelessWidget {
+class SettingsList extends StatefulWidget {
   const SettingsList({super.key});
+
+  @override
+  State<SettingsList> createState() => _SettingsListState();
+}
+
+class _SettingsListState extends State<SettingsList> {
+  String userName = ''; //  이름을 저장할 변수
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserName(); //이름 로드
+  }
+
+  Future<void> _loadUserName() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userName = prefs.getString('user_name') ?? '사용자 이름';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,11 +54,17 @@ class SettingsList extends StatelessWidget {
                 "사용자 이름",
                 style: TextStyle(color: Colors.black54, fontSize: 25)),
           ),
+          // 사용자 이름 표시
+          Text(
+            userName, // 여기서 userName 표시
+            style: const TextStyle(color: Colors.black54, fontSize: 18),
+          ),
+          const SizedBox(height: 10), // 여백 추가
           Text(
             isKorean ? "계정 설정" : "Account Settings",
             style: TextStyle(color: Colors.grey, fontSize: 14),
           ),
-          const Divider(color: Colors.grey, thickness: 0.5),
+          const Divider(color: Color(0xFFCACACA), thickness: 0.5),
           ListTile(
             title: Text(
               isKorean ? "이름 수정" : "Edit Name",

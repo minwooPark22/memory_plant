@@ -3,6 +3,8 @@ import 'package:memory_plant_application/screens/start_page.dart';
 import 'package:memory_plant_application/widgets/setting_list.dart';    //original widget
 import 'package:memory_plant_application/widgets/blue_box.dart';   //blue box widget
 
+
+
 class SettingPage extends StatelessWidget {
   const SettingPage({super.key});
 
@@ -19,8 +21,7 @@ class SettingPage extends StatelessWidget {
             Navigator.pop(context); // go back
           },
         ),
-
-          title: Text(isKorean ? "⚙️️설정" : "⚙️Settings"), //일단 임티로 대체
+          title: Text(isKorean ? "⚙️ 설정" : "⚙️ Settings"), //일단 임티로 대체
         ),
         body: Stack(
           children: [
