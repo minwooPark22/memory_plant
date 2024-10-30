@@ -21,7 +21,7 @@ class SettingPage extends StatelessWidget {
             Navigator.pop(context); // go back
           },
         ),
-          title: Text(isKorean ? "⚙️ 설정" : "⚙️ Settings"), //일단 임티로 대체
+          title: Text(isKorean ? "⚙️ 설정" : "⚙️ Settings"), //일단 임티로 대체 흑
         ),
         body: Stack(
           children: [
