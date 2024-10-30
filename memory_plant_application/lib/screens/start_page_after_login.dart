@@ -56,12 +56,12 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const Center(
+                Center(
                   child: Text(
-                    '날짜', //여기 해야함
+                    '${DateTime.now().month}/${DateTime.now().day}', //날짜 표기
                     style: TextStyle(
-                      fontSize: 50,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 60,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 ),
