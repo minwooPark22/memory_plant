@@ -3,7 +3,6 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:memory_plant_application/screens/add_page.dart';
 import 'package:memory_plant_application/screens/home_page.dart';
 import 'package:memory_plant_application/screens/setting_page.dart';
-
 import 'chattingbot.dart';
 
 class BottomNavPage extends StatefulWidget {
@@ -33,9 +32,16 @@ class _BottomNavPageState extends State<BottomNavPage> {
       appBar: _selectedIndex == 2 // Chatbot 페이지에서는 AppBar를 숨김
           ? null
           : AppBar(
-        title: const Text("기억저장소"),
+        title: const Text("기억발전소"),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context); // 이전 페이지로 이동
+          },
+        ),
         actions: [
           IconButton(
+            icon: const Icon(FluentSystemIcons.ic_fluent_settings_regular),
             onPressed: () {
               Navigator.push(
                 context,
@@ -44,7 +50,6 @@ class _BottomNavPageState extends State<BottomNavPage> {
                 ),
               );
             },
-            icon: const Icon(FluentSystemIcons.ic_fluent_settings_regular),
           ),
         ],
       ),

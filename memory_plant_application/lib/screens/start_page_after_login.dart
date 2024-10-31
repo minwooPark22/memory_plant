@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:memory_plant_application/screens/bottom_nav_page.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class StartPageAfterLogin extends StatefulWidget {
   const StartPageAfterLogin({super.key});
@@ -10,14 +12,37 @@ class StartPageAfterLogin extends StatefulWidget {
 }
 
 class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
+  String? userName; // 이름 담을 변수
+
   @override
+  void initState() {
+    super.initState();
+    _loadUserName(); // 사용자 이름 로드
+  }
+
+  Future<void> _loadUserName() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userName = prefs.getString('user_name') ?? 'Guest'; // 저장된 이름 불러오기
+    });
+  }
+
+
+  @override
+
   Widget build(BuildContext context) {
+    final locale = Localizations.localeOf(context);
+    final isKorean = StartPage.selectedLanguage == 'ko';
+
     return Scaffold(
       appBar: AppBar(
-        title: Center(
-            child: Text(
-          StartPage.selectedLanguage == 'ko' ? '기억 발전소' : 'Memory Plant',
-        )),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context); // go back
+          },
+        ),
+        title: Text(isKorean ? "기억발전소" : "memory plant"), //일단 임티로 대체
       ),
       body: GestureDetector(
         onTap: () {
@@ -31,16 +56,16 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const Center(
+                Center(
                   child: Text(
-                    '날짜', //여기 해야함
+                    '${DateTime.now().month}/${DateTime.now().day}', //날짜 표기
                     style: TextStyle(
-                      fontSize: 50,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 60,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 ),
-                const Text('name'),
+                Text(userName ?? 'name'),
                 const Text('memory number'),
                 const SizedBox(height: 50), // 간격 추가
                 const Text('눌러서시작'),
