@@ -4,7 +4,7 @@ import 'package:memory_plant_application/screens/start_page.dart';
 
 // 출력 텍스트 영어버전도 가능하게 하기: 완료
 // 빈 리스트일 때 추가하기 하면 add로 넘어가게 하기. 이건 add 페이지에서 일기 파일로 저장 되면 변경
-// dismissable을 slidable로 변경하기
+// dismissable을 slidable로 변경하기: flutter_swipe_action_cell.dart로 바꿈
 // json 더미로 리스트 만드는 것 시도
 // json에 제목, timestamp, content 있으면 될 듯
 
