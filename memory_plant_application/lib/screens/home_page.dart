@@ -1,4 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:memory_plant_application/screens/start_page.dart';
+
+// 출력 텍스트 영어버전도 가능하게 하기: 완료
+// 빈 리스트일 때 추가하기 하면 add로 넘어가게 하기. 이건 add 페이지에서 일기 파일로 저장 되면 변경
+// dismissable을 slidable로 변경하기
+// json 더미로 리스트 만드는 것 시도
+// json에 제목, timestamp, content 있으면 될 듯
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -31,7 +38,7 @@ class _HomePageState extends State<HomePage> {
             height: 150,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.blue.shade200, // 배경 색상
+              color: Color(0xFFA6D1FA), // 배경 색상
             ),
             child: const Icon(
               Icons.block,
@@ -40,9 +47,9 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           const SizedBox(height: 20),
-          const Text(
-            '첫 기억을 추가해보세요',
-            style: TextStyle(fontSize: 18),
+          Text(
+            StartPage.selectedLanguage == 'ko' ? '첫 기억을 추가해보세요' : 'Add your first memory',
+            style: const TextStyle(fontSize: 18),
           ),
           const SizedBox(height: 20),
           ElevatedButton(
@@ -54,11 +61,13 @@ class _HomePageState extends State<HomePage> {
                     MaterialPageRoute(builder: (context) => const AddPage()),
                 );
                 */
+
+                // 
               setState(() {
                 nodata += 10;
               });
             },
-            child: const Text('추가하기'),
+            child: Text(StartPage.selectedLanguage == 'ko' ? '추가하기' : 'Add Memory'),
           ),
         ],
       ),
@@ -75,7 +84,7 @@ class _HomePageState extends State<HomePage> {
           background: _buildDeleteBackground(), // 왼쪽 스와이프 시 삭제 배경
           secondaryBackground: _buildEditBackground(), // 오른쪽 스와이프 시 수정 배경
           confirmDismiss: (direction) async {
-            if (direction == DismissDirection.startToEnd) {
+            if (direction == DismissDirection.startToEnd) { // slidable로 변경하기
               // 왼쪽으로 스와이프 시 삭제 확인 메시지
               return await _confirmDelete(context);
             } else if (direction == DismissDirection.endToStart) {
@@ -147,20 +156,20 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("삭제 확인"),
-          content: const Text("정말로 삭제하시겠습니까?"),
+          title: Text(StartPage.selectedLanguage == 'ko' ? '삭제 확인' : 'Confirm delete'),
+          content: Text(StartPage.selectedLanguage == 'ko' ? "정말로 삭제하시겠습니까?" : 'Are you sure you want to delete it?'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(false); // 취소
               },
-              child: const Text("아니오"),
+              child: Text(StartPage.selectedLanguage == 'ko' ? "아니오" : "No"),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(true); // 확인
               },
-              child: const Text("예"),
+              child: Text(StartPage.selectedLanguage == 'ko' ? "예" : 'Yes'),
             ),
           ],
         );
@@ -193,3 +202,4 @@ class DetailPage extends StatelessWidget {
     );
   }
 }
+
