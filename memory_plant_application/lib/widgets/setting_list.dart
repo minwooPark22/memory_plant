@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:memory_plant_application/widgets/edit_name.dart';
+import 'package:memory_plant_application/widgets/time_setting.dart';
+import 'package:memory_plant_application/screens/start_page_after_login.dart';
 
 class SettingsList extends StatefulWidget {
   const SettingsList({super.key});
@@ -24,6 +27,27 @@ class _SettingsListState extends State<SettingsList> {
       userName = prefs.getString('user_name') ?? '사용자 이름';
     });
   }
+  Future<void> _saveUserName(String newName) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('user_name', newName); // 새로운 이름 저장
+  }
+
+  void _showEditNameDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return EditNameDialog(
+          currentName: userName ?? 'Guest',
+          onNameSaved: (newName) {
+            setState(() {
+              userName = newName; // Update state with new name
+            });
+          },
+        );
+      },
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +95,8 @@ class _SettingsListState extends State<SettingsList> {
               style: TextStyle(color: Colors.black54, fontSize: 14),
             ),
             onTap: () {
-              // 이름 수정 기능 구현
+              _showEditNameDialog();
+              _loadUserName();
             },
           ),
 
@@ -81,6 +106,16 @@ class _SettingsListState extends State<SettingsList> {
               style: TextStyle(color: Colors.black54, fontSize: 14),
             ),
             onTap: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return TimeSettingDialog(
+                    onSave: () {
+                      // 알람 시간이 저장된 후 호출할 로직 추가 가능
+                    },
+                  );
+                },
+              );
             },
           ),
 
