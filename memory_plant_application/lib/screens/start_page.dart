@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memory_plant_application/screens/name_input_page.dart';
+import 'package:memory_plant_application/styles/app_styles.dart';
 
 class StartPage extends StatefulWidget {
   static var selectedLanguage = 'ko';
@@ -66,7 +67,9 @@ class _StartPageState extends State<StartPage> {
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size(250, 50),
                 ),
-                child: Text(buttonTexts[currentButtonIndex][0]),
+                child: Text(buttonTexts[currentButtonIndex][0],
+                  style: TextStyle(color: AppStyles.maindeepblue),
+                ),
               ),
               const SizedBox(height: 20), // 간격 추가
               OutlinedButton(
@@ -90,7 +93,9 @@ class _StartPageState extends State<StartPage> {
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size(250, 50),
                 ),
-                child: Text(buttonTexts[currentButtonIndex][1]),
+                child: Text(buttonTexts[currentButtonIndex][1],
+                  style: TextStyle(color: AppStyles.maindeepblue),
+                ),
               ),
             ],
           ),
@@ -133,4 +138,3 @@ class _StartPageState extends State<StartPage> {
     );
   }
 }
-

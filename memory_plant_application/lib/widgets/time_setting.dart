@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:memory_plant_application/widgets/alarm.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
+import 'package:memory_plant_application/styles/app_styles.dart';
 
 class TimeSettingDialog extends StatefulWidget {
   final Function onSave;
@@ -46,6 +47,7 @@ class _TimeSettingDialogState extends State<TimeSettingDialog> {
     return CupertinoAlertDialog(
       title: Text(isKorean ? "알람 시간 설정" : "Set Alarm Time"),
       content: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(
             height: 150,
@@ -96,14 +98,17 @@ class _TimeSettingDialogState extends State<TimeSettingDialog> {
       actions: [
         CupertinoDialogAction(
           onPressed: () => Navigator.pop(context),
-          child: Text(isKorean ? "취소" : "Cancel"),
+          child: Text(isKorean ? "취소" : "Cancel",
+            style: TextStyle(color: AppStyles.maindeepblue),
+          ),
         ),
         CupertinoDialogAction(
           onPressed: () {
             _saveTime(isKorean); // isKorean
             Navigator.pop(context);
           },
-          child: Text(isKorean ? "저장" : "Save"),
+          child: Text(isKorean ? "저장" : "Save",
+            style: TextStyle(color: AppStyles.maindeepblue),),
         ),
       ],
     );
