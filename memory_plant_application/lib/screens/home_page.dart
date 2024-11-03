@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
+import 'package:memory_plant_application/styles/app_styles.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -62,7 +63,10 @@ class _HomePageState extends State<HomePage> {
                 nodata += 10;
               });
             },
-            child: Text(isKorean ? "추가하기" : "add here"),
+            child: Text(
+              isKorean ? "추가하기" : "Add here",
+              style: TextStyle(color: AppStyles.maindeepblue),
+            ),
           ),
         ],
       ),

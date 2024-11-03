@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:memory_plant_application/screens/bottom_nav_page.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:memory_plant_application/styles/app_styles.dart';
 
 class StartPageAfterLogin extends StatefulWidget {
   const StartPageAfterLogin({super.key});
@@ -65,7 +66,10 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
                   Text(userName ?? 'name'),
                   const Text('memory number'), // 여기 memory num 추가 해야함
                   const SizedBox(height: 50), // 간격 추가
-                  Text(isKorean ? "눌러서 시작" : "tap to start"),
+                  Text(
+                    isKorean ? "눌러서 시작" : "Tap to start",
+                    style: TextStyle(color: AppStyles.maindeepblue),
+                  ),
                   const SizedBox(height: 20), // 간격 추가
                   Image.asset(
                     'assets/images/wind_power.png',
