@@ -5,6 +5,7 @@ import 'package:memory_plant_application/widgets/edit_name.dart';
 import 'package:memory_plant_application/widgets/time_setting.dart';
 import 'package:memory_plant_application/screens/start_page_after_login.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
+import 'package:memory_plant_application/widgets/language.dart';
 
 class SettingsList extends StatefulWidget {
   const SettingsList({super.key});
@@ -50,6 +51,16 @@ class _SettingsListState extends State<SettingsList> {
       },
     );
   }
+  // 로그아웃띠
+  Future<void> _logout() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const StartPage()),
+          (Route<dynamic> route) => false,
+    );
+  }
 
 
   @override
@@ -75,15 +86,6 @@ class _SettingsListState extends State<SettingsList> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /*
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: const Text(
-                "사용자 이름",
-                style: TextStyle(color: Colors.black54, fontSize: 25)),
-          ),
-          // 사용자 이름 표시
-           */
           Row(
             children: [
               const Icon(Icons.account_circle, size: 40, color: Colors.grey), // 프로필 아이콘
@@ -135,6 +137,13 @@ class _SettingsListState extends State<SettingsList> {
               "KOR/ENG",
               style: TextStyle(color: AppStyles.mainblack, fontSize: 14),
             ),
+            trailing: LanguageToggleSwitch(
+              onToggle: (isKorean) {
+                setState(() {
+                  // 필요 시 전체 앱 언어 설정을 업데이트할 수 있음
+                });
+              },
+            ),
           ),
 
           ListTile(
@@ -142,9 +151,7 @@ class _SettingsListState extends State<SettingsList> {
               isKorean ? "로그아웃" : "Log-out",
               style: TextStyle(color: AppStyles.mainblack, fontSize: 14),
             ),
-            onTap: () {
-              // 로그아웃 기능 구현
-            },
+            onTap:  _logout,
           ),
 
           ListTile(
