@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memory_plant_application/screens/start_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -6,6 +7,7 @@ class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
 }
+
 
 class _HomePageState extends State<HomePage> {
   @override
@@ -22,6 +24,8 @@ class _HomePageState extends State<HomePage> {
 
   // 데이터가 없을 때 보여줄 화면
   Widget _buildEmptyState() {
+    bool isKorean = StartPage.selectedLanguage == 'ko';
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -40,8 +44,8 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           const SizedBox(height: 20),
-          const Text(
-            '첫 기억을 추가해보세요',
+          Text(
+            isKorean ? "첫 기억을 추가해보세요" : "Add your first memory",
             style: TextStyle(fontSize: 18),
           ),
           const SizedBox(height: 20),
@@ -58,7 +62,7 @@ class _HomePageState extends State<HomePage> {
                 nodata += 10;
               });
             },
-            child: const Text('추가하기'),
+            child: Text(isKorean ? "추가하기" : "add here"),
           ),
         ],
       ),
@@ -67,6 +71,8 @@ class _HomePageState extends State<HomePage> {
 
   // 데이터가 있을 때 보여줄 화면 (메모리 리스트)
   Widget _buildMemoryList() {
+    bool isKorean = StartPage.selectedLanguage == 'ko';
+
     return ListView.builder(
       itemCount: nodata, // nodata 값에 따라 리스트 아이템 개수 결정
       itemBuilder: (context, index) {
@@ -143,24 +149,26 @@ class _HomePageState extends State<HomePage> {
 
   // 삭제 확인 메시지 다이얼로그
   Future<bool?> _confirmDelete(BuildContext context) async {
+    bool isKorean = StartPage.selectedLanguage == 'ko';
+
     return showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("삭제 확인"),
-          content: const Text("정말로 삭제하시겠습니까?"),
+          title: Text(isKorean ? "삭제 확인" : "Delete Confirmation"),
+          content: Text(isKorean ? "이 항목을 삭제하시겠습니까?\n이 작업은 취소할 수 없습니다." : "Are you sure you want to delete this?"),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(false); // 취소
               },
-              child: const Text("아니오"),
+              child: Text(isKorean ? "아니요" : "No"),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(true); // 확인
               },
-              child: const Text("예"),
+              child: Text(isKorean ? "예" : "Yes"),
             ),
           ],
         );
@@ -183,6 +191,7 @@ class DetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Detail Page for Memory #${index + 1}'),

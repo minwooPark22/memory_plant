@@ -95,20 +95,33 @@ class _StartPageState extends State<StartPage> {
             ],
           ),
           const SizedBox(height: 20), // 간격 추가
-          const Text(
-            '언어를 선택해주세요',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w300,
+          if (currentButtonIndex == 0) ...[
+            const Text(
+              '언어를 선택해주세요',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w300,
+              ),
             ),
-          ),
-          const Text(
-            'Select your preferred languages',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w300,
+            const Text(
+              'Select your preferred languages',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w300,
+              ),
             ),
-          ),
+          ] else ...[
+            // 언어 선택 후 메시지 표시
+            Text(
+              StartPage.selectedLanguage == 'ko'
+                  ? '로그인할 계정을 선택해주세요'
+                  : 'Select the account to log in',
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
+          ],
           const SizedBox(height: 20), // 간격 추가
           Image.asset(
             'assets/images/wind_power.png',
@@ -120,3 +133,4 @@ class _StartPageState extends State<StartPage> {
     );
   }
 }
+
