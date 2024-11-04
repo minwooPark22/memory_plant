@@ -51,6 +51,7 @@ class _SettingsListState extends State<SettingsList> {
       },
     );
   }
+
   // 로그아웃띠
   Future<void> _logout() async {
     final prefs = await SharedPreferences.getInstance();
@@ -134,7 +135,7 @@ class _SettingsListState extends State<SettingsList> {
 
           ListTile(
             title: Text(
-              "KOR/ENG",
+              "ENG/KOR",
               style: TextStyle(color: AppStyles.mainblack, fontSize: 14),
             ),
             trailing: LanguageToggleSwitch(

@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> {
             height: 150,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.blue.shade200, // 배경 색상
+              color: AppStyles.primaryColor, // 배경 색상
             ),
             child: const Icon(
               Icons.block,

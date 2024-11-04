@@ -1,9 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
-/*
+
 class EditNameDialog extends StatefulWidget {
   final String currentName;
   final ValueChanged<String> onNameSaved;
@@ -37,13 +38,26 @@ class _EditNameDialogState extends State<EditNameDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final isKorean = StartPage.selectedLanguage == 'ko';
+
     return AlertDialog(
-      title: Text('이름 수정'),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      backgroundColor: Colors.white,
+
+      title: Text(isKorean ? "이름 수정" : "Name",
+        textAlign: TextAlign.center,
+        style: TextStyle(
+            fontSize: 17,
+            fontWeight:FontWeight.bold
+        ),
+      ),
       content: TextField(
         controller: _nameController,
         maxLength: 20,
         decoration: InputDecoration(
-          hintText: '이름 입력',
+          //hintText: isKorean ? "이름 입력" : "Name",
         ),
       ),
       actions: <Widget>[
@@ -69,7 +83,7 @@ class _EditNameDialogState extends State<EditNameDialog> {
       ],
     );
   }
-}*/
+}
 /*
 class EditNameDialog extends StatefulWidget {
   final String currentName;
@@ -130,7 +144,7 @@ class _EditNameDialogState extends State<EditNameDialog> {
   }
 }
 */
-
+/*
 class EditNameDialog extends StatefulWidget {
   final String currentName;
   final ValueChanged<String> onNameSaved;
@@ -196,5 +210,5 @@ class _EditNameDialogState extends State<EditNameDialog> {
     );
   }
 }
-
+*/
 

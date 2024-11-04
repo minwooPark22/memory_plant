@@ -30,7 +30,7 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
   @override
   Widget build(BuildContext context) {
     final locale = Localizations.localeOf(context);
-    final isKorean = StartPage.selectedLanguage == 'ko';
+    final isKorean = StartPage.selectedLanguage == 'ko'; // -> 이렇게 하면 언어가 안바껴
 
     return WillPopScope(
       onWillPop: () async {
