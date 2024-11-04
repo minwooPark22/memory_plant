@@ -33,21 +33,22 @@ class _BottomNavPageState extends State<BottomNavPage> {
       appBar: _selectedIndex == 2 // Chatbot 페이지에서는 AppBar를 숨김
           ? null
           : AppBar(
-        title: const Text("기억저장소"),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const SettingPage(),
+              title: const Text("기억발전소"),
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SettingPage(),
+                      ),
+                    );
+                  },
+                  icon:
+                      const Icon(FluentSystemIcons.ic_fluent_settings_regular),
                 ),
-              );
-            },
-            icon: const Icon(FluentSystemIcons.ic_fluent_settings_regular),
-          ),
-        ],
-      ),
+              ],
+            ),
       body: appScreens[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,

@@ -13,13 +13,10 @@ class _WritePageState extends State<WritePage> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
 
-  Future<String> _getFilePath() async {
-    return 'lib/utils/memory.json';
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: const Text("기억발전소")),
       body: Column(
         children: [
           Container(
