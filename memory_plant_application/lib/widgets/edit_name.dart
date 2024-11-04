@@ -38,6 +38,7 @@ class _EditNameDialogState extends State<EditNameDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final locale = Localizations.localeOf(context);
     final isKorean = StartPage.selectedLanguage == 'ko';
 
     return AlertDialog(

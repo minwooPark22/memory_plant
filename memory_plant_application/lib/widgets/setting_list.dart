@@ -89,7 +89,7 @@ class _SettingsListState extends State<SettingsList> {
         children: [
           Row(
             children: [
-              const Icon(Icons.account_circle, size: 40, color: Colors.grey), // 프로필 아이콘
+              Icon(Icons.account_circle, size: 40, color: AppStyles.maindeepblue), // 프로필 아이콘
               const SizedBox(width: 8), // 아이콘과 이름 사이 간격
               Text(
                 userName, // 사용자 이름 표시

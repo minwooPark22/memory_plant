@@ -3,10 +3,12 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:memory_plant_application/screens/add_page.dart';
 import 'package:memory_plant_application/screens/home_page.dart';
 import 'package:memory_plant_application/screens/setting_page.dart';
+import 'package:memory_plant_application/screens/start_page.dart';
 import 'chattingbot.dart';
 
 class BottomNavPage extends StatefulWidget {
   const BottomNavPage({super.key});
+
 
   @override
   State<BottomNavPage> createState() => _BottomNavPageState();
@@ -17,6 +19,7 @@ class _BottomNavPageState extends State<BottomNavPage> {
     const HomePage(),
     const AddPage(),
     const Chatbot() // Chatbot 페이지는 자체 AppBar를 사용
+    //여기에 void updateName(){ _loadUserName();} 이 내용 추가? 🎃
   ];
 
   int _selectedIndex = 0;
@@ -28,11 +31,12 @@ class _BottomNavPageState extends State<BottomNavPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isKorean = StartPage.selectedLanguage == 'ko';
     return Scaffold(
       appBar: _selectedIndex == 2 // Chatbot 페이지에서는 AppBar를 숨김
           ? null
           : AppBar(
-        title: const Text("기억발전소"),
+        title: Text(isKorean ? "기억발전소" : "memory plant"),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {

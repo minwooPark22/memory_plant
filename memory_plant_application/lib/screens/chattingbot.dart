@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'package:memory_plant_application/screens/start_page.dart';
+import 'package:memory_plant_application/styles/app_styles.dart';
 
 class Chatbot extends StatefulWidget {
   const Chatbot({super.key});
@@ -69,6 +71,7 @@ class _ChatbotState extends State<Chatbot> {
 
   @override
   Widget build(BuildContext context) {
+    final isKorean = StartPage.selectedLanguage == 'ko';
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFA6D1FA),
@@ -86,8 +89,8 @@ class _ChatbotState extends State<Chatbot> {
               'assets/images/sojang.png',
               height: 40,
             ),
-            const Text(
-              '기억관리소장',
+            Text(
+              isKorean ? "기억관리소장" : "Memory Curator",
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 20,
@@ -115,19 +118,33 @@ class _ChatbotState extends State<Chatbot> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: const Text("Delete Message"),
-                          content: const Text("Are you sure you want to delete this message?"),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          backgroundColor: Colors.white,
+                          title: Text(isKorean ? "메세지 삭제" : "Delete message",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 17,
+                                fontWeight:FontWeight.bold
+                            ),
+                          ),
+                          content: Text(isKorean ? "메세지를 지우면 복구가 어렵습니다.\n정말로 삭제하시겠습니까?" : "Are you sure you want to delete this message?"),
                           actions: [
                             TextButton(
                               onPressed: () => Navigator.of(context).pop(),
-                              child: const Text("Cancel"),
+                              child: Text(isKorean ? "취소" : "Cencle",
+                                style: TextStyle(color: AppStyles.maindeepblue),
+                              ),
                             ),
                             TextButton(
                               onPressed: () {
                                 _deleteMessage(messages.length - 1 - index);
                                 Navigator.of(context).pop();
                               },
-                              child: const Text("Delete"),
+                              child: Text(isKorean ? "삭제" : "Delete",
+                                style: TextStyle(color: AppStyles.maindeepblue),
+                              ),
                             ),
                           ],
                         );
@@ -183,14 +200,26 @@ class _ChatbotState extends State<Chatbot> {
                     focusNode: _focusNode,
                     maxLines: null,
                     textInputAction: TextInputAction.newline,
-                    decoration: const InputDecoration(
-                      hintText: 'Enter your message...',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      hintText: isKorean ? "메세지 보내기💬" : "Enter your message💬",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide(color: AppStyles.primaryColor),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide(color: AppStyles.maindeepblue),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0), // 테두리 각도 설정
+                        borderSide: BorderSide(color: AppStyles.primaryColor),
+                      ),
                     ),
                   ),
                 ),
+                //
                 IconButton(
-                  icon: Image.asset('assets/images/send.png'),
+                  icon: Icon(Icons.arrow_circle_up, color: AppStyles.maindeepblue), // 아이콘 표시 수정
                   onPressed: _sendMessage,
                 ),
               ],
@@ -201,3 +230,17 @@ class _ChatbotState extends State<Chatbot> {
     );
   }
 }
+//
+                /*IconButton(
+                  //icon: Image.asset('assets/images/send.png',)
+                  onPressed: _sendMessage,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+*/

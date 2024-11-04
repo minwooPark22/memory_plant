@@ -3,6 +3,7 @@ import 'package:memory_plant_application/screens/bottom_nav_page.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
+import 'package:memory_plant_application/screens/home_page.dart';
 
 class StartPageAfterLogin extends StatefulWidget {
   const StartPageAfterLogin({super.key});
@@ -20,6 +21,11 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
     _loadUserName(); // 사용자 이름 로드
   }
 
+  //✨✨✨ 아래의 futere 함수를 실행하는 함수 하나 설정
+  void updateName(){
+    _loadUserName();
+  } //이 함수를 setting page에서 받아야함
+
   Future<void> _loadUserName() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -29,14 +35,13 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
 
   @override
   Widget build(BuildContext context) {
-    final locale = Localizations.localeOf(context);
-    final isKorean = StartPage.selectedLanguage == 'ko'; // -> 이렇게 하면 언어가 안바껴
-
+    final isKorean = StartPage.selectedLanguage == 'ko'; // -> 여기서만 안바뀌삼
     return WillPopScope(
       onWillPop: () async {
         _loadUserName(); // 이전 페이지에서 돌아올 때 이름 재로드
         return true; // 페이지가 정상적으로 돌아갈 수 있도록 true 반환
       },
+
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,

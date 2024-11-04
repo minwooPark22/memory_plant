@@ -14,7 +14,6 @@ class NameInputPage extends StatefulWidget {
 class _NameInputPageState extends State<NameInputPage> {
   final TextEditingController languageController = TextEditingController();
 
-
   @override
   void dispose(){
     languageController.dispose();   //메모리 누수 방지용
