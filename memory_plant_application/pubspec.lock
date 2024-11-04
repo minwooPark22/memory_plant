@@ -138,10 +138,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_swipe_action_cell
-      sha256: c77baca62a6274980c57775672e62af6a3a05e0c3eeecc9b3ed5fb0574ae89c1
+      sha256: f09036bf30fea826d9ee7e86f72f040011f42783e8c629a1a549587b0e057c53
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.3"
+    version: "3.1.5"
   flutter_test:
     dependency: "direct dev"
     description: flutter
