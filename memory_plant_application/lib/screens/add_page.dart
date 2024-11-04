@@ -24,9 +24,11 @@ class _AddPageState extends State<AddPage> {
 
   @override
   Widget build(BuildContext context) {
+
     final isKorean = StartPage.selectedLanguage == 'ko';
     return Scaffold(
         body: Column(
+
       children: [
         Text(
           isKorean ? "날짜를 선택해주세요" : "Please select a date",
@@ -71,6 +73,6 @@ class _AddPageState extends State<AddPage> {
             child: Text(isKorean ? "선택하기" : "Select Date",
               style: TextStyle(color: AppStyles.maindeepblue),))
       ],
-    ));
+    );
   }
 }

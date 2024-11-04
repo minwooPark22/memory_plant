@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+
 import 'package:memory_plant_application/screens/start_page.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,19 +13,17 @@ class HomePage extends StatefulWidget {
 
 
 class _HomePageState extends State<HomePage> {
-  @override
   int nodata = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: nodata == 0
-          ? _buildEmptyState() // 데이터가 없을 때 빈 상태 화면
-          : _buildMemoryList(), // 데이터가 있을 때 리스트 화면
+          ? _buildEmptyState()
+          : _buildMemoryList(),
     );
   }
 
-  // 데이터가 없을 때 보여줄 화면
   Widget _buildEmptyState() {
     bool isKorean = StartPage.selectedLanguage == 'ko';
 
@@ -34,9 +34,10 @@ class _HomePageState extends State<HomePage> {
           Container(
             width: 150,
             height: 150,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               shape: BoxShape.circle,
               color: AppStyles.primaryColor, // 배경 색상
+
             ),
             child: const Icon(
               Icons.block,
@@ -48,17 +49,11 @@ class _HomePageState extends State<HomePage> {
           Text(
             isKorean ? "첫 기억을 추가해보세요" : "Add your first memory",
             style: TextStyle(fontSize: 18),
+
           ),
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
-              /* 나중에 구현되면 이걸로 변경
-                // 새로운 데이터를 추가할 수 있는 페이지로 이동
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const AddPage()),
-                );
-                */
               setState(() {
                 nodata += 10;
               });
@@ -67,41 +62,60 @@ class _HomePageState extends State<HomePage> {
               isKorean ? "추가하기" : "Add here",
               style: TextStyle(color: AppStyles.maindeepblue),
             ),
+
           ),
         ],
       ),
     );
   }
 
-  // 데이터가 있을 때 보여줄 화면 (메모리 리스트)
   Widget _buildMemoryList() {
     bool isKorean = StartPage.selectedLanguage == 'ko';
 
     return ListView.builder(
-      itemCount: nodata, // nodata 값에 따라 리스트 아이템 개수 결정
+      itemCount: nodata,
       itemBuilder: (context, index) {
-        return Dismissible(
+        return SwipeActionCell(
           key: Key(index.toString()),
-          background: _buildDeleteBackground(), // 왼쪽 스와이프 시 삭제 배경
-          secondaryBackground: _buildEditBackground(), // 오른쪽 스와이프 시 수정 배경
-          confirmDismiss: (direction) async {
-            if (direction == DismissDirection.startToEnd) {
-              // 왼쪽으로 스와이프 시 삭제 확인 메시지
-              return await _confirmDelete(context);
-            } else if (direction == DismissDirection.endToStart) {
-              // 오른쪽으로 스와이프 시 수정 동작
-              _editMemory(index);
-              return false; // 수정 시 삭제하지 않음
-            }
-            return false;
-          },
-          onDismissed: (direction) {
-            if (direction == DismissDirection.endToStart) {
-              setState(() {
-                nodata -= 1; // 삭제된 아이템 수만큼 nodata 감소
-              });
-            }
-          },
+          trailingActions: [
+            SwipeAction(
+              onTap: (CompletionHandler handler) async {
+                final confirmed = await _confirmDelete(context);
+                if (confirmed ?? false) {
+                  setState(() {
+                    nodata -= 1;
+                  });
+                }
+              },
+              color: Colors.red,
+              content: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.delete, color: Colors.white),
+                  Text(
+                    StartPage.selectedLanguage == 'ko' ? '삭제' : 'Delete',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ],
+              ),
+            ),
+            SwipeAction(
+              onTap: (CompletionHandler handler) async {
+                _editMemory(index);
+              },
+              color: Colors.blue,
+              content: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.edit, color: Colors.white),
+                  Text(
+                    StartPage.selectedLanguage == 'ko' ? '수정' : 'Edit',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ],
+              ),
+            ),
+          ],
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Card(
@@ -109,7 +123,7 @@ class _HomePageState extends State<HomePage> {
               child: ListTile(
                 title: Text('Memory ${index + 1}'),
                 subtitle: Text('This is memory item #${index + 1}'),
-                trailing: Icon(Icons.arrow_forward),
+                trailing: const Icon(Icons.arrow_forward),
                 onTap: () {
                   Navigator.push(
                     context,
@@ -125,33 +139,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // 왼쪽 스와이프 시 삭제 배경
-  Widget _buildDeleteBackground() {
-    return Container(
-      alignment: Alignment.centerRight,
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      color: Colors.red,
-      child: const Icon(
-        Icons.delete,
-        color: Colors.white,
-      ),
-    );
-  }
-
-  // 오른쪽 스와이프 시 수정 배경
-  Widget _buildEditBackground() {
-    return Container(
-      alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      color: Colors.blue,
-      child: const Icon(
-        Icons.edit,
-        color: Colors.white,
-      ),
-    );
-  }
-
-  // 삭제 확인 메시지 다이얼로그
   Future<bool?> _confirmDelete(BuildContext context) async {
     bool isKorean = StartPage.selectedLanguage == 'ko';
 
@@ -161,18 +148,21 @@ class _HomePageState extends State<HomePage> {
         return AlertDialog(
           title: Text(isKorean ? "삭제 확인" : "Delete Confirmation"),
           content: Text(isKorean ? "이 항목을 삭제하시겠습니까?\n이 작업은 취소할 수 없습니다." : "Are you sure you want to delete this?"),
+
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(false); // 취소
+                Navigator.of(context).pop(false);
               },
               child: Text(isKorean ? "아니요" : "No"),
+
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(true); // 확인
+                Navigator.of(context).pop(true);
               },
               child: Text(isKorean ? "예" : "Yes"),
+
             ),
           ],
         );
@@ -180,7 +170,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // 메모리 수정 동작 (여기서는 그냥 메시지를 표시함)
   void _editMemory(int index) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Editing memory: Memory #${index + 1}')),
@@ -188,7 +177,6 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-// 임시로 박스 누르면 나오는 페이지
 class DetailPage extends StatelessWidget {
   final int index;
   const DetailPage({super.key, required this.index});
