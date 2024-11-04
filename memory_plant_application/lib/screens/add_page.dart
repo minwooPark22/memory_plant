@@ -22,8 +22,7 @@ class _AddPageState extends State<AddPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Column(
+    return Column(
       children: [
         const Text(
           "날짜를 선택해주세요",
@@ -67,6 +66,6 @@ class _AddPageState extends State<AddPage> {
             },
             child: Text("선택하기"))
       ],
-    ));
+    );
   }
 }
