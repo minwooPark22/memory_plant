@@ -20,6 +20,7 @@ class _WritePageState extends State<WritePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text("기억발전소")),
       body: Column(
         children: [
           Container(
