@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePage> {
           Container(
             width: 150,
             height: 150,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: AppStyles.primaryColor, // 배경 색상
 

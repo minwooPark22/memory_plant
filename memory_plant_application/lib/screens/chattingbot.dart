@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert'; // JSON 인코딩 및 디코딩을 위해 필요
+import 'dart:convert';
 
 class Chatbot extends StatefulWidget {
   const Chatbot({super.key});
@@ -11,14 +11,14 @@ class Chatbot extends StatefulWidget {
 }
 
 class _ChatbotState extends State<Chatbot> {
-  final List<Map<String, dynamic>> messages = []; // 채팅 메시지를 저장할 리스트
-  final TextEditingController _controller = TextEditingController(); // 입력 필드 컨트롤러
-  final FocusNode _focusNode = FocusNode(); // FocusNode 추가
+  final List<Map<String, dynamic>> messages = [];
+  final TextEditingController _controller = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    _loadMessages(); // 저장된 채팅 기록 불러오기
+    _loadMessages();
   }
 
   Future<void> _loadMessages() async {
@@ -39,32 +39,25 @@ class _ChatbotState extends State<Chatbot> {
 
   void _sendMessage() {
     if (_controller.text.isNotEmpty) {
-      if (_controller.text.trim() == "/c") {
-        _clearMessages(); // '/c' 명령어로 채팅 기록 삭제
-      } else {
-        setState(() {
-          messages.add({
-            'text': _controller.text,
-            'isMe': true, // true이면 사용자가 보낸 메시지
-            'time': DateFormat('hh:mm a').format(DateTime.now()), // 현재 시간 추가
-          });
-          _controller.clear(); // 입력 필드 초기화
+      setState(() {
+        messages.add({
+          'text': _controller.text,
+          'isMe': true,
+          'time': DateFormat('hh:mm a').format(DateTime.now()),
         });
-        _saveMessages(); // 메시지를 저장
-      }
+        _controller.clear();
+      });
+      _saveMessages();
 
-      // 전송 후에도 키보드 포커스 유지
       FocusScope.of(context).requestFocus(_focusNode);
     }
   }
 
-  Future<void> _clearMessages() async {
+  void _deleteMessage(int index) {
     setState(() {
-      messages.clear(); // 채팅 기록을 지우고
-      _controller.clear(); // '/c' 입력도 함께 지우기
+      messages.removeAt(index);
     });
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove('messages'); // 저장된 기록 삭제
+    _saveMessages();
   }
 
   @override
@@ -78,72 +71,102 @@ class _ChatbotState extends State<Chatbot> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.lightBlueAccent[100], // 연한 하늘색으로 설정
+        backgroundColor: const Color(0xFFA6D1FA),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context); // 이전 화면으로 돌아가기
+            Navigator.pop(context);
           },
         ),
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.center, // 타이틀을 가운데 정렬
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Spacer(), // 왼쪽 여백 추가
+            const Spacer(),
             Image.asset(
-              'assets/images/sojang.png', // 헤더 이미지 경로
-              height: 40, // 이미지 크기 조정
+              'assets/images/sojang.png',
+              height: 40,
             ),
             const Text(
-              '기억관리소장', // 타이틀 텍스트
+              '기억관리소장',
               style: TextStyle(
-                color: Colors.white, // 타이틀 색상 흰색
-                fontSize: 20, // 타이틀 폰트 크기
-                fontWeight: FontWeight.bold, // 타이틀 굵게
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            const Spacer(flex: 2), // 오른쪽 여백 추가 (2칸)
+            const Spacer(flex: 2),
           ],
         ),
-        centerTitle: false, // 타이틀 중앙 정렬을 비활성화
+        centerTitle: false,
       ),
       body: Column(
         children: [
           Expanded(
             child: ListView.builder(
-              reverse: true, // 새 메시지가 아래에 쌓이도록 설정
+              reverse: true,
               itemCount: messages.length,
               itemBuilder: (context, index) {
-                final message = messages[messages.length - 1 - index]; // 역순으로 접근
+                final message = messages[messages.length - 1 - index];
                 bool isMe = message['isMe'];
-                return Align(
-                  alignment: isMe ? Alignment.centerRight : Alignment.centerLeft, // 메시지 정렬
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0), // 여백 설정
-                    padding: const EdgeInsets.all(10.0),
-                    decoration: BoxDecoration(
-                      color: isMe ? Colors.white : Colors.lightBlueAccent[100], // 사용자: 흰색, 상대방: 연한 하늘색
-                      borderRadius: BorderRadius.circular(12.0), // 모서리 둥글게
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5), // 그림자 색상
-                          spreadRadius: 1,
-                          blurRadius: 4,
-                          offset: const Offset(0, 2), // 그림자 위치
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          message['text'], // 메시지 텍스트
-                          style: const TextStyle(color: Colors.black), // 텍스트 색상
-                        ),
-                        Text(
-                          message['time'], // 메시지 전송 시간
-                          style: TextStyle(color: Colors.grey[600], fontSize: 10),
-                        ),
-                      ],
+                return GestureDetector(
+                  onLongPress: () {
+                    // 삭제 확인 다이얼로그 표시
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text("Delete Message"),
+                          content: const Text("Are you sure you want to delete this message?"),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: const Text("Cancel"),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                _deleteMessage(messages.length - 1 - index);
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text("Delete"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  child: Align(
+                    alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+                    child: Container(
+                      constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width * 0.6,
+                      ),
+                      margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                      padding: const EdgeInsets.all(10.0),
+                      decoration: BoxDecoration(
+                        color: isMe ? const Color(0xFFECECEC) : const Color(0xFFA6D1FA),
+                        borderRadius: BorderRadius.circular(12.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 1,
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            message['text'],
+                            style: const TextStyle(color: Colors.black),
+                          ),
+                          Text(
+                            message['time'],
+                            style: TextStyle(color: Colors.grey[600], fontSize: 10),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );
@@ -157,20 +180,18 @@ class _ChatbotState extends State<Chatbot> {
                 Expanded(
                   child: TextField(
                     controller: _controller,
-                    focusNode: _focusNode, // FocusNode 연결
-                    onTap: () {
-                      FocusScope.of(context).requestFocus(_focusNode); // 입력창 탭하면 포커스
-                    },
-                    onSubmitted: (_) => _sendMessage(), // Enter 키 눌렀을 때 메시지 전송
+                    focusNode: _focusNode,
+                    maxLines: null,
+                    textInputAction: TextInputAction.newline,
                     decoration: const InputDecoration(
-                      hintText: 'Enter your message... (/c to clear chat)', // 힌트 텍스트 수정
+                      hintText: 'Enter your message...',
                       border: OutlineInputBorder(),
                     ),
                   ),
                 ),
                 IconButton(
-                  icon: Image.asset('assets/images/send.png'), // 이미지 아이콘
-                  onPressed: _sendMessage, // 메시지 전송 버튼
+                  icon: Image.asset('assets/images/send.png'),
+                  onPressed: _sendMessage,
                 ),
               ],
             ),
