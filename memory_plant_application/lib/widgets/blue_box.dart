@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memory_plant_application/styles/app_styles.dart';
 
 
 class BlueBox extends StatelessWidget {
@@ -9,7 +10,7 @@ class BlueBox extends StatelessWidget {
     return Container(
       height: MediaQuery.of(context).size.height * 0.35,
       decoration: BoxDecoration(
-        color: Color(0xFFA6D1FA),
+        color: AppStyles.primaryColor,
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(30.0),
           bottomRight: Radius.circular(30.0),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memory_plant_application/screens/name_input_page.dart';
+import 'package:memory_plant_application/styles/app_styles.dart';
 
 class StartPage extends StatefulWidget {
   static var selectedLanguage = 'ko';
@@ -66,7 +67,9 @@ class _StartPageState extends State<StartPage> {
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size(250, 50),
                 ),
-                child: Text(buttonTexts[currentButtonIndex][0]),
+                child: Text(buttonTexts[currentButtonIndex][0],
+                  style: TextStyle(color: AppStyles.maindeepblue),
+                ),
               ),
               const SizedBox(height: 20), // 간격 추가
               OutlinedButton(
@@ -90,25 +93,40 @@ class _StartPageState extends State<StartPage> {
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size(250, 50),
                 ),
-                child: Text(buttonTexts[currentButtonIndex][1]),
+                child: Text(buttonTexts[currentButtonIndex][1],
+                  style: TextStyle(color: AppStyles.maindeepblue),
+                ),
               ),
             ],
           ),
           const SizedBox(height: 20), // 간격 추가
-          const Text(
-            '언어를 선택해주세요',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w300,
+          if (currentButtonIndex == 0) ...[
+            const Text(
+              '언어를 선택해주세요',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w300,
+              ),
             ),
-          ),
-          const Text(
-            'Select your preferred languages',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w300,
+            const Text(
+              'Select your preferred languages',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w300,
+              ),
             ),
-          ),
+          ] else ...[
+            // 언어 선택 후 메시지 표시
+            Text(
+              StartPage.selectedLanguage == 'ko'
+                  ? '로그인할 계정을 선택해주세요'
+                  : 'Select the account to log in',
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
+          ],
           const SizedBox(height: 20), // 간격 추가
           Image.asset(
             'assets/images/wind_power.png',
