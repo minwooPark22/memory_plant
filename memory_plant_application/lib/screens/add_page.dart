@@ -26,8 +26,7 @@ class _AddPageState extends State<AddPage> {
   Widget build(BuildContext context) {
 
     final isKorean = StartPage.selectedLanguage == 'ko';
-    return Scaffold(
-        body: Column(
+    return Column(
 
       children: [
         Text(
