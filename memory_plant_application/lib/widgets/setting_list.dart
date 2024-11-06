@@ -85,15 +85,20 @@ class _SettingsListState extends State<SettingsList> {
       margin: const EdgeInsets.all(16), // 전체 여백
       padding: const EdgeInsets.all(16), // 내부 여백
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(Icons.account_circle, size: 40, color: AppStyles.maindeepblue), // 프로필 아이콘
+              Icon(Icons.account_circle, size: 40, color: AppStyles.primaryColor), // 프로필 아이콘
               const SizedBox(width: 8), // 아이콘과 이름 사이 간격
               Text(
                 userName, // 사용자 이름 표시
-                style: TextStyle(color: AppStyles.mainblack, fontSize: 20),
+                style: TextStyle(
+                  color: AppStyles.maindeepblue,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
             ],
           ),

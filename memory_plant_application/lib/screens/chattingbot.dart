@@ -73,6 +73,7 @@ class _ChatbotState extends State<Chatbot> {
   Widget build(BuildContext context) {
     final isKorean = StartPage.selectedLanguage == 'ko';
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: const Color(0xFFA6D1FA),
         leading: IconButton(
@@ -217,9 +218,8 @@ class _ChatbotState extends State<Chatbot> {
                     ),
                   ),
                 ),
-                //
                 IconButton(
-                  icon: Icon(Icons.arrow_circle_up, color: AppStyles.maindeepblue), // 아이콘 표시 수정
+                  icon: Image.asset('assets/images/send.png',),
                   onPressed: _sendMessage,
                 ),
               ],
@@ -230,17 +230,3 @@ class _ChatbotState extends State<Chatbot> {
     );
   }
 }
-//
-                /*IconButton(
-                  //icon: Image.asset('assets/images/send.png',)
-                  onPressed: _sendMessage,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-*/

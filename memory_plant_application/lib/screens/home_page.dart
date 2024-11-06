@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
+import 'package:memory_plant_application/widgets/edit_name.dart';
+import 'package:memory_plant_application/widgets/setting_list.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -14,9 +17,29 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int nodata = 0;
+  String userName = 'Guest'; // Default name
+  bool isLoading = true; // To track loading state for the name
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserName();
+  }
+  Future<void> _loadUserName() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userName = prefs.getString('user_name') ?? 'Guest';
+      isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
     return Scaffold(
       body: nodata == 0
           ? _buildEmptyState()
@@ -26,6 +49,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildEmptyState() {
     bool isKorean = StartPage.selectedLanguage == 'ko';
+
 
     return Center(
       child: Column(

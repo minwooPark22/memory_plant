@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
-
+/*
 class EditNameDialog extends StatefulWidget {
   final String currentName;
   final ValueChanged<String> onNameSaved;
@@ -13,6 +13,7 @@ class EditNameDialog extends StatefulWidget {
 
   @override
   _EditNameDialogState createState() => _EditNameDialogState();
+
 }
 
 class _EditNameDialogState extends State<EditNameDialog> {
@@ -58,7 +59,6 @@ class _EditNameDialogState extends State<EditNameDialog> {
         controller: _nameController,
         maxLength: 20,
         decoration: InputDecoration(
-          //hintText: isKorean ? "이름 입력" : "Name",
         ),
       ),
       actions: <Widget>[
@@ -84,126 +84,105 @@ class _EditNameDialogState extends State<EditNameDialog> {
       ],
     );
   }
-}
-/*
+}*/
 class EditNameDialog extends StatefulWidget {
   final String currentName;
   final ValueChanged<String> onNameSaved;
-
 
   const EditNameDialog({Key? key, required this.currentName, required this.onNameSaved}) : super(key: key);
 
   @override
   _EditNameDialogState createState() => _EditNameDialogState();
 }
+
 class _EditNameDialogState extends State<EditNameDialog> {
   late TextEditingController _nameController;
+  String? _errorMessage;
 
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.currentName);
   }
+
   @override
   void dispose() {
     _nameController.dispose();
     super.dispose();
   }
+
   Future<void> _saveName() async {
+    final name = _nameController.text.trim();
+
+    if (name.isEmpty) {
+      setState(() {
+        _errorMessage = StartPage.selectedLanguage == 'ko' ? '이름을 작성해주세요!' : 'Please enter your name!';
+      });
+      return;
+    }
+
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('user_name', _nameController.text);
-    widget.onNameSaved(_nameController.text);
+    await prefs.setString('user_name', name);
+    widget.onNameSaved(name);
   }
 
   @override
   Widget build(BuildContext context) {
+    final locale = Localizations.localeOf(context);
     final isKorean = StartPage.selectedLanguage == 'ko';
+
     return AlertDialog(
-        title: Text('이름 수정'),
-    content: TextField(
-    controller: _nameController,
-    maxLength: 20,
-    decoration: InputDecoration(
-    hintText: '이름 입력',
-    ),
-    ),
-      actions: [
-        CupertinoDialogAction(
-          onPressed: () => Navigator.pop(context),
-          child: Text(isKorean ? "취소" : "Cancel",
-            style: TextStyle(color: AppStyles.maindeepblue),
-          ),
-        ),
-        CupertinoDialogAction(
-          onPressed: () {
-          },
-          child: Text(isKorean ? "저장" : "Save",
-            style: TextStyle(color: AppStyles.maindeepblue),),
-        ),
-      ],
-    );
-  }
-}
-*/
-/*
-class EditNameDialog extends StatefulWidget {
-  final String currentName;
-  final ValueChanged<String> onNameSaved;
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      backgroundColor: Colors.white,
 
-  const EditNameDialog({Key? key, required this.currentName, required this.onNameSaved}) : super(key: key);
-
-  @override
-  _EditNameDialogState createState() => _EditNameDialogState();
-}
-
-class _EditNameDialogState extends State<EditNameDialog> {
-  late TextEditingController _nameController;
-
-  @override
-  void initState() {
-    super.initState();
-    _nameController = TextEditingController(text: widget.currentName);
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _saveName() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('user_name', _nameController.text);
-    widget.onNameSaved(_nameController.text);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final isKorean = StartPage.selectedLanguage == 'ko';
-
-    return CupertinoAlertDialog(
-      title: Text('이름 수정'),
-      content: Padding(
-        padding: const EdgeInsets.only(top: 8.0),
-        child: CupertinoTextField(
-          controller: _nameController,
-          maxLength: 20,
-          placeholder: '이름 입력',
+      title: Text(isKorean ? "이름 수정" : "Name",
+        textAlign: TextAlign.center,
+        style: TextStyle(
+            fontSize: 17,
+            fontWeight:FontWeight.bold
         ),
       ),
-      actions: [
-        CupertinoDialogAction(
-          onPressed: () => Navigator.pop(context),
-          child: Text(isKorean ? "취소" : "Cancel",
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(
+            controller: _nameController,
+            maxLength: 20,
+            decoration: InputDecoration(
+              errorText: _errorMessage, // Error message if name is empty
+            ),
+          ),/*
+          if (_errorMessage != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Text(
+                _errorMessage!,
+                style: TextStyle(color: Colors.red, fontSize: 12),
+              ),
+            ),*/
+        ],
+      ),
+      actions: <Widget>[
+        TextButton(
+          child: Text(
+            isKorean ? '취소' : 'Cancel',
             style: TextStyle(color: AppStyles.maindeepblue),
           ),
-        ),
-        CupertinoDialogAction(
-          onPressed: () async {
-            await _saveName();
-            Navigator.pop(context);
+          onPressed: () {
+            Navigator.of(context).pop();
           },
-          child: Text(isKorean ? "저장" : "Save",
+        ),
+        TextButton(
+          onPressed: () async {
+            await _saveName(); // Save name
+            if (_errorMessage == null) {
+              Navigator.of(context).pop(); // Close dialog if no error
+            }
+          },
+          child: Text(
+            isKorean ? '저장' : 'Save',
             style: TextStyle(color: AppStyles.maindeepblue),
           ),
         ),
@@ -211,5 +190,3 @@ class _EditNameDialogState extends State<EditNameDialog> {
     );
   }
 }
-*/
-
