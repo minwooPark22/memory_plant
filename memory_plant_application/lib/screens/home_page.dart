@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
+import 'package:memory_plant_application/screens/add_page.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
 import 'package:memory_plant_application/screens/read_memory_page.dart';
@@ -147,13 +148,10 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
-              setState(() {
-                memoryList.add({
-                  'title': 'New Memory',
-                  'timestamp': DateTime.now().toIso8601String(),
-                  'contents': 'New memory content'
-                });
-              });
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AddPage()),
+              ); // 추가하기 누르면 AddPage로 넘어가게 함
             },
             child: Text(
               isKorean ? "추가하기" : "Add here",
