@@ -70,74 +70,69 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildMemoryList() {
-    bool isKorean = StartPage.selectedLanguage == 'ko';
+  bool isKorean = StartPage.selectedLanguage == 'ko';
 
-    return ListView.builder(
-      itemCount: nodata,
-      itemBuilder: (context, index) {
-        return SwipeActionCell(
-          key: Key(index.toString()),
-          trailingActions: [
-            SwipeAction(
-              onTap: (CompletionHandler handler) async {
-                final confirmed = await _confirmDelete(context);
-                if (confirmed ?? false) {
-                  setState(() {
-                    nodata -= 1;
-                  });
-                }
-              },
-              color: Colors.red,
-              content: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.delete, color: Colors.white),
-                  Text(
-                    StartPage.selectedLanguage == 'ko' ? '삭제' : 'Delete',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ],
-              ),
-            ),
-            SwipeAction(
-              onTap: (CompletionHandler handler) async {
-                _editMemory(index);
-              },
-              color: Colors.blue,
-              content: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.edit, color: Colors.white),
-                  Text(
-                    StartPage.selectedLanguage == 'ko' ? '수정' : 'Edit',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ],
-              ),
-            ),
-          ],
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Card(
-              elevation: 4,
-              child: ListTile(
-                title: Text('Memory ${index + 1}'),
-                subtitle: Text('This is memory item #${index + 1}'),
-                trailing: const Icon(Icons.arrow_forward),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => DetailPage(index: index)),
-                  );
-                },
-              ),
+  return ListView.builder(
+    itemCount: nodata,
+    itemBuilder: (context, index) {
+      return SwipeActionCell(
+        key: Key(index.toString()),
+        trailingActions: [
+          SwipeAction(
+            onTap: (CompletionHandler handler) async {
+              final confirmed = await _confirmDelete(context);
+              if (confirmed ?? false) {
+                setState(() {
+                  nodata -= 1;
+                });
+              }
+            },
+            color: Colors.red,
+            content: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.delete, color: Colors.white),
+                Text(
+                  StartPage.selectedLanguage == 'ko' ? '삭제' : 'Delete',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ],
             ),
           ),
-        );
-      },
-    );
-  }
+          SwipeAction(
+            onTap: (CompletionHandler handler) async {
+              _editMemory(index);
+            },
+            color: Colors.blue,
+            content: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.edit, color: Colors.white),
+                Text(
+                  StartPage.selectedLanguage == 'ko' ? '수정' : 'Edit',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ],
+            ),
+          ),
+        ],
+        child: ListTile(
+          title: Text('Memory ${index + 1}'),
+          subtitle: Text('This is memory item #${index + 1}'),
+          trailing: const Icon(Icons.arrow_forward),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => DetailPage(index: index)),
+            );
+          },
+        ),
+      );
+    },
+  );
+}
+
 
   Future<bool?> _confirmDelete(BuildContext context) async {
     bool isKorean = StartPage.selectedLanguage == 'ko';
