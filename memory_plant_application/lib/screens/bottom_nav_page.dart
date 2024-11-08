@@ -5,6 +5,7 @@ import 'package:memory_plant_application/screens/home_page.dart';
 import 'package:memory_plant_application/screens/setting_page.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
 import 'chattingbot.dart';
+import 'package:memory_plant_application/styles/app_styles.dart';
 
 class BottomNavPage extends StatefulWidget {
   const BottomNavPage({super.key});
@@ -36,68 +37,73 @@ class _BottomNavPageState extends State<BottomNavPage> {
       appBar: _selectedIndex == 2 // Chatbot 페이지에서는 AppBar를 숨김
           ? null
           : AppBar(
-              toolbarHeight: 100, // AppBar 높이 조정
-              backgroundColor: Colors.white,
-              elevation: 0, // 그림자 제거
-              flexibleSpace: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 40), // AppBar에서 텍스트를 아래로 이동
-                  Text(
-                    isKorean ? "기억발전소" : "memory plant",
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.black),
-                onPressed: () {
-                  Navigator.pop(context); // 이전 페이지로 이동
-                },
-              ),
-              actions: [
-                IconButton(
-                  icon: const Icon(
-                    FluentSystemIcons.ic_fluent_settings_regular,
-                    color: Colors.black,
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const SettingPage(),
-                      ),
-                    );
-                  },
-                ),
-              ],
+        backgroundColor: Colors.white,
+        title: Text(isKorean ? "기억발전소" : "Memory Plant"),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.pop(context); // 이전 페이지로 이동
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              FluentSystemIcons.ic_fluent_settings_regular,
+              color: Colors.black,
             ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SettingPage(),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
       body: appScreens[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: AppStyles.primaryColor,
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        selectedItemColor: Colors.blueGrey,
-        unselectedItemColor: const Color(0xFF526400),
-        showSelectedLabels: false,
+        selectedItemColor: AppStyles.maindeepblue,
+        unselectedItemColor: AppStyles.textColor,
+        showSelectedLabels: true,
+        selectedFontSize: 10, // 선택된 아이템의 글씨 크기 줄임
+        unselectedFontSize: 10,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(FluentSystemIcons.ic_fluent_home_regular),
-            activeIcon: Icon(FluentSystemIcons.ic_fluent_home_filled),
+            icon: Padding(
+              padding: EdgeInsets.only(top: 12.0), // 아이콘 위에 12.0 만큼의 여백 추가
+              child: Icon(FluentSystemIcons.ic_fluent_home_regular),
+            ),
+            activeIcon: Padding(
+              padding: EdgeInsets.only(top: 12.0), // 아이콘 위에 12.0 만큼의 여백 추가
+              child: Icon(FluentSystemIcons.ic_fluent_home_filled),
+            ),
             label: "Home",
           ),
           BottomNavigationBarItem(
-            icon: Icon(FluentSystemIcons.ic_fluent_add_regular),
-            activeIcon: Icon(FluentSystemIcons.ic_fluent_add_filled),
+            icon: Padding(
+              padding: EdgeInsets.only(top: 12.0), // 아이콘 위에 12.0 만큼의 여백 추가
+              child: Icon(FluentSystemIcons.ic_fluent_add_regular),
+            ),
+            activeIcon: Padding(
+              padding: EdgeInsets.only(top: 12.0), // 아이콘 위에 12.0 만큼의 여백 추가
+              child: Icon(FluentSystemIcons.ic_fluent_add_filled),
+            ),
             label: "Add",
           ),
           BottomNavigationBarItem(
-            icon: Icon(FluentSystemIcons.ic_fluent_chat_regular),
-            activeIcon: Icon(FluentSystemIcons.ic_fluent_chat_filled),
+            icon: Padding(
+              padding: EdgeInsets.only(top: 12.0), // 아이콘 위에 12.0 만큼의 여백 추가
+              child: Icon(FluentSystemIcons.ic_fluent_chat_regular),
+            ),
+            activeIcon: Padding(
+              padding: EdgeInsets.only(top: 12.0), // 아이콘 위에 12.0 만큼의 여백 추가
+              child: Icon(FluentSystemIcons.ic_fluent_chat_filled),
+            ),
             label: "Chatting",
           ),
         ],

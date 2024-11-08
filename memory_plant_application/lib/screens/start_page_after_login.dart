@@ -139,7 +139,11 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          toolbarHeight: 100, // AppBar 높이 조정
+          backgroundColor:Colors.white,
+          elevation: 0, // 그림자 제거
+          title: Text(isKorean ? "기억발전소" : "Memory Plant"),
+        ),
+        /*appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0, // 그림자 제거
           flexibleSpace: Column(
@@ -157,7 +161,7 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
               ),
             ],
           ),
-        ),
+        ),*/
         body: GestureDetector(
           onTap: () {
             Navigator.push(

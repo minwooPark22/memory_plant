@@ -94,7 +94,7 @@ class _AddPageState extends State<AddPage> {
             height: 60, // 버튼 높이 조정
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
+                backgroundColor: AppStyles.maindeepblue,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12.0),
                 ),
