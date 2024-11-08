@@ -67,32 +67,30 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-
-
   Widget _buildMemoryList() {
     return memoryList.isEmpty
         ? _buildEmptyState()
         : Align(
-      alignment: Alignment.center,
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.95, // 90퍼센트 넓이 차지
-        decoration: BoxDecoration(
-          color: Colors.white, // 컨테이너 배경을 흰색으로 설정
-        ),
-        child: ListView.builder(
-          itemCount: memoryList.length,
-          itemBuilder: (context, index) {
-            final memory = memoryList[index];
-            return DiaryTile(
-              memory: memory,
-              index: index,
-              onDelete: _deleteMemory,
-              onEdit: _editMemory,
-            );
-          },
-        ),
-      ),
-    );
+            alignment: Alignment.center,
+            child: Container(
+              // width: MediaQuery.of(context).size.width * 0.95, // 90퍼센트 넓이 차지
+              decoration: const BoxDecoration(
+                color: Colors.white, // 컨테이너 배경을 흰색으로 설정
+              ),
+              child: ListView.builder(
+                itemCount: memoryList.length,
+                itemBuilder: (context, index) {
+                  final memory = memoryList[index];
+                  return DiaryTile(
+                    memory: memory,
+                    index: index,
+                    onDelete: _deleteMemory,
+                    onEdit: _editMemory,
+                  );
+                },
+              ),
+            ),
+          );
   }
 
   void _deleteMemory(int index) {
@@ -101,7 +99,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-
   Widget _buildEmptyState() {
     bool isKorean = StartPage.selectedLanguage == 'ko';
 
@@ -109,30 +106,22 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            width: 150,
+          Image.asset(
+            'assets/images/No_memory.png',
             height: 150,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: AppStyles.primaryColor,
-            ),
-            child: const Icon(
-              Icons.block,
-              size: 100,
-              color: Colors.white,
-            ),
+            width: 150,
           ),
           const SizedBox(height: 20),
           Text(
             isKorean ? "첫 기억을 추가해보세요" : "Add your first memory",
-            style: TextStyle(fontSize: 18),
+            style: const TextStyle(fontSize: 18),
           ),
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AddPage()),
+                MaterialPageRoute(builder: (context) => const AddPage()),
               ); // 추가하기 누르면 AddPage로 넘어가게 함
             },
             child: Text(

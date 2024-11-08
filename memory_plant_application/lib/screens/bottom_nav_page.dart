@@ -37,31 +37,29 @@ class _BottomNavPageState extends State<BottomNavPage> {
       appBar: _selectedIndex == 2 // Chatbot 페이지에서는 AppBar를 숨김
           ? null
           : AppBar(
-        backgroundColor: Colors.white,
-        title: Text(isKorean ? "기억발전소" : "Memory Plant"),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.pop(context); // 이전 페이지로 이동
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              FluentSystemIcons.ic_fluent_settings_regular,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const SettingPage(),
+              backgroundColor: Colors.white,
+              title: Text(
+                isKorean ? "기억발전소" : "Memory Plant",
+                style: const TextStyle(fontWeight: FontWeight.w700),
+              ),
+              centerTitle: true,
+              actions: [
+                IconButton(
+                  icon: const Icon(
+                    FluentSystemIcons.ic_fluent_settings_regular,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SettingPage(),
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
-          ),
-        ],
-      ),
+              ],
+            ),
       body: appScreens[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: AppStyles.primaryColor,

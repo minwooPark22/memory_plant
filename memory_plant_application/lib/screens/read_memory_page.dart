@@ -17,7 +17,9 @@ class ReadMemoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         // 일단 비워둠
       ),
       body: Padding(

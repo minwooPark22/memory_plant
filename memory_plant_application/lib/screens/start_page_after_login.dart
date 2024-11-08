@@ -139,9 +139,13 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor:Colors.white,
+          backgroundColor: Colors.white,
           elevation: 0, // 그림자 제거
-          title: Text(isKorean ? "기억발전소" : "Memory Plant"),
+          title: Text(
+            isKorean ? "기억발전소" : "Memory Plant",
+            style: TextStyle(fontWeight: FontWeight.w700),
+          ),
+          centerTitle: true,
         ),
         body: GestureDetector(
           onTap: () {
