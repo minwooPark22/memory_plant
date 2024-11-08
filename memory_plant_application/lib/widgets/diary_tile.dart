@@ -1,0 +1,127 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
+import 'package:memory_plant_application/screens/read_memory_page.dart';
+
+class DiaryTile extends StatelessWidget {
+  final Map<String, dynamic> memory;
+  final int index;
+  final Function(int) onDelete;
+  final Function(int) onEdit;
+
+  const DiaryTile({
+    Key? key,
+    required this.memory,
+    required this.index,
+    required this.onDelete,
+    required this.onEdit,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(25.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 5,
+          ),
+        ],
+      ),
+      child: SwipeActionCell(
+        key: Key(index.toString()),
+        trailingActions: [
+          SwipeAction(
+            onTap: (CompletionHandler handler) async {
+              final confirmed = await _confirmDelete(context);
+              if (confirmed ?? false) {
+                onDelete(index);
+              }
+            },
+            color: Colors.red,
+            content: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.delete, color: Colors.white),
+                Text(
+                  'Delete',
+                  style: TextStyle(color: Colors.white, fontSize: 12),
+                ),
+              ],
+            ),
+          ),
+          SwipeAction(
+            onTap: (CompletionHandler handler) async {
+              onEdit(index);
+            },
+            color: Colors.blue,
+            content: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.edit, color: Colors.white),
+                Text(
+                  'Edit',
+                  style: TextStyle(color: Colors.white, fontSize: 12),
+                ),
+              ],
+            ),
+          ),
+        ],
+        backgroundColor: Colors.transparent, // 경계 충돌 방지
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
+            title: Text(
+              memory['title'] ?? 'Untitled Memory',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            subtitle: Text(
+              memory['contents'] ?? 'No content available',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            trailing: const Icon(Icons.arrow_forward),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ReadMemoryPage(memory: memory),
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<bool?> _confirmDelete(BuildContext context) async {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Delete Confirmation"),
+          content: const Text("Are you sure you want to delete this?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: const Text("No"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+              child: const Text("Yes"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}

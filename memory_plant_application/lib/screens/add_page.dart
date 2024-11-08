@@ -58,7 +58,7 @@ class _AddPageState extends State<AddPage> {
                 });
               },
               calendarStyle: CalendarStyle(
-                todayDecoration: BoxDecoration(
+                todayDecoration: const BoxDecoration(
                   color: Colors.transparent, // 오늘 날짜의 색상을 투명하게 처리
                 ),
                 todayTextStyle: const TextStyle(
