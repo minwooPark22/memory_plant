@@ -143,25 +143,6 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
           elevation: 0, // 그림자 제거
           title: Text(isKorean ? "기억발전소" : "Memory Plant"),
         ),
-        /*appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0, // 그림자 제거
-          flexibleSpace: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(height: 40), // AppBar에서 텍스트를 아래로 이동
-              Text(
-                isKorean ? "기억발전소" : "memory plant",
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),*/
         body: GestureDetector(
           onTap: () {
             Navigator.push(
