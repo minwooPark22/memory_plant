@@ -10,7 +10,7 @@ class BlueBox extends StatelessWidget {
     return Container(
       height: MediaQuery.of(context).size.height * 0.35,
       decoration: BoxDecoration(
-        color: AppStyles.primaryColor,
+        color: AppStyles.maindeepblue,
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(30.0),
           bottomRight: Radius.circular(30.0),

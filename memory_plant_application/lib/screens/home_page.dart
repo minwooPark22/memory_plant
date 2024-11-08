@@ -5,6 +5,9 @@ import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 import 'package:memory_plant_application/screens/add_page.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
+import 'package:memory_plant_application/widgets/edit_name.dart';
+import 'package:memory_plant_application/widgets/setting_list.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:memory_plant_application/screens/read_memory_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,13 +18,23 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String userName = 'Guest'; // Default name
   List<Map<String, dynamic>> memoryList = [];
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
+    _loadUserName();
     _loadMemoryData();
+  }
+  
+  Future<void> _loadUserName() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userName = prefs.getString('user_name') ?? 'Guest';
+      isLoading = false;
+    });
   }
 
   Future<void> _loadMemoryData() async {
@@ -44,6 +57,11 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
     return Scaffold(
       body: isLoading ? Center(child: CircularProgressIndicator()) : _buildMemoryList(),
     );
@@ -123,6 +141,7 @@ class _HomePageState extends State<HomePage> {
   Widget _buildEmptyState() {
     bool isKorean = StartPage.selectedLanguage == 'ko';
 
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -194,6 +213,24 @@ class _HomePageState extends State<HomePage> {
   void _editMemory(int index) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Editing memory: Memory #${index + 1}')),
+    );
+  }
+}
+
+class DetailPage extends StatelessWidget {
+  final int index;
+  const DetailPage({super.key, required this.index});
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Detail Page for Memory #${index + 1}'),
+      ),
+      body: Center(
+        child: Text('This is the detail view for Memory #${index + 1}.'),
+      ),
     );
   }
 }

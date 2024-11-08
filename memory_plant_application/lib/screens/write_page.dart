@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memory_plant_application/screens/start_page.dart';
 
 class WritePage extends StatefulWidget {
   final DateTime selected_date;
@@ -19,16 +20,18 @@ class _WritePageState extends State<WritePage> {
 
   @override
   Widget build(BuildContext context) {
+    final isKorean = StartPage.selectedLanguage == 'ko';
+
     return Scaffold(
-      appBar: AppBar(title: Text("기억발전소")),
+      appBar: AppBar(title: Text(isKorean ? "기억발전소" : "memory plant")),
       body: Column(
         children: [
           Container(
             padding: const EdgeInsets.all(16.0),
             child: TextField(
               controller: _titleController, // 제목 컨트롤러 연결
-              decoration: const InputDecoration(
-                hintText: 'Title', // 라벨 텍스트
+              decoration: InputDecoration(
+                hintText: isKorean ? "제목을 입력하세요." : "Please enter a title.", // 라벨 텍스트
                 border: InputBorder.none, // 경계선 없앰
               ),
             ),
@@ -50,8 +53,8 @@ class _WritePageState extends State<WritePage> {
               controller: _contentController, // 내용 컨트롤러 연결
               maxLines: null,
               minLines: 6,
-              decoration: const InputDecoration(
-                hintText: '내용을 입력하세요...',
+              decoration: InputDecoration(
+                hintText: isKorean ? "일기를 작성해주세요✍🏻" : "Please write a diary✍🏻",
                 border: InputBorder.none,
               ),
             ),
