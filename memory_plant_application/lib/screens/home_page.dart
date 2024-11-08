@@ -1,7 +1,14 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
+import 'package:memory_plant_application/screens/add_page.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
+import 'package:memory_plant_application/widgets/edit_name.dart';
+import 'package:memory_plant_application/widgets/setting_list.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:memory_plant_application/screens/read_memory_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,13 +18,128 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int nodata = 0;
+  String userName = 'Guest'; // Default name
+  List<Map<String, dynamic>> memoryList = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserName();
+    _loadMemoryData();
+  }
+
+  Future<void> _loadUserName() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userName = prefs.getString('user_name') ?? 'Guest';
+      isLoading = false;
+    });
+  }
+
+  Future<void> _loadMemoryData() async {
+    try {
+      final String response = await rootBundle.loadString(
+        'assets/dummy_json/dummy_memory_list.json',
+      );
+      final List<dynamic> data = json.decode(response);
+      setState(() {
+        memoryList =
+            data.map((item) => Map<String, dynamic>.from(item)).toList();
+        isLoading = false;
+      });
+    } catch (e) {
+      print("Error loading JSON data: $e");
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
     return Scaffold(
-      body: nodata == 0 ? _buildEmptyState() : _buildMemoryList(),
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : _buildMemoryList(),
     );
+  }
+
+  Widget _buildMemoryList() {
+    bool isKorean = StartPage.selectedLanguage == 'ko';
+
+    return memoryList.isEmpty
+        ? _buildEmptyState()
+        : ListView.builder(
+            itemCount: memoryList.length,
+            itemBuilder: (context, index) {
+              final memory = memoryList[index];
+              return SwipeActionCell(
+                key: Key(index.toString()),
+                trailingActions: [
+                  SwipeAction(
+                    onTap: (CompletionHandler handler) async {
+                      final confirmed = await _confirmDelete(context);
+                      if (confirmed ?? false) {
+                        setState(() {
+                          memoryList.removeAt(index);
+                        });
+                      }
+                    },
+                    color: Colors.red,
+                    content: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.delete, color: Colors.white),
+                        Text(
+                          StartPage.selectedLanguage == 'ko' ? '삭제' : 'Delete',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SwipeAction(
+                    onTap: (CompletionHandler handler) async {
+                      _editMemory(index);
+                    },
+                    color: Colors.blue,
+                    content: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.edit, color: Colors.white),
+                        Text(
+                          StartPage.selectedLanguage == 'ko' ? '수정' : 'Edit',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+                child: ListTile(
+                  title: Text(memory['title'] ?? 'Untitled Memory'),
+                  subtitle: Text(
+                    memory['contents'] ?? 'No content available',
+                    maxLines: 1, // 첫 번째 줄만 표시
+                    overflow: TextOverflow.ellipsis, // 남은 내용은 ...으로 표시
+                  ),
+                  trailing: const Icon(Icons.arrow_forward),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ReadMemoryPage(
+                              memory: memory)), // ReadMemoryPage로 이동
+                    );
+                  },
+                ),
+              );
+            },
+          );
   }
 
   Widget _buildEmptyState() {
@@ -32,7 +154,7 @@ class _HomePageState extends State<HomePage> {
             height: 150,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppStyles.primaryColor, // 배경 색상
+              color: AppStyles.primaryColor,
             ),
             child: const Icon(
               Icons.block,
@@ -48,9 +170,10 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
-              setState(() {
-                nodata += 10;
-              });
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AddPage()),
+              ); // 추가하기 누르면 AddPage로 넘어가게 함
             },
             child: Text(
               isKorean ? "추가하기" : "Add here",
@@ -59,76 +182,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildMemoryList() {
-    bool isKorean = StartPage.selectedLanguage == 'ko';
-
-    return ListView.builder(
-      itemCount: nodata,
-      itemBuilder: (context, index) {
-        return SwipeActionCell(
-          key: Key(index.toString()),
-          trailingActions: [
-            SwipeAction(
-              onTap: (CompletionHandler handler) async {
-                final confirmed = await _confirmDelete(context);
-                if (confirmed ?? false) {
-                  setState(() {
-                    nodata -= 1;
-                  });
-                }
-              },
-              color: Colors.red,
-              content: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.delete, color: Colors.white),
-                  Text(
-                    StartPage.selectedLanguage == 'ko' ? '삭제' : 'Delete',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ],
-              ),
-            ),
-            SwipeAction(
-              onTap: (CompletionHandler handler) async {
-                _editMemory(index);
-              },
-              color: Colors.blue,
-              content: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.edit, color: Colors.white),
-                  Text(
-                    StartPage.selectedLanguage == 'ko' ? '수정' : 'Edit',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ],
-              ),
-            ),
-          ],
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Card(
-              elevation: 4,
-              child: ListTile(
-                title: Text('Memory ${index + 1}'),
-                subtitle: Text('This is memory item #${index + 1}'),
-                trailing: const Icon(Icons.arrow_forward),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => DetailPage(index: index)),
-                  );
-                },
-              ),
-            ),
-          ),
-        );
-      },
     );
   }
 

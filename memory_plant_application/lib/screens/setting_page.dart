@@ -14,14 +14,27 @@ class SettingPage extends StatelessWidget {
     final isKorean = StartPage.selectedLanguage == 'ko';
 
     return Scaffold(
+      backgroundColor:Colors.white ,
         appBar: AppBar(
+          backgroundColor:Colors.white,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context); // go back
           },
         ),
-          title: Text(isKorean ? "⚙️ 설정" : "⚙️ Settings"), //일단 임티로 대체 흑
+          //title: Text(isKorean ? "설정" : "Settings"), //일단 임티로 대체 흑
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Spacer(),
+              Icon(Icons.settings_outlined),
+              Text(
+                isKorean ? "설정" : "Settings",
+              ),
+              const Spacer(flex: 2),
+            ],
+          ),
         ),
         body: Stack(
           children: [
