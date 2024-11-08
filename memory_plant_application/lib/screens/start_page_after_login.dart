@@ -4,6 +4,7 @@ import 'package:memory_plant_application/screens/start_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
 import 'package:memory_plant_application/widgets/setting_list.dart';
+
 /*
 class StartPageAfterLogin extends StatefulWidget {
   const StartPageAfterLogin({super.key});
@@ -135,13 +136,27 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
         updateName(); // 이전 페이지에서 돌아올 때 이름 재로드
         return true; // 페이지가 정상적으로 돌아갈 수 있도록 true 반환
       },
-
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
+          toolbarHeight: 100, // AppBar 높이 조정
           backgroundColor: Colors.white,
-          automaticallyImplyLeading: false,
-          title: Text(isKorean ? "기억발전소" : "memory plant"),
+          elevation: 0, // 그림자 제거
+          flexibleSpace: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: 40), // AppBar에서 텍스트를 아래로 이동
+              Text(
+                isKorean ? "기억발전소" : "memory plant",
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
         body: GestureDetector(
           onTap: () {

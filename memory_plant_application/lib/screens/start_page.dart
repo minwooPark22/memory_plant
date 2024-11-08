@@ -31,7 +31,7 @@ class _StartPageState extends State<StartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:Colors.white,
+      backgroundColor: Colors.white,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -68,7 +68,8 @@ class _StartPageState extends State<StartPage> {
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size(250, 50),
                 ),
-                child: Text(buttonTexts[currentButtonIndex][0],
+                child: Text(
+                  buttonTexts[currentButtonIndex][0],
                   style: TextStyle(color: AppStyles.maindeepblue),
                 ),
               ),
@@ -94,7 +95,8 @@ class _StartPageState extends State<StartPage> {
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size(250, 50),
                 ),
-                child: Text(buttonTexts[currentButtonIndex][1],
+                child: Text(
+                  buttonTexts[currentButtonIndex][1],
                   style: TextStyle(color: AppStyles.maindeepblue),
                 ),
               ),
@@ -120,8 +122,8 @@ class _StartPageState extends State<StartPage> {
             // 언어 선택 후 메시지 표시
             Text(
               StartPage.selectedLanguage == 'ko'
-                  ? '로그인할 계정을 선택해주세요'
-                  : 'Select the account to log in',
+                  ? '로그인할 계정을 선택해주세요\n'
+                  : 'Select the account to log in\n',
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w300,

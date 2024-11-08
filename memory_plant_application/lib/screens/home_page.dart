@@ -58,87 +58,112 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
-      return Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
-    }
-    return Scaffold(
-      body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : _buildMemoryList(),
-    );
+    return isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : _buildMemoryList();
   }
 
   Widget _buildMemoryList() {
-    bool isKorean = StartPage.selectedLanguage == 'ko';
-
     return memoryList.isEmpty
         ? _buildEmptyState()
-        : ListView.builder(
-            itemCount: memoryList.length,
-            itemBuilder: (context, index) {
-              final memory = memoryList[index];
-              return SwipeActionCell(
-                key: Key(index.toString()),
-                trailingActions: [
-                  SwipeAction(
-                    onTap: (CompletionHandler handler) async {
-                      final confirmed = await _confirmDelete(context);
-                      if (confirmed ?? false) {
-                        setState(() {
-                          memoryList.removeAt(index);
-                        });
-                      }
-                    },
-                    color: Colors.red,
-                    content: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.delete, color: Colors.white),
-                        Text(
-                          StartPage.selectedLanguage == 'ko' ? '삭제' : 'Delete',
-                          style: TextStyle(color: Colors.white),
+        : Align(
+            alignment: Alignment.center,
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.95, // 90퍼센트 넓이 차지
+              // color: Colors.white, // 여기 색깔이 왜 안바뀌냐 야팔
+              child: ListView.builder(
+                itemCount: memoryList.length,
+                itemBuilder: (context, index) {
+                  final memory = memoryList[index];
+                  return SwipeActionCell(
+                    key: Key(index.toString()),
+                    trailingActions: [
+                      SwipeAction(
+                        onTap: (CompletionHandler handler) async {
+                          final confirmed = await _confirmDelete(context);
+                          if (confirmed ?? false) {
+                            setState(() {
+                              memoryList.removeAt(index);
+                            });
+                          }
+                        },
+                        color: Colors.red,
+                        content: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.delete, color: Colors.white),
+                            Text(
+                              StartPage.selectedLanguage == 'ko'
+                                  ? '삭제'
+                                  : 'Delete',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                  SwipeAction(
-                    onTap: (CompletionHandler handler) async {
-                      _editMemory(index);
-                    },
-                    color: Colors.blue,
-                    content: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.edit, color: Colors.white),
-                        Text(
-                          StartPage.selectedLanguage == 'ko' ? '수정' : 'Edit',
-                          style: TextStyle(color: Colors.white),
+                      ),
+                      SwipeAction(
+                        onTap: (CompletionHandler handler) async {
+                          _editMemory(index);
+                        },
+                        color: Colors.blue,
+                        content: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.edit, color: Colors.white),
+                            Text(
+                              StartPage.selectedLanguage == 'ko'
+                                  ? '수정'
+                                  : 'Edit',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
+                    ],
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 8.0), // Add some vertical margin
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical:
+                              8.0), // Horizontal padding is more, vertical padding is less
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade100, // White background color
+                        borderRadius: BorderRadius.circular(
+                            25.0), // Optional: Rounded corners
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 1,
+                            blurRadius: 5,
+                          ),
+                        ],
+                      ),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 12.0), // Reduce horizontal padding here
+                        title: Text(memory['title'] ?? 'Untitled Memory'),
+                        subtitle: Text(
+                          memory['contents'] ?? 'No content available',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        trailing: const Icon(Icons.arrow_forward),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  ReadMemoryPage(memory: memory),
+                            ),
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                ],
-                child: ListTile(
-                  title: Text(memory['title'] ?? 'Untitled Memory'),
-                  subtitle: Text(
-                    memory['contents'] ?? 'No content available',
-                    maxLines: 1, // 첫 번째 줄만 표시
-                    overflow: TextOverflow.ellipsis, // 남은 내용은 ...으로 표시
-                  ),
-                  trailing: const Icon(Icons.arrow_forward),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ReadMemoryPage(
-                              memory: memory)), // ReadMemoryPage로 이동
-                    );
-                  },
-                ),
-              );
-            },
+                  );
+                },
+              ),
+            ),
           );
   }
 
