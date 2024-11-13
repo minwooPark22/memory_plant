@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 import 'package:memory_plant_application/screens/read_memory_page.dart';
+import 'package:memory_plant_application/services/memory_log.dart';
 
 class DiaryTile extends StatelessWidget {
-  final Map<String, dynamic> memory;
+  final MemoryLog memory;
   final int index;
   final Function(int) onDelete;
   final Function(int) onEdit;
@@ -72,15 +73,15 @@ class DiaryTile extends StatelessWidget {
         ],
         backgroundColor: Colors.transparent, // 경계 충돌 방지
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.symmetric(vertical: 5),
           child: ListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
             title: Text(
-              memory['title'] ?? 'Untitled Memory',
+              memory.title ?? 'Untitled Memory',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             subtitle: Text(
-              memory['contents'] ?? 'No content available',
+              memory.contents ?? 'No content available',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),

@@ -6,7 +6,15 @@ import 'package:path_provider/path_provider.dart';
 class MessageLogLogService {
   // JSON 파일 경로를 가져오는 메서드
   Future<String> _getLocalFilePath() async {
-    final directory = await getExternalStorageDirectory();
+    late final directory;
+
+    if (Platform.isAndroid) {
+      // 안드로이드에서 외부 저장소 디렉토리
+      directory = await getExternalStorageDirectory();
+    } else if (Platform.isIOS) {
+      // iOS에서는 Documents 디렉토리를 사용
+      directory = await getApplicationDocumentsDirectory();
+    }
     return '${directory!.path}/chatting_log.json'; // 파일 이름 지정 // 파일 이름 지정
   }
 

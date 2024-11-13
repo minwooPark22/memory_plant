@@ -104,7 +104,7 @@ class _AddPageState extends State<AddPage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => WritePage(
-                        selected_date: _selectedDay ?? DateTime.now()),
+                        selectedDay: _selectedDay ?? DateTime.now()),
                   ),
                 );
               },

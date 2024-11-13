@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:memory_plant_application/widgets/edit_name.dart';
-import 'package:memory_plant_application/widgets/time_setting.dart';
 import 'package:memory_plant_application/screens/start_page_after_login.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
 import 'package:memory_plant_application/widgets/language.dart';
@@ -15,7 +14,7 @@ class SettingsList extends StatefulWidget {
 }
 
 class _SettingsListState extends State<SettingsList> {
-  String userName = ''; //  이름을 저장할 변수
+  String userName = 'Guest'; //  이름을 저장할 변수
 
   @override
   void initState() {
@@ -26,7 +25,7 @@ class _SettingsListState extends State<SettingsList> {
   Future<void> _loadUserName() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      userName = prefs.getString('user_name') ?? '사용자 이름';
+      userName = prefs.getString('user_name') ?? 'Guest';
     });
   }
 
@@ -118,26 +117,6 @@ class _SettingsListState extends State<SettingsList> {
               _loadUserName();
             },
           ),
-
-          ListTile(
-            title: Text(
-              isKorean ? "알람 시간 설정" : "Set an Alarm",
-              style: TextStyle(color: AppStyles.mainblack, fontSize: 14),
-            ),
-            onTap: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return TimeSettingDialog(
-                    onSave: () {
-                      // 알람 시간이 저장된 후 호출할 로직 추가 가능
-                    },
-                  );
-                },
-              );
-            },
-          ),
-
           ListTile(
             title: Text(
               "ENG/KOR",
