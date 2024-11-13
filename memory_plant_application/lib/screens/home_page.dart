@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 import 'package:memory_plant_application/screens/add_page.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
+import 'package:memory_plant_application/services/memory_log.dart';
+import 'package:memory_plant_application/services/memory_log_service.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
 import 'package:memory_plant_application/widgets/edit_name.dart';
 import 'package:memory_plant_application/widgets/setting_list.dart';
@@ -20,7 +22,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String userName = 'Guest'; // Default name
-  List<Map<String, dynamic>> memoryList = [];
+  List<MemoryLog> memoryList = [];
+  MemoryLogService memoryLogService = MemoryLogService();
   bool isLoading = true;
 
   @override
@@ -39,22 +42,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _loadMemoryData() async {
-    try {
-      final String response = await rootBundle.loadString(
-        'assets/dummy_json/dummy_memory_list.json',
-      );
-      final List<dynamic> data = json.decode(response);
-      setState(() {
-        memoryList =
-            data.map((item) => Map<String, dynamic>.from(item)).toList();
-        isLoading = false;
-      });
-    } catch (e) {
-      print("Error loading JSON data: $e");
-      setState(() {
-        isLoading = false;
-      });
-    }
+    final memories = await memoryLogService.loadMemoryLogs();
+    setState(() {
+      memoryList = memories;
+      isLoading = false;
+    });
   }
 
   @override
@@ -71,32 +63,33 @@ class _HomePageState extends State<HomePage> {
     return memoryList.isEmpty
         ? _buildEmptyState()
         : Align(
-            alignment: Alignment.center,
-            child: Container(
-              // width: MediaQuery.of(context).size.width * 0.95, // 90퍼센트 넓이 차지
-              decoration: const BoxDecoration(
-                color: Colors.white, // 컨테이너 배경을 흰색으로 설정
-              ),
-              child: ListView.builder(
-                itemCount: memoryList.length,
-                itemBuilder: (context, index) {
-                  final memory = memoryList[index];
-                  return DiaryTile(
-                    memory: memory,
-                    index: index,
-                    onDelete: _deleteMemory,
-                    onEdit: _editMemory,
-                  );
-                },
-              ),
-            ),
-          );
+      alignment: Alignment.center,
+      child: Container(
+        // width: MediaQuery.of(context).size.width * 0.95, // 90퍼센트 넓이 차지
+        decoration: const BoxDecoration(
+          color: Colors.white, // 컨테이너 배경을 흰색으로 설정
+        ),
+        child: ListView.builder(
+          itemCount: memoryList.length,
+          itemBuilder: (context, index) {
+            final memory = memoryList[index];
+            return DiaryTile(
+              memory: memory,
+              index: index,
+              onDelete: _deleteMemory,
+              onEdit: _editMemory,
+            );
+          },
+        ),
+      ),
+    );
   }
 
   void _deleteMemory(int index) {
     setState(() {
       memoryList.removeAt(index);
     });
+    memoryLogService.saveMemoryLogs(memoryList);
   }
 
   Widget _buildEmptyState() {
@@ -117,18 +110,7 @@ class _HomePageState extends State<HomePage> {
             style: const TextStyle(fontSize: 18),
           ),
           const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const AddPage()),
-              ); // 추가하기 누르면 AddPage로 넘어가게 함
-            },
-            child: Text(
-              isKorean ? "추가하기" : "Add here",
-              style: TextStyle(color: AppStyles.maindeepblue),
-            ),
-          ),
+
         ],
       ),
     );

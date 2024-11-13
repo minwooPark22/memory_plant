@@ -77,31 +77,31 @@ class _ChatbotState extends State<Chatbot> {
       appBar: AppBar(
         backgroundColor: const Color(0xFFA6D1FA),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back,color:Colors.white),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min, // 자식 요소의 크기에 맞게 줄이기
           children: [
-            const Spacer(),
             Image.asset(
               'assets/images/sojang.png',
               height: 40,
             ),
+            const SizedBox(width: 8), // 이미지와 텍스트 사이 간격 조정
             Text(
               isKorean ? "기억관리소장" : "Memory Curator",
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const Spacer(flex: 2),
           ],
         ),
-        centerTitle: false,
+        centerTitle: true,
       ),
       body: Column(
         children: [
@@ -202,7 +202,7 @@ class _ChatbotState extends State<Chatbot> {
                     maxLines: null,
                     textInputAction: TextInputAction.newline,
                     decoration: InputDecoration(
-                      hintText: isKorean ? "메세지 보내기💬" : "Enter your message💬",
+                      hintText: isKorean ? "메세지 보내기" : "message...",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8.0),
                         borderSide: BorderSide(color: AppStyles.primaryColor),

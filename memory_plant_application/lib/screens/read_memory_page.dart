@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:memory_plant_application/services/memory_log.dart';
 
 class ReadMemoryPage extends StatelessWidget {
-  final Map<String, dynamic> memory;
+  final MemoryLog memory;
   const ReadMemoryPage({super.key, required this.memory});
 
   String _formatDate(String timestamp) {
@@ -36,7 +37,7 @@ class ReadMemoryPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
-                memory['title'] ?? 'No Title',
+                memory.title ?? 'No Title',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
             ),
@@ -49,7 +50,7 @@ class ReadMemoryPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
-                _formatDate(memory['timestamp'] ?? ''),
+                _formatDate(memory.timestamp ?? ''),
                 style: TextStyle(fontSize: 16, color: Colors.grey[700]),
               ),
             ),
@@ -64,7 +65,7 @@ class ReadMemoryPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    memory['contents'] ?? 'No Content',
+                    memory.contents ?? 'No Content',
                     style: TextStyle(fontSize: 18),
                   ),
                 ),
