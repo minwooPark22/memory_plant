@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
-import 'package:memory_plant_application/screens/start_page_after_login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
 import 'package:memory_plant_application/widgets/primary_box.dart';
@@ -43,12 +42,7 @@ class _NameInputPageState extends State<NameInputPage> {
   void _submitName() {
     if (_formKey.currentState!.validate()) {
       saveName(); // 이름 저장
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const StartPageAfterLogin(),
-        ),
-      );
+      Navigator.pushNamed(context, "/startPageAfterLogin");
     }
   }
 
@@ -76,7 +70,9 @@ class _NameInputPageState extends State<NameInputPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  StartPage.selectedLanguage == 'ko' ? '기억 발전소' : 'Memory Plant',
+                  StartPage.selectedLanguage == 'ko'
+                      ? '기억 발전소'
+                      : 'Memory Plant',
                   style: const TextStyle(
                     fontSize: 50,
                     fontWeight: FontWeight.bold,
@@ -96,18 +92,23 @@ class _NameInputPageState extends State<NameInputPage> {
                           controller: languageController,
                           maxLength: 20,
                           decoration: InputDecoration(
-                            labelText: StartPage.selectedLanguage == 'ko' ? '이름' : 'full name',
+                            labelText: StartPage.selectedLanguage == 'ko'
+                                ? '이름'
+                                : 'full name',
                             labelStyle: TextStyle(
                               color: AppStyles.maindeepblue,
                             ),
                             border: OutlineInputBorder(
-                              borderSide: BorderSide(color: AppStyles.maindeepblue, width: 1.5),
+                              borderSide: BorderSide(
+                                  color: AppStyles.maindeepblue, width: 1.5),
                             ),
                             enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: AppStyles.maindeepblue, width: 1.5),
+                              borderSide: BorderSide(
+                                  color: AppStyles.maindeepblue, width: 1.5),
                             ),
                             focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: AppStyles.maindeepblue, width: 1.5),
+                              borderSide: BorderSide(
+                                  color: AppStyles.maindeepblue, width: 1.5),
                             ),
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                             counterStyle: TextStyle(
@@ -117,9 +118,10 @@ class _NameInputPageState extends State<NameInputPage> {
                           validator: (value) {
                             if (value == null || value.trim().isEmpty) {
                               setState(() {
-                                _errorMessage = StartPage.selectedLanguage == 'ko'
-                                    ? '이름을 작성해주세요!'
-                                    : 'Please enter your name!';
+                                _errorMessage =
+                                    StartPage.selectedLanguage == 'ko'
+                                        ? '이름을 작성해주세요!'
+                                        : 'Please enter your name!';
                               });
                               return '';
                             }
@@ -136,7 +138,8 @@ class _NameInputPageState extends State<NameInputPage> {
                           padding: const EdgeInsets.only(bottom: 8.0),
                           child: Text(
                             _errorMessage!,
-                            style: const TextStyle(color: Colors.red, fontSize: 12),
+                            style: const TextStyle(
+                                color: Colors.red, fontSize: 12),
                           ),
                         ),
                       const SizedBox(height: 10),
@@ -149,7 +152,9 @@ class _NameInputPageState extends State<NameInputPage> {
                             minimumSize: const Size(250, 50),
                           ),
                           child: Text(
-                            StartPage.selectedLanguage == 'ko' ? '제출' : 'submit',
+                            StartPage.selectedLanguage == 'ko'
+                                ? '제출'
+                                : 'submit',
                             style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,

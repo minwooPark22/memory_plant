@@ -38,7 +38,7 @@ class _SettingsListState extends State<SettingsList> {
       context: context,
       builder: (BuildContext context) {
         return EditNameDialog(
-          currentName: userName ?? 'Guest',
+          currentName: userName,
           onNameSaved: (newName) {
             setState(() {
               userName = newName;
@@ -51,8 +51,6 @@ class _SettingsListState extends State<SettingsList> {
 
   // 로그아웃띠
   Future<void> _logout() async {
-    final prefs = await SharedPreferences.getInstance();
-
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => const StartPage()),
@@ -62,7 +60,6 @@ class _SettingsListState extends State<SettingsList> {
 
   @override
   Widget build(BuildContext context) {
-    final locale = Localizations.localeOf(context);
     final isKorean = StartPage.selectedLanguage == 'ko';
 
     return Container(

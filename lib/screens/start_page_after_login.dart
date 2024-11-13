@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:memory_plant_application/screens/bottom_nav_page.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
@@ -74,10 +73,12 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
       },
       onVerticalDragEnd: (details) {
         if (verticalDragOffset > 150) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const BottomNavPage()),
-          );
+          setState(() {
+            // 화면 전환 전 상태 초기화
+            primaryBoxTopPosition = 0;
+            verticalDragOffset = 0;
+          });
+          Navigator.pushNamed(context, "/bottomNavPage");
         } else {
           setState(() {
             verticalDragOffset = 0;
