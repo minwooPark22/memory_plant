@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:memory_plant_application/screens/name_input_page.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
 
 class StartPage extends StatefulWidget {
@@ -146,11 +145,7 @@ class _StartPageState extends State<StartPage>
                             StartPage.selectedLanguage = 'ko';
                           });
                         } else if (currentButtonIndex == 1) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const NameInputPage()),
-                          );
+                          Navigator.pushNamed(context, "/nameInputPage");
                         }
                         changeButton();
                       },
@@ -174,11 +169,7 @@ class _StartPageState extends State<StartPage>
                             StartPage.selectedLanguage = 'en';
                           });
                         } else if (currentButtonIndex == 1) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const NameInputPage()),
-                          );
+                          Navigator.pushNamed(context, "/nameInputPage");
                         }
                         changeButton();
                       },

@@ -113,20 +113,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-class DetailPage extends StatelessWidget {
-  final int index;
-  const DetailPage({super.key, required this.index});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Detail Page for Memory #${index + 1}'),
-      ),
-      body: Center(
-        child: Text('This is the detail view for Memory #${index + 1}.'),
-      ),
-    );
-  }
-}

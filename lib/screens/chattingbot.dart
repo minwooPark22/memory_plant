@@ -77,12 +77,6 @@ class _ChatbotState extends State<Chatbot> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: const Color(0xFFA6D1FA),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min, // 자식 요소의 크기에 맞게 줄이기
@@ -91,7 +85,6 @@ class _ChatbotState extends State<Chatbot> {
               'assets/images/sojang.png',
               height: 40,
             ),
-            const SizedBox(width: 8), // 이미지와 텍스트 사이 간격 조정
             Text(
               isKorean ? "기억관리소장" : "Memory Curator",
               style: const TextStyle(

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:memory_plant_application/screens/add_page.dart';
 import 'package:memory_plant_application/screens/home_page.dart';
-import 'package:memory_plant_application/screens/setting_page.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
 import 'chattingbot.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
@@ -50,12 +49,7 @@ class _BottomNavPageState extends State<BottomNavPage> {
                     color: Colors.black,
                   ),
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const SettingPage(),
-                      ),
-                    );
+                    Navigator.pushNamed(context, "/settingPage");
                   },
                 ),
               ],

@@ -34,7 +34,6 @@ class _SettingPageState extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
-    final locale = Localizations.localeOf(context);
     final isKorean = StartPage.selectedLanguage == 'ko';
 
     return Scaffold(
