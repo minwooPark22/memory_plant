@@ -85,7 +85,6 @@ class _ChatbotState extends State<Chatbot> {
               'assets/images/sojang.png',
               height: 40,
             ),
-            const SizedBox(width: 8), // 이미지와 텍스트 사이 간격 조정
             Text(
               isKorean ? "기억관리소장" : "Memory Curator",
               style: const TextStyle(
