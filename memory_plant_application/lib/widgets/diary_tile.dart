@@ -6,16 +6,16 @@ import 'package:memory_plant_application/services/memory_log.dart';
 class DiaryTile extends StatelessWidget {
   final MemoryLog memory;
   final int index;
-  final Function(int) onDelete;
+  final Function onDelete;
   final Function(int) onEdit;
 
   const DiaryTile({
-    Key? key,
+    super.key,
     required this.memory,
     required this.index,
     required this.onDelete,
     required this.onEdit,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -33,17 +33,20 @@ class DiaryTile extends StatelessWidget {
         ],
       ),
       child: SwipeActionCell(
-        key: Key(index.toString()),
+        key: Key(memory.timestamp!),
         trailingActions: [
           SwipeAction(
             onTap: (CompletionHandler handler) async {
               final confirmed = await _confirmDelete(context);
               if (confirmed ?? false) {
-                onDelete(index);
+                onDelete(index); // 인덱스를 넘겨서 정확한 항목 삭제
+              }
+              else{
+                await handler(false);
               }
             },
             color: Colors.red,
-            content: Column(
+            content: const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.delete, color: Colors.white),
@@ -59,7 +62,7 @@ class DiaryTile extends StatelessWidget {
               onEdit(index);
             },
             color: Colors.blue,
-            content: Column(
+            content: const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.edit, color: Colors.white),
@@ -78,7 +81,7 @@ class DiaryTile extends StatelessWidget {
             contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
             title: Text(
               memory.title ?? 'Untitled Memory',
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             subtitle: Text(
               memory.contents ?? 'No content available',
