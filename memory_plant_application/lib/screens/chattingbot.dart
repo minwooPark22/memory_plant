@@ -9,7 +9,7 @@ class Chatbot extends StatefulWidget {
   const Chatbot({super.key});
 
   @override
-  _ChatbotState createState() => _ChatbotState();
+  State<Chatbot> createState() => _ChatbotState();
 }
 
 class _ChatbotState extends State<Chatbot> {
@@ -29,7 +29,8 @@ class _ChatbotState extends State<Chatbot> {
 
     if (storedMessages != null) {
       setState(() {
-        messages.addAll(List<Map<String, dynamic>>.from(json.decode(storedMessages)));
+        messages.addAll(
+            List<Map<String, dynamic>>.from(json.decode(storedMessages)));
       });
     }
   }
@@ -77,7 +78,7 @@ class _ChatbotState extends State<Chatbot> {
       appBar: AppBar(
         backgroundColor: const Color(0xFFA6D1FA),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back,color:Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -123,18 +124,20 @@ class _ChatbotState extends State<Chatbot> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                           backgroundColor: Colors.white,
-                          title: Text(isKorean ? "메세지 삭제" : "Delete message",
+                          title: Text(
+                            isKorean ? "메세지 삭제" : "Delete message",
                             textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 17,
-                                fontWeight:FontWeight.bold
-                            ),
+                            style: const TextStyle(
+                                fontSize: 17, fontWeight: FontWeight.bold),
                           ),
-                          content: Text(isKorean ? "메세지를 지우면 복구가 어렵습니다.\n정말로 삭제하시겠습니까?" : "Are you sure you want to delete this message?"),
+                          content: Text(isKorean
+                              ? "메세지를 지우면 복구가 어렵습니다.\n정말로 삭제하시겠습니까?"
+                              : "Are you sure you want to delete this message?"),
                           actions: [
                             TextButton(
                               onPressed: () => Navigator.of(context).pop(),
-                              child: Text(isKorean ? "취소" : "Cencle",
+                              child: Text(
+                                isKorean ? "취소" : "Cencle",
                                 style: TextStyle(color: AppStyles.maindeepblue),
                               ),
                             ),
@@ -143,7 +146,8 @@ class _ChatbotState extends State<Chatbot> {
                                 _deleteMessage(messages.length - 1 - index);
                                 Navigator.of(context).pop();
                               },
-                              child: Text(isKorean ? "삭제" : "Delete",
+                              child: Text(
+                                isKorean ? "삭제" : "Delete",
                                 style: TextStyle(color: AppStyles.maindeepblue),
                               ),
                             ),
@@ -153,15 +157,19 @@ class _ChatbotState extends State<Chatbot> {
                     );
                   },
                   child: Align(
-                    alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+                    alignment:
+                        isMe ? Alignment.centerRight : Alignment.centerLeft,
                     child: Container(
                       constraints: BoxConstraints(
                         maxWidth: MediaQuery.of(context).size.width * 0.6,
                       ),
-                      margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 4.0, horizontal: 8.0),
                       padding: const EdgeInsets.all(10.0),
                       decoration: BoxDecoration(
-                        color: isMe ? const Color(0xFFECECEC) : const Color(0xFFA6D1FA),
+                        color: isMe
+                            ? const Color(0xFFECECEC)
+                            : const Color(0xFFA6D1FA),
                         borderRadius: BorderRadius.circular(12.0),
                         boxShadow: [
                           BoxShadow(
@@ -181,7 +189,8 @@ class _ChatbotState extends State<Chatbot> {
                           ),
                           Text(
                             message['time'],
-                            style: TextStyle(color: Colors.grey[600], fontSize: 10),
+                            style: TextStyle(
+                                color: Colors.grey[600], fontSize: 10),
                           ),
                         ],
                       ),
@@ -219,7 +228,9 @@ class _ChatbotState extends State<Chatbot> {
                   ),
                 ),
                 IconButton(
-                  icon: Image.asset('assets/images/send.png',),
+                  icon: Image.asset(
+                    'assets/images/send.png',
+                  ),
                   onPressed: _sendMessage,
                 ),
               ],

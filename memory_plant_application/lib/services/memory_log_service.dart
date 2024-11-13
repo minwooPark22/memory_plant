@@ -6,8 +6,7 @@ import 'package:path_provider/path_provider.dart';
 class MemoryLogService {
   // JSON 파일 경로를 가져오는 메서드
   Future<String> _getLocalFilePath() async {
-
-    late final directory;
+    late final Directory? directory;
 
     if (Platform.isAndroid) {
       // 안드로이드에서 외부 저장소 디렉토리

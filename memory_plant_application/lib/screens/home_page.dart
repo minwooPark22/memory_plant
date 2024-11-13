@@ -1,16 +1,8 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
-import 'package:memory_plant_application/screens/add_page.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
 import 'package:memory_plant_application/services/memory_log.dart';
 import 'package:memory_plant_application/services/memory_log_service.dart';
-import 'package:memory_plant_application/styles/app_styles.dart';
-import 'package:memory_plant_application/widgets/edit_name.dart';
-import 'package:memory_plant_application/widgets/setting_list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:memory_plant_application/screens/read_memory_page.dart';
 import 'package:memory_plant_application/widgets/diary_tile.dart';
 
 class HomePage extends StatefulWidget {
@@ -47,7 +39,6 @@ class _HomePageState extends State<HomePage> {
       memoryList = memories;
       isLoading = false;
     });
-    print(memoryList[0].title);
   }
 
   @override
@@ -64,26 +55,26 @@ class _HomePageState extends State<HomePage> {
     return memoryList.isEmpty
         ? _buildEmptyState()
         : Align(
-      alignment: Alignment.center,
-      child: Container(
-        // width: MediaQuery.of(context).size.width * 0.95, // 90퍼센트 넓이 차지
-        decoration: const BoxDecoration(
-          color: Colors.white, // 컨테이너 배경을 흰색으로 설정
-        ),
-        child: ListView.builder(
-          itemCount: memoryList.length,
-          itemBuilder: (context, index) {
-            final memory = memoryList[index];
-            return DiaryTile(
-              memory: memory,
-              index: index,
-              onDelete: _deleteMemory,
-              onEdit: _editMemory,
-            );
-          },
-        ),
-      ),
-    );
+            alignment: Alignment.center,
+            child: Container(
+              // width: MediaQuery.of(context).size.width * 0.95, // 90퍼센트 넓이 차지
+              decoration: const BoxDecoration(
+                color: Colors.white, // 컨테이너 배경을 흰색으로 설정
+              ),
+              child: ListView.builder(
+                itemCount: memoryList.length,
+                itemBuilder: (context, index) {
+                  final memory = memoryList[index];
+                  return DiaryTile(
+                    memory: memory,
+                    index: index,
+                    onDelete: _deleteMemory,
+                    onEdit: _editMemory,
+                  );
+                },
+              ),
+            ),
+          );
   }
 
   void _deleteMemory(int index) {
@@ -92,7 +83,6 @@ class _HomePageState extends State<HomePage> {
     });
     memoryLogService.saveMemoryLogs(memoryList);
   }
-
 
   Widget _buildEmptyState() {
     bool isKorean = StartPage.selectedLanguage == 'ko';
@@ -112,39 +102,8 @@ class _HomePageState extends State<HomePage> {
             style: const TextStyle(fontSize: 18),
           ),
           const SizedBox(height: 20),
-
         ],
       ),
-    );
-  }
-
-  Future<bool?> _confirmDelete(BuildContext context) async {
-    bool isKorean = StartPage.selectedLanguage == 'ko';
-
-    return showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(isKorean ? "삭제 확인" : "Delete Confirmation"),
-          content: Text(isKorean
-              ? "이 항목을 삭제하시겠습니까?\n이 작업은 취소할 수 없습니다."
-              : "Are you sure you want to delete this?"),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-              child: Text(isKorean ? "아니요" : "No"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              },
-              child: Text(isKorean ? "예" : "Yes"),
-            ),
-          ],
-        );
-      },
     );
   }
 

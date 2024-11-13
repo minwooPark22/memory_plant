@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:memory_plant_application/screens/home_page.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
 import 'package:memory_plant_application/services/memory_log.dart';
 import 'package:memory_plant_application/services/memory_log_service.dart';
@@ -28,7 +27,6 @@ class _WritePageState extends State<WritePage> {
         timestamp: widget.selectedDay.toString(),
       );
       await memoryLogService.addMemory(newMemory);
-      Navigator.of(context).pop();
     }
 
     return Scaffold(
@@ -48,6 +46,7 @@ class _WritePageState extends State<WritePage> {
           TextButton(
             onPressed: () {
               addMemory();
+              Navigator.of(context).pop();
             },
             child: Text(
               isKorean ? "저장" : "Save",

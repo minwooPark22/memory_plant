@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:memory_plant_application/widgets/edit_name.dart';
-import 'package:memory_plant_application/screens/start_page_after_login.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
 import 'package:memory_plant_application/widgets/language.dart';
 
@@ -28,7 +27,6 @@ class _SettingsListState extends State<SettingsList> {
       userName = prefs.getString('user_name') ?? 'Guest';
     });
   }
-
 
   Future<void> _saveUserName(String newName) async {
     final prefs = await SharedPreferences.getInstance();
@@ -58,10 +56,9 @@ class _SettingsListState extends State<SettingsList> {
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => const StartPage()),
-          (Route<dynamic> route) => false,
+      (Route<dynamic> route) => false,
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +86,8 @@ class _SettingsListState extends State<SettingsList> {
         children: [
           Row(
             children: [
-              Icon(Icons.account_circle, size: 40, color: AppStyles.primaryColor), // 프로필 아이콘
+              Icon(Icons.account_circle,
+                  size: 40, color: AppStyles.primaryColor), // 프로필 아이콘
               const SizedBox(width: 8), // 아이콘과 이름 사이 간격
               Text(
                 userName, // 사용자 이름 표시
@@ -136,7 +134,7 @@ class _SettingsListState extends State<SettingsList> {
               isKorean ? "로그아웃" : "Log-out",
               style: TextStyle(color: AppStyles.mainblack, fontSize: 14),
             ),
-            onTap:  _logout,
+            onTap: _logout,
           ),
 
           ListTile(

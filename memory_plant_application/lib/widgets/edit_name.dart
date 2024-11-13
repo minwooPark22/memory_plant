@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
@@ -8,7 +7,8 @@ class EditNameDialog extends StatefulWidget {
   final String currentName;
   final ValueChanged<String> onNameSaved;
 
-  const EditNameDialog({Key? key, required this.currentName, required this.onNameSaved}) : super(key: key);
+  const EditNameDialog(
+      {super.key, required this.currentName, required this.onNameSaved});
 
   @override
   _EditNameDialogState createState() => _EditNameDialogState();
@@ -35,7 +35,9 @@ class _EditNameDialogState extends State<EditNameDialog> {
 
     if (name.isEmpty) {
       setState(() {
-        _errorMessage = StartPage.selectedLanguage == 'ko' ? '이름을 작성해주세요!' : 'Please enter your name!';
+        _errorMessage = StartPage.selectedLanguage == 'ko'
+            ? '이름을 작성해주세요!'
+            : 'Please enter your name!';
       });
       return;
     }
@@ -78,14 +80,14 @@ class _EditNameDialogState extends State<EditNameDialog> {
               ),
               suffixIcon: _nameController.text.isNotEmpty
                   ? IconButton(
-                icon: Icon(Icons.clear, color: Colors.grey),
-                onPressed: () {
-                  _nameController.clear();
-                  setState(() {
-                    _errorMessage = null; // 에러 메시지 초기화
-                  });
-                },
-              )
+                      icon: const Icon(Icons.clear, color: Colors.grey),
+                      onPressed: () {
+                        _nameController.clear();
+                        setState(() {
+                          _errorMessage = null; // 에러 메시지 초기화
+                        });
+                      },
+                    )
                   : null,
             ),
             onChanged: (text) {

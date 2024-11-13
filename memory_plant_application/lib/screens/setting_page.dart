@@ -47,12 +47,12 @@ class _SettingPageState extends State<SettingPage> {
         ),
         centerTitle: true,
       ),
-      body: Stack(
+      body: const Stack(
         children: [
-          const BlueBox(),
+          BlueBox(),
           Padding(
-            padding: const EdgeInsets.only(top: 32.0),
-            child: const SettingsList(),
+            padding: EdgeInsets.only(top: 32.0),
+            child: SettingsList(),
           ),
         ],
       ),
