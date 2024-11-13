@@ -47,6 +47,7 @@ class _HomePageState extends State<HomePage> {
       memoryList = memories;
       isLoading = false;
     });
+    print(memoryList[0].title);
   }
 
   @override
@@ -87,10 +88,11 @@ class _HomePageState extends State<HomePage> {
 
   void _deleteMemory(int index) {
     setState(() {
-      memoryList.removeAt(index);
+      memoryList.removeAt(index); // 인덱스를 사용해 삭제
     });
     memoryLogService.saveMemoryLogs(memoryList);
   }
+
 
   Widget _buildEmptyState() {
     bool isKorean = StartPage.selectedLanguage == 'ko';
