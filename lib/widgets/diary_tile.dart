@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 import 'package:memory_plant_application/screens/read_memory_page.dart';
 import 'package:memory_plant_application/services/memory_log.dart';
+import 'package:memory_plant_application/styles/app_styles.dart';
 
 class DiaryTile extends StatelessWidget {
   final MemoryLog memory;
@@ -22,7 +23,9 @@ class DiaryTile extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: memory.isUser == false
+            ? AppStyles.primaryColor
+            : Colors.white,
         borderRadius: BorderRadius.circular(25.0),
         boxShadow: [
           BoxShadow(

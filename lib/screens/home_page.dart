@@ -4,7 +4,6 @@ import 'package:memory_plant_application/services/memory_log.dart';
 import 'package:memory_plant_application/services/memory_log_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:memory_plant_application/widgets/diary_tile.dart';
-import 'package:memory_plant_application/styles/app_styles.dart';
 import 'package:intl/intl.dart'; // 날짜 처리를 위한 패키지
 
 class HomePage extends StatefulWidget {
@@ -37,11 +36,15 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _loadMemoryData() async {
     final memories = await memoryLogService.loadMemoryLogs();
+
     setState(() {
-      // timestamp 순서로 정렬
       memoryList = memories
-        ..sort((a, b) => DateTime.parse(b.timestamp!)
-            .compareTo(DateTime.parse(a.timestamp!)));
+      ..sort((a, b) {
+        final dateA = DateTime.parse(a.timestamp!);
+        final dateB = DateTime.parse(b.timestamp!);
+
+        return dateB.compareTo(dateA); // timestamp 기준 내림차순 정렬
+      });
       isLoading = false;
     });
   }
@@ -76,16 +79,11 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (showMonthSeparator) _buildMonthSeparator(currentMonth),
-            Container(
-              color: memory.isUser == false
-                  ? AppStyles.primaryColor.withOpacity(0.2) // 파란색 배경 적용
-                  : Colors.transparent,         // 기본 배경
-              child: DiaryTile(
-                memory: memory,
-                index: index,
-                onDelete: _deleteMemory,
-                onEdit: _editMemory,
-              ),
+            DiaryTile(
+              memory: memory,
+              index: index,
+              onDelete: _deleteMemory,
+              onEdit: _editMemory,
             ),
           ],
         );
@@ -93,7 +91,6 @@ class _HomePageState extends State<HomePage> {
       separatorBuilder: (context, index) => const SizedBox(height: 8), // 항목 간 간격
     );
   }
-
 
   void _deleteMemory(int index) {
     setState(() {
