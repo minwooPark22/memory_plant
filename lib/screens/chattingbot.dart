@@ -1,66 +1,126 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
+import 'package:memory_plant_application/services/groq_service.dart';
+import 'package:memory_plant_application/services/message_log_service.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
+import '../services/message_log.dart';
 
 class Chatbot extends StatefulWidget {
   const Chatbot({super.key});
 
   @override
-  State<Chatbot> createState() => _ChatbotState();
+  _ChatbotState createState() => _ChatbotState();
 }
 
 class _ChatbotState extends State<Chatbot> {
-  final List<Map<String, dynamic>> messages = [];
+  final List<MessageLog> messages = [];
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
-
+  final MessageLogService _logService = MessageLogService();
+  final GroqService _groqService = GroqService();
   @override
   void initState() {
     super.initState();
     _loadMessages();
   }
 
+  // 메시지 로드
   Future<void> _loadMessages() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? storedMessages = prefs.getString('messages');
-
-    if (storedMessages != null) {
+    try {
+      final loadedMessages = await _logService.loadMessageLogs();
       setState(() {
-        messages.addAll(
-            List<Map<String, dynamic>>.from(json.decode(storedMessages)));
+        messages.addAll(loadedMessages);
       });
+    } catch (e) {
+      debugPrint("Failed to load messages: $e");
     }
   }
 
+  // 메시지 저장
   Future<void> _saveMessages() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('messages', json.encode(messages));
+    try {
+      await _logService.saveMessageLogs(messages);
+    } catch (e) {
+      debugPrint("Failed to save messages: $e");
+    }
   }
 
-  void _sendMessage() {
+  // 메시지 보내기
+  void _sendMessage() async {
     if (_controller.text.isNotEmpty) {
+      final now = DateTime.now();
+      final newMessage = MessageLog(
+        content: _controller.text,
+        time: DateFormat('hh:mm a').format(now),
+        date: DateFormat('yyyy-MM-dd').format(now),
+        isSentByMe: true,
+      );
+
       setState(() {
-        messages.add({
-          'text': _controller.text,
-          'isMe': true,
-          'time': DateFormat('hh:mm a').format(DateTime.now()),
-        });
+        messages.add(newMessage);
         _controller.clear();
       });
-      _saveMessages();
+      _closeKeyboard();
+      try {
+        final botResponse = await _groqService.sendMessage(newMessage.content!);
+        final botMessage = MessageLog(
+          content: botResponse,
+          time: DateFormat('hh:mm a').format(now),
+          date: DateFormat('yyyy-MM-dd').format(now),
+          isSentByMe: false,
+        );
 
-      FocusScope.of(context).requestFocus(_focusNode);
+        setState(() {
+          messages.add(botMessage);
+        });
+      } catch (e) {
+        debugPrint("Failed to get bot response: $e");
+      }
+      _saveMessages();
     }
   }
 
+  // 메시지 삭제
   void _deleteMessage(int index) {
-    setState(() {
-      messages.removeAt(index);
-    });
-    _saveMessages();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("삭제 확인"),
+          content: Text("정말 이 메시지를 삭제하시겠습니까?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // "아니오"를 눌렀을 때 다이얼로그 닫기
+              },
+              child: Text("아니오"),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  messages.removeAt(index);
+                });
+                _saveMessages();
+                Navigator.of(context).pop(); // "예"를 눌렀을 때 다이얼로그 닫고 삭제
+              },
+              child: Text("예"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // 키보드 닫기
+  void _closeKeyboard() {
+    FocusScope.of(context).unfocus();
+  }
+
+  // 날짜 형식화
+  String _formatDate(String date) {
+    DateTime parsedDate = DateFormat('yyyy-MM-dd').parse(date);
+    return DateFormat('yyyy년 MM월 dd일').format(parsedDate);
   }
 
   @override
@@ -76,158 +136,159 @@ class _ChatbotState extends State<Chatbot> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color(0xFFA6D1FA),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min, // 자식 요소의 크기에 맞게 줄이기
-          children: [
-            Image.asset(
-              'assets/images/sojang.png',
-              height: 40,
-            ),
-            Text(
-              isKorean ? "기억관리소장" : "Memory Curator",
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
+        backgroundColor: AppStyles.primaryColor,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context); // 이전 화면으로 돌아가기
+          },
         ),
-        centerTitle: true,
+        title: _buildAppBarTitle(isKorean),
+        centerTitle: false,
+        actions: [
+          // 나가기 버튼 제거
+        ],
       ),
       body: Column(
         children: [
+          // 메시지 리스트
+          Expanded(child: _buildMessageList()),
+
+          // 메시지 입력 필드
+          _buildMessageInput(isKorean),
+        ],
+      ),
+    );
+  }
+
+  // 앱바 타이틀 구성
+  Widget _buildAppBarTitle(bool isKorean) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Spacer(),
+        Image.asset(
+          'assets/images/sojang.png',
+          height: 40,
+        ),
+        Text(
+          isKorean ? "기억관리소장" : "Memory Curator",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const Spacer(flex: 2),
+      ],
+    );
+  }
+
+  // 메시지 리스트 구성
+  Widget _buildMessageList() {
+    return ListView.builder(
+      reverse: true,
+      itemCount: messages.length,
+      itemBuilder: (context, index) {
+        final message = messages[messages.length - 1 - index];
+        final bool isMe = message.isSentByMe ?? false;
+        bool showDateSeparator = _shouldShowDateSeparator(index);
+
+        return Column(
+          children: [
+            if (showDateSeparator)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Text(
+                  _formatDate(message.date!),
+                  style: TextStyle(color: AppStyles.textColor),
+                ),
+              ),
+            GestureDetector(
+              onLongPress: () => _deleteMessage(messages.length - 1 - index), // 길게 누르면 삭제
+              child: Align(
+                alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+                child: _buildMessageBubble(message, isMe),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // 날짜 구분 여부 판단
+  bool _shouldShowDateSeparator(int index) {
+    return index == 0 ||
+        (index > 0 &&
+            _formatDate(messages[messages.length - 1 - index].date!) !=
+                _formatDate(messages[messages.length - index].date!));
+  }
+
+  // 메시지 버블 구성
+  Widget _buildMessageBubble(MessageLog message, bool isMe) {
+    return Container(
+      constraints: BoxConstraints(
+        maxWidth: MediaQuery.of(context).size.width * 0.6,
+      ),
+      margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+      padding: const EdgeInsets.all(10.0),
+      decoration: BoxDecoration(
+        color: isMe ? AppStyles.maingray : AppStyles.maindeepblue,
+        borderRadius: BorderRadius.circular(12.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 1,
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Text(
+        message.content ?? "(빈 메시지)",
+        style: isMe ? TextStyle(color: Colors.black) : TextStyle(color: Colors.white),
+      ),
+    );
+  }
+
+  // 메시지 입력 필드
+  Widget _buildMessageInput(bool isKorean) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
           Expanded(
-            child: ListView.builder(
-              reverse: true,
-              itemCount: messages.length,
-              itemBuilder: (context, index) {
-                final message = messages[messages.length - 1 - index];
-                bool isMe = message['isMe'];
-                return GestureDetector(
-                  onLongPress: () {
-                    // 삭제 확인 다이얼로그 표시
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          backgroundColor: Colors.white,
-                          title: Text(
-                            isKorean ? "메세지 삭제" : "Delete message",
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                                fontSize: 17, fontWeight: FontWeight.bold),
-                          ),
-                          content: Text(isKorean
-                              ? "메세지를 지우면 복구가 어렵습니다.\n정말로 삭제하시겠습니까?"
-                              : "Are you sure you want to delete this message?"),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.of(context).pop(),
-                              child: Text(
-                                isKorean ? "취소" : "Cencle",
-                                style: TextStyle(color: AppStyles.maindeepblue),
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                _deleteMessage(messages.length - 1 - index);
-                                Navigator.of(context).pop();
-                              },
-                              child: Text(
-                                isKorean ? "삭제" : "Delete",
-                                style: TextStyle(color: AppStyles.maindeepblue),
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                  child: Align(
-                    alignment:
-                        isMe ? Alignment.centerRight : Alignment.centerLeft,
-                    child: Container(
-                      constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width * 0.6,
-                      ),
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 4.0, horizontal: 8.0),
-                      padding: const EdgeInsets.all(10.0),
-                      decoration: BoxDecoration(
-                        color: isMe
-                            ? const Color(0xFFECECEC)
-                            : const Color(0xFFA6D1FA),
-                        borderRadius: BorderRadius.circular(12.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 1,
-                            blurRadius: 4,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            message['text'],
-                            style: const TextStyle(color: Colors.black),
-                          ),
-                          Text(
-                            message['time'],
-                            style: TextStyle(
-                                color: Colors.grey[600], fontSize: 10),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
+            child: TextField(
+              controller: _controller,
+              focusNode: _focusNode,
+              maxLines: null,
+              maxLength: 500,
+              textInputAction: TextInputAction.newline,
+              decoration: InputDecoration(
+                hintText: isKorean ? "메세지 보내기" : "Enter your message",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: BorderSide(color: AppStyles.primaryColor),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: BorderSide(color: AppStyles.maindeepblue),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: BorderSide(color: AppStyles.primaryColor),
+                ),
+              ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _controller,
-                    focusNode: _focusNode,
-                    maxLines: null,
-                    textInputAction: TextInputAction.newline,
-                    decoration: InputDecoration(
-                      hintText: isKorean ? "메세지 보내기" : "message...",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                        borderSide: BorderSide(color: AppStyles.primaryColor),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                        borderSide: BorderSide(color: AppStyles.maindeepblue),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0), // 테두리 각도 설정
-                        borderSide: BorderSide(color: AppStyles.primaryColor),
-                      ),
-                    ),
-                  ),
-                ),
-                IconButton(
-                  icon: Image.asset(
-                    'assets/images/send.png',
-                  ),
-                  onPressed: _sendMessage,
-                ),
-              ],
+          IconButton(
+            icon: Image.asset(
+              'assets/images/send.png',
+              width: 24,
+              height: 24,
             ),
+            onPressed: _sendMessage,
           ),
         ],
       ),
