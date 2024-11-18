@@ -62,6 +62,7 @@ class DiaryTile extends StatelessWidget {
           ),
           SwipeAction(
             onTap: (CompletionHandler handler) async {
+              handler(false);
               onEdit(index);
             },
             color: Colors.blue,

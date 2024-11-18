@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memory_plant_application/screens/edit_memory_page.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
 import 'package:memory_plant_application/services/memory_log.dart';
 import 'package:memory_plant_application/services/memory_log_service.dart';
@@ -99,6 +100,22 @@ class _HomePageState extends State<HomePage> {
     memoryLogService.saveMemoryLogs(memoryList);
   }
 
+  void _editMemory(int index) async {
+    final updatedMemory = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditMemoryPage(memory: memoryList[index]),
+      ),
+    );
+
+    if (updatedMemory != null && updatedMemory is MemoryLog) {
+      setState(() {
+        memoryList[index] = updatedMemory; // 수정된 데이터 반영
+      });
+      memoryLogService.saveMemoryLogs(memoryList); // 수정된 데이터를 저장
+    }
+  }
+
   Widget _buildEmptyState() {
     bool isKorean = StartPage.selectedLanguage == 'ko';
 
@@ -119,12 +136,6 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(height: 20),
         ],
       ),
-    );
-  }
-
-  void _editMemory(int index) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Editing memory: Memory #${index + 1}')),
     );
   }
 
