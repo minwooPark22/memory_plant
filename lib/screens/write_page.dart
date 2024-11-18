@@ -36,7 +36,7 @@ class _WritePageState extends State<WritePage> {
         backgroundColor: Colors.white,
         elevation: 0, // 그림자 제거
         title: Text(
-          isKorean ? "기억발전소" : "Memory Plant",
+          isKorean ? "새 기억 추가" : "Add new memory",
           style: const TextStyle(
             fontWeight: FontWeight.w700,
             color: Colors.black,

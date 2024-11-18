@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:memory_plant_application/screens/start_page.dart';
 import 'package:memory_plant_application/services/memory_log.dart';
 
 class EditMemoryPage extends StatefulWidget {
@@ -49,60 +50,68 @@ class _EditMemoryPageState extends State<EditMemoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isKorean = StartPage.selectedLanguage == 'ko';
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: const Text('Edit Memory', style: TextStyle(color: Colors.black)),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.save, color: Colors.black),
-            onPressed: _saveChanges,
+        elevation: 0,
+        title: Text(
+          isKorean ? "기억 고치기" : "Edit memory",
+          style: const TextStyle(
+            fontWeight: FontWeight.w700,
+            color: Colors.black,
           ),
-        ],
-        iconTheme: const IconThemeData(color: Colors.black),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 16),
-            TextField(
-              controller: _titleController,
-              decoration: const InputDecoration(
-                labelText: 'Title',
-                border: OutlineInputBorder(),
-              ),
+        ),
+        centerTitle: true,
+        actions: [
+          TextButton(
+            onPressed: _saveChanges,
+            child: Text(
+              isKorean ? "저장" : "Save",
               style: const TextStyle(
-                fontSize: 24,
+                color: Colors.black,
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 8),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(12),
+          ),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              _formatDate(widget.memory.timestamp),
+              style: const TextStyle(
+                fontSize: 21,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
               ),
-              child: Text(
-                _formatDate(widget.memory.timestamp),
-                style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+            ),
+            TextField(
+              controller: _titleController,
+              style: const TextStyle(
+                fontSize: 21,
+                fontWeight: FontWeight.w700,
+              ),
+              decoration: InputDecoration(
+                border: InputBorder.none,
               ),
             ),
             const SizedBox(height: 16),
             Expanded(
               child: TextField(
                 controller: _contentController,
-                decoration: const InputDecoration(
-                  labelText: 'Content',
-                  border: OutlineInputBorder(),
-                ),
                 maxLines: null,
                 expands: true,
-                style: const TextStyle(fontSize: 18),
+                style: const TextStyle(fontSize: 16),
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                ),
               ),
             ),
           ],
