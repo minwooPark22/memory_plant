@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:memory_plant_application/services/message_log.dart';
 import 'package:path_provider/path_provider.dart';
 
-class MessageLogLogService {
+class MessageLogService {
   // JSON 파일 경로를 가져오는 메서드
   Future<String> _getLocalFilePath() async {
     late final directory;

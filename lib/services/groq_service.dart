@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class GroqService {
-  final String apiKey = "apikey 넣을곳"; // Replace with your actual API key
+  final String apiKey = "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"; // Replace with your actual API key
 
   Future<String> sendMessage(String messageContent) async {
     final url = Uri.parse("https://api.groq.com/openai/v1/chat/completions");
