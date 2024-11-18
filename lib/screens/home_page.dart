@@ -4,6 +4,7 @@ import 'package:memory_plant_application/services/memory_log.dart';
 import 'package:memory_plant_application/services/memory_log_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:memory_plant_application/widgets/diary_tile.dart';
+import 'package:intl/intl.dart'; // 날짜 처리를 위한 패키지
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -35,8 +36,15 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _loadMemoryData() async {
     final memories = await memoryLogService.loadMemoryLogs();
+
     setState(() {
-      memoryList = memories;
+      memoryList = memories
+      ..sort((a, b) {
+        final dateA = DateTime.parse(a.timestamp!);
+        final dateB = DateTime.parse(b.timestamp!);
+
+        return dateB.compareTo(dateA); // timestamp 기준 내림차순 정렬
+      });
       isLoading = false;
     });
   }
@@ -44,7 +52,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // 전체 배경색을 흰색으로 설정
+      backgroundColor: Colors.white,
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : _buildMemoryList(),
@@ -52,34 +60,41 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildMemoryList() {
-    return memoryList.isEmpty
-        ? _buildEmptyState()
-        : Align(
-            alignment: Alignment.center,
-            child: Container(
-              // width: MediaQuery.of(context).size.width * 0.95, // 90퍼센트 넓이 차지
-              decoration: const BoxDecoration(
-                color: Colors.white, // 컨테이너 배경을 흰색으로 설정
-              ),
-              child: ListView.builder(
-                itemCount: memoryList.length,
-                itemBuilder: (context, index) {
-                  final memory = memoryList[index];
-                  return DiaryTile(
-                    memory: memory,
-                    index: index,
-                    onDelete: _deleteMemory,
-                    onEdit: _editMemory,
-                  );
-                },
-              ),
+    if (memoryList.isEmpty) {
+      return _buildEmptyState();
+    }
+
+    return ListView.separated(
+      itemCount: memoryList.length,
+      itemBuilder: (context, index) {
+        final memory = memoryList[index];
+        final currentMonth = _getMonthFromTimestamp(memory.timestamp!);
+
+        // 첫 번째 항목이거나, 이전 항목과 월이 다르면 구분선 추가
+        bool showMonthSeparator = (index == 0) ||
+            (_getMonthFromTimestamp(memoryList[index - 1].timestamp!) !=
+                currentMonth);
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (showMonthSeparator) _buildMonthSeparator(currentMonth),
+            DiaryTile(
+              memory: memory,
+              index: index,
+              onDelete: _deleteMemory,
+              onEdit: _editMemory,
             ),
-          );
+          ],
+        );
+      },
+      separatorBuilder: (context, index) => const SizedBox(height: 8), // 항목 간 간격
+    );
   }
 
   void _deleteMemory(int index) {
     setState(() {
-      memoryList.removeAt(index); // 인덱스를 사용해 삭제
+      memoryList.removeAt(index);
     });
     memoryLogService.saveMemoryLogs(memoryList);
   }
@@ -110,6 +125,27 @@ class _HomePageState extends State<HomePage> {
   void _editMemory(int index) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Editing memory: Memory #${index + 1}')),
+    );
+  }
+
+  // Helper: 구분선 위에 표시할 월 반환
+  String _getMonthFromTimestamp(String timestamp) {
+    final date = DateTime.parse(timestamp);
+    return DateFormat.yMMMM().format(date); // 예: "November 2024"
+  }
+
+  // Helper: 월별 구분선 위젯 생성
+  Widget _buildMonthSeparator(String month) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      child: Text(
+        month,
+        style: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: Colors.black87,
+        ),
+      ),
     );
   }
 }

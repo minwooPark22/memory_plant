@@ -25,6 +25,7 @@ class _WritePageState extends State<WritePage> {
         title: _titleController.text,
         contents: _contentController.text,
         timestamp: widget.selectedDay.toString(),
+        isUser: true // 작성 페이지에서 쓴 글은 무조건 isUser 가 true
       );
       await memoryLogService.addMemory(newMemory);
     }
@@ -46,7 +47,7 @@ class _WritePageState extends State<WritePage> {
           TextButton(
             onPressed: () {
               addMemory();
-              Navigator.of(context).pop();
+              Navigator.of(context).pop(); // 저장 누르면 add page 말고 home page로 넘어가면 좋을 듯?
             },
             child: Text(
               isKorean ? "저장" : "Save",
