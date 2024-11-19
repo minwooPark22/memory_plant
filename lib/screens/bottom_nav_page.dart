@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:fluentui_icons/fluentui_icons.dart';
+import 'package:memory_plant_application/providers/navigation_provider.dart';
 import 'package:memory_plant_application/screens/add_page.dart';
 import 'package:memory_plant_application/screens/home_page.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
 import 'chattingbot.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
+import 'package:provider/provider.dart';
 
 class BottomNavPage extends StatefulWidget {
   const BottomNavPage({super.key});
@@ -20,20 +22,17 @@ class _BottomNavPageState extends State<BottomNavPage> {
     const Chatbot(), // Chatbot 페이지는 자체 AppBar를 사용
   ];
 
-  int _selectedIndex = 0;
-
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    context.read<NavigationProvider>().updateIndex(index);
   }
 
   @override
   Widget build(BuildContext context) {
+    final currentIndex = context.watch<NavigationProvider>().currentIndex;
     final isKorean = StartPage.selectedLanguage == 'ko';
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: _selectedIndex == 2 // Chatbot 페이지에서는 AppBar를 숨김
+      appBar: currentIndex == 2 // Chatbot 페이지에서는 AppBar를 숨김
           ? null
           : AppBar(
               backgroundColor: Colors.white,
@@ -54,10 +53,10 @@ class _BottomNavPageState extends State<BottomNavPage> {
                 ),
               ],
             ),
-      body: appScreens[_selectedIndex],
+      body: appScreens[currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: AppStyles.primaryColor,
-        currentIndex: _selectedIndex,
+        currentIndex: currentIndex,
         onTap: _onItemTapped,
         selectedItemColor: AppStyles.maindeepblue,
         unselectedItemColor: AppStyles.textColor,

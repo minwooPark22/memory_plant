@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:memory_plant_application/providers/memory_log_provider.dart';
+import 'package:memory_plant_application/providers/navigation_provider.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
 import 'package:memory_plant_application/services/memory_log.dart';
-import 'package:memory_plant_application/services/memory_log_service.dart';
+import 'package:provider/provider.dart';
 
 class WritePage extends StatefulWidget {
   final DateTime selectedDay;
@@ -18,16 +20,15 @@ class _WritePageState extends State<WritePage> {
   @override
   Widget build(BuildContext context) {
     final isKorean = StartPage.selectedLanguage == 'ko';
-    MemoryLogService memoryLogService = MemoryLogService();
 
     Future<void> addMemory() async {
       final newMemory = MemoryLog(
-        title: _titleController.text,
-        contents: _contentController.text,
-        timestamp: widget.selectedDay.toString(),
-        isUser: true // 작성 페이지에서 쓴 글은 무조건 isUser 가 true
-      );
-      await memoryLogService.addMemory(newMemory);
+          title: _titleController.text,
+          contents: _contentController.text,
+          timestamp: widget.selectedDay.toString(),
+          isUser: true // 작성 페이지에서 쓴 글은 무조건 isUser 가 true
+          );
+      context.read<MemoryLogProvider>().addMemory(newMemory);
     }
 
     return Scaffold(
@@ -47,7 +48,8 @@ class _WritePageState extends State<WritePage> {
           TextButton(
             onPressed: () {
               addMemory();
-              Navigator.of(context).pop(); // 저장 누르면 add page 말고 home page로 넘어가면 좋을 듯?
+              context.read<NavigationProvider>().updateIndex(0); // HomePage 인덱스
+              Navigator.of(context).pop();
             },
             child: Text(
               isKorean ? "저장" : "Save",

@@ -7,11 +7,11 @@ import 'package:memory_plant_application/styles/app_styles.dart';
 import 'package:provider/provider.dart';
 import 'package:memory_plant_application/providers/memory_log_provider.dart';
 
-class DiaryTile extends StatelessWidget {
+class DiaryTile2 extends StatelessWidget {
   final MemoryLog memory;
   final int index;
 
-  const DiaryTile({
+  const DiaryTile2({
     super.key,
     required this.memory,
     required this.index,

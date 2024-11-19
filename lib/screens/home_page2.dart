@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
 import 'package:intl/intl.dart'; // 날짜 처리를 위한 패키지
 import 'package:memory_plant_application/providers/memory_log_provider.dart';
-import 'package:memory_plant_application/widgets/diary_tile.dart';
+import 'package:memory_plant_application/widgets/diary_tile2.dart';
 import 'package:provider/provider.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class HomePage2 extends StatelessWidget {
+  const HomePage2({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class HomePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (showMonthSeparator) _buildMonthSeparator(currentMonth),
-            DiaryTile(
+            DiaryTile2(
               memory: memory,
               index: index,
             ),
