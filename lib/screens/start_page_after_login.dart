@@ -14,16 +14,16 @@ class StartPageAfterLogin extends StatefulWidget {
 }
 
 class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
-  double primaryBoxHeight = 0.26;
+  double primaryBoxHeight = 0.30;
   double verticalDragOffset = 0;
-  double primaryBoxTopPosition = -250;
+  double primaryBoxTopPosition = 0;
 
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
       setState(() {
-        primaryBoxTopPosition = 0;
+        primaryBoxTopPosition = MediaQuery.of(context).size.height * 0.00;
       });
     });
   }
@@ -49,28 +49,31 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
   @override
   Widget build(BuildContext context) {
     final nameProvider = Provider.of<NameProvider>(context);
-    final memoryLogProvider = Provider.of<MemoryLogProvider>(context); // MemoryLogProvider 가져오기
+    final memoryLogProvider =
+        Provider.of<MemoryLogProvider>(context); // MemoryLogProvider 가져오기
     final isKorean = StartPage.selectedLanguage == 'ko';
     final memoryCount = memoryLogProvider.memoryList.length; // 메모리 개수
 
     return GestureDetector(
       onVerticalDragUpdate: (details) {
         setState(() {
-          verticalDragOffset -= details.delta.dy;
-          if (verticalDragOffset < 0) verticalDragOffset = 0;
+          // 아래에서 위로 드래그 시 verticalDragOffset이 증가
+          verticalDragOffset += details.delta.dy; // 아래에서 위로 드래그하면 delta.dy는 음수
+          verticalDragOffset = verticalDragOffset.clamp(
+              0, MediaQuery.of(context).size.height * 0.3);
         });
       },
       onVerticalDragEnd: (details) {
         if (verticalDragOffset > 150) {
           setState(() {
-            // 화면 전환 전 상태 초기화
-            primaryBoxTopPosition = 0;
-            verticalDragOffset = 0;
+            primaryBoxTopPosition =
+                MediaQuery.of(context).size.height * 0.0; // 상자가 최종 위치로 이동
+            verticalDragOffset = 0; // 드래그 상태 초기화
           });
           Navigator.pushNamed(context, "/bottomNavPage");
         } else {
           setState(() {
-            verticalDragOffset = 0;
+            verticalDragOffset = 0; // 원래 상태로 복귀
           });
         }
       },
@@ -96,7 +99,7 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
               right: 0,
               child: PrimaryBox(
                   height:
-                  MediaQuery.of(context).size.height * primaryBoxHeight),
+                      MediaQuery.of(context).size.height * primaryBoxHeight),
             ),
             Center(
               child: Column(
@@ -167,7 +170,7 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
                   ),
                   const SizedBox(height: 80),
                   Text(
-                    isKorean ? "위로 스와이프하여 시작하기" : "Swipe up to start",
+                    isKorean ? "아래로 스와이프하여 시작하기" : "Swipe up to start",
                     style: TextStyle(
                       color: AppStyles.primaryColor,
                       fontWeight: FontWeight.bold,
