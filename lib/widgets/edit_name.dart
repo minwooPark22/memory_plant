@@ -1,9 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:memory_plant_application/providers/name_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:memory_plant_application/styles/app_styles.dart';
-import 'package:memory_plant_application/screens/start_page.dart';
 
 class EditNameDialog extends StatefulWidget {
   final String currentName;
