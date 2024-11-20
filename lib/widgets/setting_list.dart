@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:memory_plant_application/widgets/edit_name.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
 import 'package:memory_plant_application/widgets/language.dart';
+import 'package:memory_plant_application/screens/learning_page.dart';
+import 'package:provider/provider.dart';
+import 'package:memory_plant_application/providers/name_provider.dart';
 
 class SettingsList extends StatefulWidget {
   const SettingsList({super.key});
@@ -13,54 +15,35 @@ class SettingsList extends StatefulWidget {
 }
 
 class _SettingsListState extends State<SettingsList> {
-  String userName = 'Guest'; //  이름을 저장할 변수
-
-  @override
-  void initState() {
-    super.initState();
-    _loadUserName(); //이름 로드
-  }
-
-  Future<void> _loadUserName() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      userName = prefs.getString('user_name') ?? 'Guest';
-    });
-  }
-
-  Future<void> _saveUserName(String newName) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('user_name', newName); // 새로운 이름 저장
-  }
-
-  void _showEditNameDialog() {
+  void _showEditNameDialog(String currentName) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return EditNameDialog(
-          currentName: userName,
+          currentName: currentName,
           onNameSaved: (newName) {
-            setState(() {
-              userName = newName;
-            });
+            final nameProvider =
+            Provider.of<NameProvider>(context, listen: false);
+            nameProvider.updateName(newName); // 새로운 이름 저장
           },
         );
       },
     );
   }
 
-  // 로그아웃띠
+  // 로그아웃 처리
   Future<void> _logout() async {
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => const StartPage()),
-      (Route<dynamic> route) => false,
+          (Route<dynamic> route) => false,
     );
   }
 
   @override
   Widget build(BuildContext context) {
     final isKorean = StartPage.selectedLanguage == 'ko';
+    final nameProvider = Provider.of<NameProvider>(context);
 
     return Container(
       decoration: BoxDecoration(
@@ -81,13 +64,14 @@ class _SettingsListState extends State<SettingsList> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // 사용자 이름 및 아이콘
           Row(
             children: [
               Icon(Icons.account_circle,
                   size: 40, color: AppStyles.primaryColor), // 프로필 아이콘
               const SizedBox(width: 8), // 아이콘과 이름 사이 간격
               Text(
-                userName, // 사용자 이름 표시
+                nameProvider.name, // NameProvider에서 이름 가져오기
                 style: TextStyle(
                   color: AppStyles.maindeepblue,
                   fontSize: 20,
@@ -97,21 +81,26 @@ class _SettingsListState extends State<SettingsList> {
             ],
           ),
           const SizedBox(height: 25), // 여백 추가
+
+          // 계정 설정
           Text(
             isKorean ? "계정 설정" : "Account Settings",
             style: TextStyle(color: AppStyles.textColor, fontSize: 14),
           ),
           const Divider(color: Color(0xFFCACACA), thickness: 0.5),
+
+          // 이름 수정
           ListTile(
             title: Text(
               isKorean ? "이름 수정" : "Edit Name",
               style: TextStyle(color: AppStyles.mainblack, fontSize: 14),
             ),
             onTap: () {
-              _showEditNameDialog();
-              _loadUserName();
+              _showEditNameDialog(nameProvider.name);
             },
           ),
+
+          // 언어 토글
           ListTile(
             title: Text(
               "ENG/KOR",
@@ -120,12 +109,13 @@ class _SettingsListState extends State<SettingsList> {
             trailing: LanguageToggleSwitch(
               onToggle: (isKorean) {
                 setState(() {
-                  // 필요 시 전체 앱 언어 설정을 업데이트할 수 있음
+                  // 필요 시 언어 설정 업데이트
                 });
               },
             ),
           ),
 
+          // 로그아웃
           ListTile(
             title: Text(
               isKorean ? "로그아웃" : "Log-out",
@@ -134,6 +124,7 @@ class _SettingsListState extends State<SettingsList> {
             onTap: _logout,
           ),
 
+          // 계정 삭제
           ListTile(
             title: Text(
               isKorean ? "내 계정 삭제" : "Delete My Account",
@@ -143,7 +134,10 @@ class _SettingsListState extends State<SettingsList> {
               // 계정 삭제 기능 구현
             },
           ),
+
           const Divider(color: Colors.grey, thickness: 0.5),
+
+          // 더 보기 섹션
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Text(
@@ -152,13 +146,17 @@ class _SettingsListState extends State<SettingsList> {
             ),
           ),
 
+          // 학습 페이지 이동
           ListTile(
             title: Text(
               isKorean ? "센터에 대해 배우기" : "Learn About Centers",
               style: TextStyle(color: AppStyles.mainblack, fontSize: 14),
             ),
             onTap: () {
-              // 센터에 대해 배우기 기능 구현
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const LearningPage()),
+              );
             },
           ),
         ],

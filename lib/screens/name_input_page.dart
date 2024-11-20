@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
 import 'package:memory_plant_application/widgets/primary_box.dart';
+import 'package:provider/provider.dart';
+import 'package:memory_plant_application/providers/name_provider.dart';
 
 class NameInputPage extends StatefulWidget {
   const NameInputPage({super.key});
@@ -12,7 +13,7 @@ class NameInputPage extends StatefulWidget {
 }
 
 class _NameInputPageState extends State<NameInputPage> {
-  final TextEditingController languageController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String? _errorMessage;
   double primaryBoxTopPosition = -230; // 초기 위치를 화면 위쪽으로 설정
@@ -30,18 +31,17 @@ class _NameInputPageState extends State<NameInputPage> {
 
   @override
   void dispose() {
-    languageController.dispose(); // 메모리 누수 방지용
+    nameController.dispose(); // 메모리 누수 방지
     super.dispose();
-  }
-
-  Future<void> saveName() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('user_name', languageController.text); // 이름 저장
   }
 
   void _submitName() {
     if (_formKey.currentState!.validate()) {
-      saveName(); // 이름 저장
+      // Provider를 통해 이름 상태 업데이트
+      final nameProvider = Provider.of<NameProvider>(context, listen: false);
+      nameProvider.updateName(nameController.text);
+
+      // 다음 페이지로 이동
       Navigator.pushNamed(context, "/startPageAfterLogin");
     }
   }
@@ -52,7 +52,7 @@ class _NameInputPageState extends State<NameInputPage> {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // PrimaryBox를 화면 상단에 배치하고 애니메이션 적용
+          // 애니메이션 적용된 PrimaryBox
           AnimatedPositioned(
             duration: const Duration(milliseconds: 1000),
             curve: Curves.easeOut,
@@ -61,7 +61,7 @@ class _NameInputPageState extends State<NameInputPage> {
             right: 0,
             child: const PrimaryBox(height: 230),
           ),
-          // 콘텐츠를 PrimaryBox 아래에 배치하도록 Positioned 사용
+          // 콘텐츠를 PrimaryBox 아래에 배치
           Positioned(
             top: 150, // PrimaryBox 아래로 공간 확보
             left: 0,
@@ -69,6 +69,7 @@ class _NameInputPageState extends State<NameInputPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                // 제목
                 Text(
                   StartPage.selectedLanguage == 'ko'
                       ? '기억 발전소'
@@ -80,6 +81,7 @@ class _NameInputPageState extends State<NameInputPage> {
                   ),
                 ),
                 const SizedBox(height: 100),
+                // 이름 입력 폼
                 Form(
                   key: _formKey,
                   child: Column(
@@ -89,12 +91,12 @@ class _NameInputPageState extends State<NameInputPage> {
                       SizedBox(
                         width: 250,
                         child: TextFormField(
-                          controller: languageController,
+                          controller: nameController,
                           maxLength: 20,
                           decoration: InputDecoration(
                             labelText: StartPage.selectedLanguage == 'ko'
                                 ? '이름'
-                                : 'full name',
+                                : 'Full Name',
                             labelStyle: TextStyle(
                               color: AppStyles.maindeepblue,
                             ),
@@ -119,9 +121,9 @@ class _NameInputPageState extends State<NameInputPage> {
                             if (value == null || value.trim().isEmpty) {
                               setState(() {
                                 _errorMessage =
-                                    StartPage.selectedLanguage == 'ko'
-                                        ? '이름을 작성해주세요!'
-                                        : 'Please enter your name!';
+                                StartPage.selectedLanguage == 'ko'
+                                    ? '이름을 작성해주세요!'
+                                    : 'Please enter your name!';
                               });
                               return '';
                             }
@@ -143,6 +145,7 @@ class _NameInputPageState extends State<NameInputPage> {
                           ),
                         ),
                       const SizedBox(height: 10),
+                      // 제출 버튼
                       SizedBox(
                         width: 250,
                         child: ElevatedButton(
@@ -154,7 +157,7 @@ class _NameInputPageState extends State<NameInputPage> {
                           child: Text(
                             StartPage.selectedLanguage == 'ko'
                                 ? '제출'
-                                : 'submit',
+                                : 'Submit',
                             style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -166,6 +169,7 @@ class _NameInputPageState extends State<NameInputPage> {
                   ),
                 ),
                 const SizedBox(height: 20),
+                // 하단 텍스트
                 Text(
                   StartPage.selectedLanguage == 'ko'
                       ? '이름을 설정해주세요'

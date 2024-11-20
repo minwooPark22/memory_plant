@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
 import 'package:memory_plant_application/widgets/primary_box.dart';
+import 'package:provider/provider.dart';
+import 'package:memory_plant_application/providers/name_provider.dart';
+import 'package:memory_plant_application/providers/memory_log_provider.dart';
 
 class StartPageAfterLogin extends StatefulWidget {
   const StartPageAfterLogin({super.key});
@@ -12,7 +14,6 @@ class StartPageAfterLogin extends StatefulWidget {
 }
 
 class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
-  String userName = 'Guest';
   double primaryBoxHeight = 0.26;
   double verticalDragOffset = 0;
   double primaryBoxTopPosition = -250;
@@ -20,26 +21,10 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
   @override
   void initState() {
     super.initState();
-    _loadUserName();
     Future.delayed(Duration.zero, () {
       setState(() {
         primaryBoxTopPosition = 0;
       });
-    });
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    Future.delayed(Duration.zero, () {
-      _loadUserName();
-    });
-  }
-
-  Future<void> _loadUserName() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      userName = prefs.getString('user_name') ?? 'Guest';
     });
   }
 
@@ -63,7 +48,11 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
 
   @override
   Widget build(BuildContext context) {
+    final nameProvider = Provider.of<NameProvider>(context);
+    final memoryLogProvider = Provider.of<MemoryLogProvider>(context); // MemoryLogProvider 가져오기
     final isKorean = StartPage.selectedLanguage == 'ko';
+    final memoryCount = memoryLogProvider.memoryList.length; // 메모리 개수
+
     return GestureDetector(
       onVerticalDragUpdate: (details) {
         setState(() {
@@ -107,7 +96,7 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
               right: 0,
               child: PrimaryBox(
                   height:
-                      MediaQuery.of(context).size.height * primaryBoxHeight),
+                  MediaQuery.of(context).size.height * primaryBoxHeight),
             ),
             Center(
               child: Column(
@@ -149,7 +138,9 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        isKorean ? '$userName님 환영합니다!' : "Welcome $userName!",
+                        isKorean
+                            ? '${nameProvider.name}님 환영합니다!'
+                            : "Welcome ${nameProvider.name}!",
                         style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -163,7 +154,9 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        isKorean ? "23개의 일기" : "23 Journals",
+                        isKorean
+                            ? "$memoryCount개의 일기" // 메모리 개수 표시
+                            : "$memoryCount Journals",
                         style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,

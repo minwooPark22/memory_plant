@@ -6,6 +6,7 @@ import 'package:memory_plant_application/services/memory_log.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
 import 'package:provider/provider.dart';
 import 'package:memory_plant_application/providers/memory_log_provider.dart';
+import 'package:intl/intl.dart';
 
 class DiaryTile extends StatelessWidget {
   final MemoryLog memory;
@@ -16,6 +17,11 @@ class DiaryTile extends StatelessWidget {
     required this.memory,
     required this.index,
   });
+
+  String _formatDate(String timestamp) {
+    final date = DateTime.parse(timestamp); // timestamp를 DateTime으로 변환
+    return DateFormat('MM/dd').format(date); // MM/dd 형식으로 변환
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,9 +105,22 @@ class DiaryTile extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 5),
           child: ListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
-            title: Text(
-              memory.title ?? 'Untitled Memory',
-              style: const TextStyle(fontWeight: FontWeight.bold),
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _formatDate(memory.timestamp!), // 날짜 표시
+                  style: const TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black,
+                  ),
+                ),
+                Text(
+                  memory.title ?? 'Untitled Memory', // 제목
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
             subtitle: Text(
               memory.contents ?? 'No content available',
