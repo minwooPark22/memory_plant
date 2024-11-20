@@ -24,13 +24,10 @@ class CohereService {
       body: requestBody,
     );
 
-    print(
-        "${response} ######################################################3");
     if (response.statusCode == 200) {
       // UTF-8로 디코딩
       final decodedBody = utf8.decode(response.bodyBytes);
       final data = jsonDecode(decodedBody);
-      print(data);
       // Cohere의 생성 텍스트 가져오기
       final generatedText = data['text'];
       return generatedText; // Cohere의 응답 반환
