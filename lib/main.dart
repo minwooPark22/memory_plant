@@ -7,6 +7,7 @@ import 'package:memory_plant_application/screens/setting_page.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
 import 'package:memory_plant_application/screens/start_page_after_login.dart';
 import 'package:memory_plant_application/providers/navigation_provider.dart'; // NavigationProvider import
+import 'package:memory_plant_application/providers/name_provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,7 +22,8 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => NavigationProvider()),
         ChangeNotifierProvider(
-            create: (_) => MemoryLogProvider()..loadMemoryLogs())
+            create: (_) => MemoryLogProvider()..loadMemoryLogs()),
+        ChangeNotifierProvider(create: (_) => NameProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
