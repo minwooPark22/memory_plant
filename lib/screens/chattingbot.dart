@@ -5,6 +5,7 @@ import 'package:memory_plant_application/services/message_log_service.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
 import '../services/message_log.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class Chatbot extends StatefulWidget {
   const Chatbot({super.key});
@@ -18,7 +19,8 @@ class _ChatbotState extends State<Chatbot> {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   final MessageLogService _logService = MessageLogService();
-  final GroqService _groqService = GroqService();
+  final CohereService _groqService = CohereService();
+  bool isTyping = false; // 타이핑 애니메이션 표시 상태
   @override
   void initState() {
     super.initState();
@@ -60,22 +62,30 @@ class _ChatbotState extends State<Chatbot> {
       setState(() {
         messages.add(newMessage);
         _controller.clear();
+        isTyping = true; // API 호출 시작 시 타이핑 상태 활성화
       });
+
       _closeKeyboard();
+
       try {
         final botResponse = await _groqService.sendMessage(newMessage.content!);
+
         final botMessage = MessageLog(
           content: botResponse,
-          time: DateFormat('hh:mm a').format(now),
-          date: DateFormat('yyyy-MM-dd').format(now),
+          time: DateFormat('hh:mm a').format(DateTime.now()),
+          date: DateFormat('yyyy-MM-dd').format(DateTime.now()),
           isSentByMe: false,
         );
 
         setState(() {
           messages.add(botMessage);
+          isTyping = false; // 응답 후 타이핑 상태 비활성화
         });
       } catch (e) {
         debugPrint("Failed to get bot response: $e");
+        setState(() {
+          isTyping = false;
+        });
       }
       _saveMessages();
     }
@@ -188,11 +198,34 @@ class _ChatbotState extends State<Chatbot> {
   Widget _buildMessageList() {
     return ListView.builder(
       reverse: true,
-      itemCount: messages.length,
+      itemCount: messages.length + (isTyping ? 1 : 0), // 타이핑 메시지 추가
       itemBuilder: (context, index) {
-        final message = messages[messages.length - 1 - index];
+        if (isTyping && index == 0) {
+          // 타이핑 애니메이션 표시
+          return Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: DefaultTextStyle(
+                style: const TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.grey,
+                ),
+                child: AnimatedTextKit(
+                  repeatForever: true,
+                  animatedTexts: [
+                    TyperAnimatedText('Typing ...'),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+
+        final messageIndex = isTyping ? index - 1 : index;
+        final message = messages[messages.length - 1 - messageIndex];
         final bool isMe = message.isSentByMe ?? false;
-        bool showDateSeparator = _shouldShowDateSeparator(index);
+        bool showDateSeparator = _shouldShowDateSeparator(messageIndex);
 
         return Column(
           children: [
@@ -205,7 +238,8 @@ class _ChatbotState extends State<Chatbot> {
                 ),
               ),
             GestureDetector(
-              onLongPress: () => _deleteMessage(messages.length - 1 - index), // 길게 누르면 삭제
+              onLongPress: () =>
+                  _deleteMessage(messages.length - 1 - messageIndex),
               child: Align(
                 alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
                 child: _buildMessageBubble(message, isMe),
@@ -247,7 +281,9 @@ class _ChatbotState extends State<Chatbot> {
       ),
       child: Text(
         message.content ?? "(빈 메시지)",
-        style: isMe ? TextStyle(color: Colors.black) : TextStyle(color: Colors.white),
+        style: isMe
+            ? TextStyle(color: Colors.black)
+            : TextStyle(color: Colors.white),
       ),
     );
   }
