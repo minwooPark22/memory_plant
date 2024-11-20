@@ -170,7 +170,7 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
                   ),
                   const SizedBox(height: 80),
                   Text(
-                    isKorean ? "아래로 스와이프하여 시작하기" : "Swipe up to start",
+                    isKorean ? "아래로 스와이프하여 시작하기" : "Swipe down to start",
                     style: TextStyle(
                       color: AppStyles.primaryColor,
                       fontWeight: FontWeight.bold,
