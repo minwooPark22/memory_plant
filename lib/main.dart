@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memory_plant_application/providers/language_provider.dart';
 import 'package:memory_plant_application/providers/memory_log_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:memory_plant_application/screens/bottom_nav_page.dart';
@@ -23,7 +24,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => NavigationProvider()),
         ChangeNotifierProvider(
             create: (_) => MemoryLogProvider()..loadMemoryLogs()),
-        ChangeNotifierProvider(create: (_) => NameProvider()),
+        ChangeNotifierProvider(create: (_) => NameProvider()..loadName()),
+        ChangeNotifierProvider(create: (_) => LanguageProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

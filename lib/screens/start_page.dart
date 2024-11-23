@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:memory_plant_application/providers/language_provider.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
+import 'package:provider/provider.dart';
 
 class StartPage extends StatefulWidget {
   static var selectedLanguage = 'ko';
@@ -54,6 +56,8 @@ class _StartPageState extends State<StartPage>
 
   @override
   Widget build(BuildContext context) {
+    final isKorean =
+        context.watch<LanguageProvider>().currentLanguage == Language.ko;
     return Scaffold(
       backgroundColor: AppStyles.maindeepblue, // 배경을 maindeepblue로 설정
       body: Stack(
@@ -126,7 +130,7 @@ class _StartPageState extends State<StartPage>
                 Text(
                   currentButtonIndex == 0
                       ? 'Please select your preferred language'
-                      : StartPage.selectedLanguage == 'ko'
+                      : isKorean
                           ? '로그인할 계정을 선택해주세요'
                           : 'Select the account to log in',
                   style: const TextStyle(
@@ -141,9 +145,9 @@ class _StartPageState extends State<StartPage>
                     OutlinedButton(
                       onPressed: () {
                         if (currentButtonIndex == 0) {
-                          setState(() {
-                            StartPage.selectedLanguage = 'ko';
-                          });
+                          context
+                              .read<LanguageProvider>()
+                              .setLanguage(Language.ko);
                         } else if (currentButtonIndex == 1) {
                           Navigator.pushNamed(context, "/nameInputPage");
                         }
@@ -165,9 +169,9 @@ class _StartPageState extends State<StartPage>
                     OutlinedButton(
                       onPressed: () {
                         if (currentButtonIndex == 0) {
-                          setState(() {
-                            StartPage.selectedLanguage = 'en';
-                          });
+                          context
+                              .read<LanguageProvider>()
+                              .setLanguage(Language.en);
                         } else if (currentButtonIndex == 1) {
                           Navigator.pushNamed(context, "/nameInputPage");
                         }

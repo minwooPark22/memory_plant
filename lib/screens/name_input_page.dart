@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:memory_plant_application/screens/start_page.dart';
+import 'package:memory_plant_application/providers/language_provider.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
 import 'package:memory_plant_application/widgets/primary_box.dart';
 import 'package:provider/provider.dart';
@@ -48,6 +48,8 @@ class _NameInputPageState extends State<NameInputPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isKorean =
+        context.watch<LanguageProvider>().currentLanguage == Language.ko;
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -71,9 +73,7 @@ class _NameInputPageState extends State<NameInputPage> {
               children: [
                 // 제목
                 Text(
-                  StartPage.selectedLanguage == 'ko'
-                      ? '기억 발전소'
-                      : 'Memory Plant',
+                  isKorean ? '기억 발전소' : 'Memory Plant',
                   style: const TextStyle(
                     fontSize: 50,
                     fontWeight: FontWeight.bold,
@@ -94,9 +94,7 @@ class _NameInputPageState extends State<NameInputPage> {
                           controller: nameController,
                           maxLength: 20,
                           decoration: InputDecoration(
-                            labelText: StartPage.selectedLanguage == 'ko'
-                                ? '이름'
-                                : 'Full Name',
+                            labelText: isKorean ? '이름' : 'Full Name',
                             labelStyle: TextStyle(
                               color: AppStyles.maindeepblue,
                             ),
@@ -120,8 +118,7 @@ class _NameInputPageState extends State<NameInputPage> {
                           validator: (value) {
                             if (value == null || value.trim().isEmpty) {
                               setState(() {
-                                _errorMessage =
-                                StartPage.selectedLanguage == 'ko'
+                                _errorMessage = isKorean
                                     ? '이름을 작성해주세요!'
                                     : 'Please enter your name!';
                               });
@@ -155,9 +152,7 @@ class _NameInputPageState extends State<NameInputPage> {
                             minimumSize: const Size(250, 50),
                           ),
                           child: Text(
-                            StartPage.selectedLanguage == 'ko'
-                                ? '제출'
-                                : 'Submit',
+                            isKorean ? '제출' : 'Submit',
                             style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -171,9 +166,7 @@ class _NameInputPageState extends State<NameInputPage> {
                 const SizedBox(height: 20),
                 // 하단 텍스트
                 Text(
-                  StartPage.selectedLanguage == 'ko'
-                      ? '이름을 설정해주세요'
-                      : 'Setting your name',
+                  isKorean ? '이름을 설정해주세요' : 'Setting your name',
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w300,

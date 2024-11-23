@@ -6,7 +6,7 @@ import 'package:path_provider/path_provider.dart';
 class MessageLogService {
   // JSON 파일 경로를 가져오는 메서드
   Future<String> _getLocalFilePath() async {
-    late final directory;
+    late final Directory? directory;
 
     if (Platform.isAndroid) {
       // 안드로이드에서 외부 저장소 디렉토리
@@ -23,8 +23,7 @@ class MessageLogService {
     final filePath = await _getLocalFilePath();
     final file = File(filePath);
     // List<MessageLog>를 JSON 문자열로 변환하여 저장
-    final jsonString =
-        jsonEncode(messages.map((log) => log.toJson()).toList());
+    final jsonString = jsonEncode(messages.map((log) => log.toJson()).toList());
     await file.writeAsString(jsonString);
   }
 

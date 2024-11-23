@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:memory_plant_application/screens/start_page.dart';
+import 'package:memory_plant_application/providers/language_provider.dart';
 import 'package:intl/intl.dart'; // 날짜 처리를 위한 패키지
 import 'package:memory_plant_application/providers/memory_log_provider.dart';
 import 'package:memory_plant_application/widgets/diary_tile.dart';
@@ -10,13 +10,15 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isKorean =
+        context.watch<LanguageProvider>().currentLanguage == Language.ko;
     return Scaffold(
       backgroundColor: Colors.white,
       body: Consumer<MemoryLogProvider>(
         builder: (context, memoryLogProvider, child) {
           // 로딩 상태를 다루지 않고, 이미 로드된 상태에서 UI 갱신
           if (memoryLogProvider.memoryList.isEmpty) {
-            return _buildEmptyState();
+            return _buildEmptyState(isKorean);
           }
 
           return _buildMemoryList(context, memoryLogProvider);
@@ -54,9 +56,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState() {
-    bool isKorean = StartPage.selectedLanguage == 'ko';
-
+  Widget _buildEmptyState(bool isKorean) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
