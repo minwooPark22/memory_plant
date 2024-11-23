@@ -15,7 +15,7 @@ class IntroCenter extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12.0), // 둥근 모서리
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: Colors.black26,
               blurRadius: 5,
@@ -29,7 +29,10 @@ class IntroCenter extends StatelessWidget {
           children: [
             Text(
               isKorean ? '🏭기억발전소 알아보기' : '🏭Learn About Memory Plant',
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Colors.black),
+              style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black),
               textAlign: TextAlign.left,
             ),
             const SizedBox(height: 16), // 제목과 본문 사이 간격 추가

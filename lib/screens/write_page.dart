@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:memory_plant_application/providers/language_provider.dart';
 import 'package:memory_plant_application/providers/memory_log_provider.dart';
 import 'package:memory_plant_application/providers/navigation_provider.dart';
-import 'package:memory_plant_application/screens/start_page.dart';
 import 'package:memory_plant_application/services/memory_log.dart';
 import 'package:provider/provider.dart';
 
@@ -19,7 +19,8 @@ class _WritePageState extends State<WritePage> {
 
   @override
   Widget build(BuildContext context) {
-    final isKorean = StartPage.selectedLanguage == 'ko';
+    final isKorean =
+        context.watch<LanguageProvider>().currentLanguage == Language.ko;
 
     Future<void> addMemory() async {
       final newMemory = MemoryLog(
@@ -70,7 +71,7 @@ class _WritePageState extends State<WritePage> {
             // 선택된 날짜 표시
             Text(
               isKorean
-                  ? '${widget.selectedDay.year} - ${widget.selectedDay.month} - ${widget.selectedDay.day}'
+                  ? '${widget.selectedDay.year}년 ${widget.selectedDay.month}월 ${widget.selectedDay.day}일'
                   : '${widget.selectedDay.month} - ${widget.selectedDay.day} - ${widget.selectedDay.year}',
               style: const TextStyle(
                 fontSize: 21,

@@ -1,31 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:memory_plant_application/screens/start_page.dart';
-
+import 'package:memory_plant_application/providers/language_provider.dart';
+import 'package:provider/provider.dart';
 
 class LanguageToggleSwitch extends StatefulWidget {
   final ValueChanged<bool> onToggle;
 
-  const LanguageToggleSwitch({Key? key, required this.onToggle}) : super(key: key);
+  const LanguageToggleSwitch({super.key, required this.onToggle});
 
   @override
-  _LanguageToggleSwitchState createState() => _LanguageToggleSwitchState();
+  State<LanguageToggleSwitch> createState() => _LanguageToggleSwitchState();
 }
 
 class _LanguageToggleSwitchState extends State<LanguageToggleSwitch> {
-  bool isKorean = StartPage.selectedLanguage == 'ko';
-
   void _toggleSwitch(bool value) {
-    setState(() {
-      isKorean = value;
-      StartPage.selectedLanguage = value ? 'ko' : 'en';
-    });
-    widget.onToggle(value);
+    context.read<LanguageProvider>().changeLanguage();
   }
 
   @override
   Widget build(BuildContext context) {
     return Switch(
-      value: isKorean,
+      value: context.watch<LanguageProvider>().currentLanguage == Language.ko,
       onChanged: _toggleSwitch,
       activeColor: Colors.blue,
     );

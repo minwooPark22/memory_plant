@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memory_plant_application/providers/language_provider.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
 import 'package:memory_plant_application/widgets/edit_name.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
@@ -23,7 +24,7 @@ class _SettingsListState extends State<SettingsList> {
           currentName: currentName,
           onNameSaved: (newName) {
             final nameProvider =
-            Provider.of<NameProvider>(context, listen: false);
+                Provider.of<NameProvider>(context, listen: true);
             nameProvider.updateName(newName); // 새로운 이름 저장
           },
         );
@@ -36,14 +37,15 @@ class _SettingsListState extends State<SettingsList> {
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => const StartPage()),
-          (Route<dynamic> route) => false,
+      (Route<dynamic> route) => false,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final isKorean = StartPage.selectedLanguage == 'ko';
-    final nameProvider = Provider.of<NameProvider>(context);
+    final isKorean =
+        context.watch<LanguageProvider>().currentLanguage == Language.ko;
+    final nameProvider = Provider.of<NameProvider>(context, listen: true);
 
     return Container(
       decoration: BoxDecoration(

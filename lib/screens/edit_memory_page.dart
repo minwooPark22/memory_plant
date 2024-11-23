@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:memory_plant_application/screens/start_page.dart';
+import 'package:memory_plant_application/providers/language_provider.dart';
 import 'package:memory_plant_application/services/memory_log.dart';
+import 'package:provider/provider.dart';
 
 class EditMemoryPage extends StatefulWidget {
   final MemoryLog memory;
@@ -50,7 +51,8 @@ class _EditMemoryPageState extends State<EditMemoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isKorean = StartPage.selectedLanguage == 'ko';
+    final isKorean =
+        context.watch<LanguageProvider>().currentLanguage == Language.ko;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -98,18 +100,18 @@ class _EditMemoryPageState extends State<EditMemoryPage> {
                 fontSize: 21,
                 fontWeight: FontWeight.w700,
               ),
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: InputBorder.none,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 8),
             Expanded(
               child: TextField(
                 controller: _contentController,
                 maxLines: null,
                 expands: true,
                 style: const TextStyle(fontSize: 16),
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   border: InputBorder.none,
                 ),
               ),

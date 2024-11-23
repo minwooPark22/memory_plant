@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:memory_plant_application/providers/language_provider.dart';
+import 'package:memory_plant_application/providers/navigation_provider.dart';
 import 'package:memory_plant_application/services/groq_service.dart';
 import 'package:memory_plant_application/services/message_log_service.dart';
-import 'package:memory_plant_application/screens/start_page.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
+import 'package:provider/provider.dart';
 import '../services/message_log.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
@@ -11,7 +13,7 @@ class Chatbot extends StatefulWidget {
   const Chatbot({super.key});
 
   @override
-  _ChatbotState createState() => _ChatbotState();
+  State<Chatbot> createState() => _ChatbotState();
 }
 
 class _ChatbotState extends State<Chatbot> {
@@ -97,14 +99,14 @@ class _ChatbotState extends State<Chatbot> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("삭제 확인"),
-          content: Text("정말 이 메시지를 삭제하시겠습니까?"),
+          title: const Text("삭제 확인"),
+          content: const Text("정말 이 메시지를 삭제하시겠습니까?"),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // "아니오"를 눌렀을 때 다이얼로그 닫기
               },
-              child: Text("아니오"),
+              child: const Text("아니오"),
             ),
             TextButton(
               onPressed: () {
@@ -114,7 +116,7 @@ class _ChatbotState extends State<Chatbot> {
                 _saveMessages();
                 Navigator.of(context).pop(); // "예"를 눌렀을 때 다이얼로그 닫고 삭제
               },
-              child: Text("예"),
+              child: const Text("예"),
             ),
           ],
         );
@@ -142,7 +144,8 @@ class _ChatbotState extends State<Chatbot> {
 
   @override
   Widget build(BuildContext context) {
-    final isKorean = StartPage.selectedLanguage == 'ko';
+    final isKorean =
+        context.watch<LanguageProvider>().currentLanguage == Language.ko;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -150,12 +153,12 @@ class _ChatbotState extends State<Chatbot> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context); // 이전 화면으로 돌아가기
+            context.read<NavigationProvider>().updateIndex(0); // HomePage 인덱스
           },
         ),
         title: _buildAppBarTitle(isKorean),
         centerTitle: false,
-        actions: [
+        actions: const [
           // 나가기 버튼 제거
         ],
       ),
@@ -183,7 +186,7 @@ class _ChatbotState extends State<Chatbot> {
         ),
         Text(
           isKorean ? "기억관리소장" : "Memory Curator",
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -282,8 +285,8 @@ class _ChatbotState extends State<Chatbot> {
       child: Text(
         message.content ?? "(빈 메시지)",
         style: isMe
-            ? TextStyle(color: Colors.black)
-            : TextStyle(color: Colors.white),
+            ? const TextStyle(color: Colors.black)
+            : const TextStyle(color: Colors.white),
       ),
     );
   }

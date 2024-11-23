@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:memory_plant_application/screens/start_page.dart';
+import 'package:memory_plant_application/providers/language_provider.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
 import 'package:memory_plant_application/widgets/primary_box.dart';
 import 'package:provider/provider.dart';
@@ -48,10 +48,11 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
 
   @override
   Widget build(BuildContext context) {
-    final nameProvider = Provider.of<NameProvider>(context);
+    final nameProvider = Provider.of<NameProvider>(context, listen: true);
     final memoryLogProvider =
         Provider.of<MemoryLogProvider>(context); // MemoryLogProvider 가져오기
-    final isKorean = StartPage.selectedLanguage == 'ko';
+    final isKorean =
+        context.watch<LanguageProvider>().currentLanguage == Language.ko;
     final memoryCount = memoryLogProvider.memoryList.length; // 메모리 개수
 
     return GestureDetector(

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fluentui_icons/fluentui_icons.dart';
+import 'package:memory_plant_application/providers/language_provider.dart';
 import 'package:memory_plant_application/providers/navigation_provider.dart';
 import 'package:memory_plant_application/screens/add_page.dart';
 import 'package:memory_plant_application/screens/home_page.dart';
-import 'package:memory_plant_application/screens/start_page.dart';
 import 'chattingbot.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
 import 'package:provider/provider.dart';
@@ -29,10 +29,12 @@ class _BottomNavPageState extends State<BottomNavPage> {
   @override
   Widget build(BuildContext context) {
     final currentIndex = context.watch<NavigationProvider>().currentIndex;
-    final isKorean = StartPage.selectedLanguage == 'ko';
+    final isKorean =
+        context.watch<LanguageProvider>().currentLanguage == Language.ko;
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: currentIndex == 2 // Chatbot 페이지에서는 AppBar를 숨김
+      appBar: currentIndex == 1 ||
+              currentIndex == 2 // addpage 랑 Chatbot 페이지에서는 AppBar를 숨김
           ? null
           : AppBar(
               backgroundColor: Colors.white,
