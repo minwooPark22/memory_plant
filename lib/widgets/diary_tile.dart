@@ -148,6 +148,7 @@ class DiaryTile extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: Colors.white,
           title: const Text("Delete Confirmation"),
           content: const Text("Are you sure you want to delete this?"),
           actions: <Widget>[
@@ -155,13 +156,15 @@ class DiaryTile extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
-              child: const Text("No"),
+              child:  Text("No",
+                  style: TextStyle(color: AppStyles.maindeepblue)),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
-              child: const Text("Yes"),
+              child: Text("Yes",
+                  style: TextStyle(color: AppStyles.maindeepblue)),
             ),
           ],
         );
