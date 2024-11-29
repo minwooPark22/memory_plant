@@ -8,21 +8,28 @@ class ReadMemoryPage extends StatelessWidget {
   final MemoryLog memory;
   const ReadMemoryPage({super.key, required this.memory});
 
-  String _formatDateKorean(String timestamp) {
-    try {
-      final dateTime = DateTime.parse(timestamp);
-      return DateFormat('yyyy년 MM월 dd일').format(dateTime);
-    } catch (e) {
-      return 'No Date';
-    }
-  }
 
-  String _formatDateEnglish(String timestamp) {
+  String _formattedDate(BuildContext context, String? timestamp) {
     try {
-      final dateTime = DateTime.parse(timestamp);
-      return DateFormat('MM-dd-yyyy').format(dateTime);
+      final isKorean = context.watch<LanguageProvider>().currentLanguage == Language.ko;
+
+      if (timestamp == null) return isKorean ? "날짜 없음" : "No Date";
+
+      final date = DateTime.parse(timestamp); // timestamp를 DateTime으로 변환
+      final weekdaysKorean = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'];
+      final weekdaysEnglish = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+      final weekday = date.weekday;
+
+      if (isKorean) {
+        return '${DateFormat('MM월 dd일').format(date)} ${weekdaysKorean[weekday - 1]}';
+      } else {
+        return '${weekdaysEnglish[weekday - 1]}, ${DateFormat('MMM dd').format(date)}';
+      }
     } catch (e) {
-      return 'No Date';
+      return context.watch<LanguageProvider>().currentLanguage == Language.ko
+          ? "날짜 없음"
+          : "No Date";
     }
   }
 
@@ -36,7 +43,7 @@ class ReadMemoryPage extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         title: Text(
-          isKorean ? "기억 읽기" : "Read memory",
+          _formattedDate(context, memory.timestamp),
           style: const TextStyle(
             fontWeight: FontWeight.w700,
             color: Colors.black,
@@ -49,32 +56,30 @@ class ReadMemoryPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: Text(
-                isKorean
-                    ? _formatDateKorean(memory.timestamp!)
-                    : _formatDateEnglish(memory.timestamp!),
-                style: const TextStyle(
-                  fontSize: 21,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
             const SizedBox(height: 8.0),
             Text(
-              memory.title ?? "No title",
+              memory.title ?? "",
               style: const TextStyle(
                 fontSize: 21,
                 fontWeight: FontWeight.w700,
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 8),
+            // 얇은 회색 선
+            const Divider(
+              color: Colors.grey, // 선 색상
+              thickness: 0.5, // 선 두께
+              height: 1, // 선의 높이
+            ),
+            const SizedBox(height: 8),
+
             Expanded(
-              child: Text(
-                memory.contents ?? "No contents",
-                maxLines: null,
-                style: const TextStyle(fontSize: 16),
+              child: SingleChildScrollView(
+                child: Text(
+                  memory.contents ?? "",
+                  maxLines: null,
+                  style: const TextStyle(fontSize: 16),
+                ),
               ),
             ),
           ],
