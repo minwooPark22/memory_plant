@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memory_plant_application/providers/memory_log_provider.dart';
 import 'package:memory_plant_application/providers/navigation_provider.dart';
+import 'package:memory_plant_application/providers/language_provider.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
 import 'package:memory_plant_application/services/memory_log.dart';
 import 'package:provider/provider.dart';
@@ -49,34 +50,24 @@ class _WritePageState extends State<WritePage> {
     context.read<MemoryLogProvider>().addMemory(newMemory);
   }
 //여기까지 추가
+  String formattedDate(BuildContext context) {
+    final day = widget.selectedDay.day;
+    final month = widget.selectedDay.month;
+    final weekdaysKorean = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'];
+    final weekdaysEnglish = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    final monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    final weekday = widget.selectedDay.weekday;
+
+    final isKorean = context.watch<LanguageProvider>().currentLanguage == Language.ko;
+
+    return isKorean
+        ? '${month}월 ${day}일 ${weekdaysKorean[weekday - 1]}'
+        : '${weekdaysEnglish[weekday - 1]}, ${monthNames[month - 1]} $day';
+  }
 
   @override
   Widget build(BuildContext context) {
-    final isKorean = StartPage.selectedLanguage == 'ko';
-
-
-
-    String formattedDate() {
-      final day = widget.selectedDay.day;
-      final month = widget.selectedDay.month;
-      final year = widget.selectedDay.year;
-
-      // 요일 이름 배열 (1: Monday, 7: Sunday)
-      final weekdaysKorean = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'];
-      final weekdaysEnglish = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
-      // 월 이름 배열
-      final monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-      // 현재 요일 계산
-      final weekday = widget.selectedDay.weekday; // 1: Monday, ..., 7: Sunday
-
-      if (isKorean) {
-        return '${month}월 ${day}일 ${weekdaysKorean[weekday - 1]}';
-      } else {
-        return '${weekdaysEnglish[weekday - 1]}, ${monthNames[month - 1]} $day';
-      }
-    }
+    final isKorean = context.watch<LanguageProvider>().currentLanguage == Language.ko;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -84,7 +75,7 @@ class _WritePageState extends State<WritePage> {
         backgroundColor: Colors.white,
         elevation: 0, // 그림자 제거
         title: Text(
-          formattedDate(),
+          formattedDate(context),
           style: const TextStyle(
             fontWeight: FontWeight.w700,
             color: Colors.black,
