@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:memory_plant_application/providers/memory_log_provider.dart';
 import 'package:memory_plant_application/providers/navigation_provider.dart';
 import 'package:memory_plant_application/providers/language_provider.dart';
-import 'package:memory_plant_application/screens/start_page.dart';
 import 'package:memory_plant_application/services/memory_log.dart';
 import 'package:provider/provider.dart';
 
@@ -19,7 +18,7 @@ class _WritePageState extends State<WritePage> {
   final TextEditingController _contentController = TextEditingController();
   bool _isSaveEnabled = false; // 저장 활성화 이거 추가
 
-//여기부터
+
   @override
   void initState() {
     super.initState();
@@ -49,7 +48,7 @@ class _WritePageState extends State<WritePage> {
     );
     context.read<MemoryLogProvider>().addMemory(newMemory);
   }
-//여기까지 추가
+
   String formattedDate(BuildContext context) {
     final day = widget.selectedDay.day;
     final month = widget.selectedDay.month;
