@@ -16,20 +16,45 @@ class WritePage extends StatefulWidget {
 class _WritePageState extends State<WritePage> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
+  bool _isSaveEnabled = false; // 저장 활성화 이거 추가
+
+//여기부터
+  @override
+  void initState() {
+    super.initState();
+    // 제목과 내용 입력 상태를 감지
+    _titleController.addListener(_updateSaveButtonState);
+    _contentController.addListener(_updateSaveButtonState);
+  }
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _contentController.dispose();
+    super.dispose();
+  }
+
+  void _updateSaveButtonState() {
+    // 제목과 내용이 둘 다 비어있지 않으면 저장 활성화
+    setState(() {
+      _isSaveEnabled = _titleController.text.isNotEmpty || _contentController.text.isNotEmpty;
+    });
+  }
+  Future<void> addMemory() async {
+    final newMemory = MemoryLog(
+        title: _titleController.text,
+        contents: _contentController.text,
+        timestamp: widget.selectedDay.toString(),
+        isUser: true // 작성 페이지에서 쓴 글은 무조건 isUser 가 true
+    );
+    context.read<MemoryLogProvider>().addMemory(newMemory);
+  }
+//여기까지 추가
 
   @override
   Widget build(BuildContext context) {
     final isKorean = StartPage.selectedLanguage == 'ko';
 
-    Future<void> addMemory() async {
-      final newMemory = MemoryLog(
-          title: _titleController.text,
-          contents: _contentController.text,
-          timestamp: widget.selectedDay.toString(),
-          isUser: true // 작성 페이지에서 쓴 글은 무조건 isUser 가 true
-      );
-      context.read<MemoryLogProvider>().addMemory(newMemory);
-    }
+
 
     String formattedDate() {
       final day = widget.selectedDay.day;
@@ -68,15 +93,17 @@ class _WritePageState extends State<WritePage> {
         centerTitle: true,
         actions: [
           TextButton(
-            onPressed: () {
+            onPressed: _isSaveEnabled
+              ? () {
               addMemory();
               context.read<NavigationProvider>().updateIndex(0); // HomePage 인덱스
               Navigator.of(context).pop();
-            },
+            }
+            : null ,    //활성화 되지 않은 상태에서는 null 처리
             child: Text(
               isKorean ? "저장" : "Save",
-              style: const TextStyle(
-                color: Colors.black,
+              style: TextStyle(
+                color: _isSaveEnabled ? Colors.black : Colors.grey, // 비활성화 시 회색
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
