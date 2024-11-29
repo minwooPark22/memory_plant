@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:memory_plant_application/providers/language_provider.dart';
 import 'package:memory_plant_application/providers/memory_log_provider.dart';
 import 'package:memory_plant_application/providers/navigation_provider.dart';
+import 'package:memory_plant_application/screens/start_page.dart';
 import 'package:memory_plant_application/services/memory_log.dart';
 import 'package:provider/provider.dart';
 
@@ -19,8 +19,7 @@ class _WritePageState extends State<WritePage> {
 
   @override
   Widget build(BuildContext context) {
-    final isKorean =
-        context.watch<LanguageProvider>().currentLanguage == Language.ko;
+    final isKorean = StartPage.selectedLanguage == 'ko';
 
     Future<void> addMemory() async {
       final newMemory = MemoryLog(
@@ -28,8 +27,30 @@ class _WritePageState extends State<WritePage> {
           contents: _contentController.text,
           timestamp: widget.selectedDay.toString(),
           isUser: true // 작성 페이지에서 쓴 글은 무조건 isUser 가 true
-          );
+      );
       context.read<MemoryLogProvider>().addMemory(newMemory);
+    }
+
+    String formattedDate() {
+      final day = widget.selectedDay.day;
+      final month = widget.selectedDay.month;
+      final year = widget.selectedDay.year;
+
+      // 요일 이름 배열 (1: Monday, 7: Sunday)
+      final weekdaysKorean = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'];
+      final weekdaysEnglish = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+      // 월 이름 배열
+      final monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+      // 현재 요일 계산
+      final weekday = widget.selectedDay.weekday; // 1: Monday, ..., 7: Sunday
+
+      if (isKorean) {
+        return '${month}월 ${day}일 ${weekdaysKorean[weekday - 1]}';
+      } else {
+        return '${weekdaysEnglish[weekday - 1]}, ${monthNames[month - 1]} $day';
+      }
     }
 
     return Scaffold(
@@ -38,7 +59,7 @@ class _WritePageState extends State<WritePage> {
         backgroundColor: Colors.white,
         elevation: 0, // 그림자 제거
         title: Text(
-          isKorean ? "새 기억 추가" : "Add new memory",
+          formattedDate(),
           style: const TextStyle(
             fontWeight: FontWeight.w700,
             color: Colors.black,
@@ -68,26 +89,22 @@ class _WritePageState extends State<WritePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // 선택된 날짜 표시
-            Text(
-              isKorean
-                  ? '${widget.selectedDay.year}년 ${widget.selectedDay.month}월 ${widget.selectedDay.day}일'
-                  : '${widget.selectedDay.month} - ${widget.selectedDay.day} - ${widget.selectedDay.year}',
-              style: const TextStyle(
-                fontSize: 21,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
             TextField(
               controller: _titleController,
-              style: const TextStyle(fontSize: 21, fontWeight: FontWeight.w700),
+              style: const TextStyle(fontSize: 21, fontWeight: FontWeight.w600),
               decoration: InputDecoration(
-                hintText: isKorean ? "제목을 입력하세요." : "Enter the title.",
+                hintText: isKorean ? "제목" : "Title.",
                 border: InputBorder.none, // 밑줄 제거
                 hintStyle: const TextStyle(color: Colors.grey),
               ),
             ),
+            // 얇은 회색 선
+            const Divider(
+              color: Colors.grey, // 선 색상
+              thickness: 0.5, // 선 두께
+              height: 1, // 선의 높이
+            ),
+            const SizedBox(height: 8),
             Expanded(
               child: TextField(
                 controller: _contentController,
