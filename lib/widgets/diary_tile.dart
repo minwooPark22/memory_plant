@@ -26,7 +26,7 @@ class DiaryTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 3.0),
       decoration: BoxDecoration(
         color: memory.isUser == false ? AppStyles.primaryColor : Colors.white,
         borderRadius: BorderRadius.circular(25.0),
