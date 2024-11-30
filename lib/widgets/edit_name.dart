@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memory_plant_application/styles/app_styles.dart';
 
 class EditNameDialog extends StatefulWidget {
   final String currentName;
@@ -45,21 +46,37 @@ class _EditNameDialogState extends State<EditNameDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      backgroundColor: Colors.white,
       title: const Text('Edit Name'),
       content: TextField(
         controller: _nameController,
         decoration: InputDecoration(
           errorText: _errorMessage,
+          suffixIcon: IconButton(
+            icon: const Icon(Icons.clear),
+            onPressed: () {
+              _nameController.clear(); // 텍스트 필드 내용 삭제
+              setState(() {
+                _errorMessage = null; // 에러 메시지도 초기화
+              });
+            },
+            color: Colors.grey,
+          ),
         ),
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: Text('Cancel',
+          style: TextStyle(color: AppStyles.maindeepblue)
+          ),
         ),
         TextButton(
           onPressed: _saveName,
-          child: const Text('Save'),
+          child: Text(
+              'Save',
+              style: TextStyle(color: AppStyles.maindeepblue)
+          ),
         ),
       ],
     );
