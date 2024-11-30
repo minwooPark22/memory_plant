@@ -8,16 +8,24 @@ class ReadMemoryPage extends StatelessWidget {
   final MemoryLog memory;
   const ReadMemoryPage({super.key, required this.memory});
 
-
   String _formattedDate(BuildContext context, String? timestamp) {
     try {
-      final isKorean = context.watch<LanguageProvider>().currentLanguage == Language.ko;
+      final isKorean =
+          context.watch<LanguageProvider>().currentLanguage == Language.ko;
 
       if (timestamp == null) return isKorean ? "날짜 없음" : "No Date";
 
       final date = DateTime.parse(timestamp); // timestamp를 DateTime으로 변환
       final weekdaysKorean = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'];
-      final weekdaysEnglish = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+      final weekdaysEnglish = [
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+        'Sunday'
+      ];
 
       final weekday = date.weekday;
 
@@ -35,8 +43,6 @@ class ReadMemoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isKorean =
-        context.watch<LanguageProvider>().currentLanguage == Language.ko;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
