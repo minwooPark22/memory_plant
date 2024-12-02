@@ -19,9 +19,9 @@ class Chatbot extends StatelessWidget {
         return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-            backgroundColor: AppStyles.primaryColor,
+            backgroundColor: AppStyles.maindeepblue,
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back),
+              icon: const Icon(Icons.arrow_back_ios,color: Colors.white,),
               onPressed: () {
                 context.read<NavigationProvider>().updateIndex(0); // HomePage 인덱스
               },
@@ -218,7 +218,7 @@ class Chatbot extends StatelessWidget {
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.send),
+            icon: Icon(Icons.send,color: AppStyles.maindeepblue,),
             onPressed: () => chatProvider.sendMessage(context),
           ),
         ],

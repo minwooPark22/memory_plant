@@ -57,7 +57,7 @@ class _BottomNavPageState extends State<BottomNavPage> {
             ),
       body: appScreens[currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: AppStyles.primaryColor,
+        backgroundColor: Colors.white,
         currentIndex: currentIndex,
         onTap: _onItemTapped,
         selectedItemColor: AppStyles.maindeepblue,
