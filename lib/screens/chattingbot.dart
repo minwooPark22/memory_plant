@@ -15,25 +15,32 @@ class Chatbot extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<ChatProvider>(
       builder: (context, chatProvider, child) {
-        final isKorean = context.watch<LanguageProvider>().currentLanguage == Language.ko;
+        final isKorean =
+            context.watch<LanguageProvider>().currentLanguage == Language.ko;
         return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
             backgroundColor: AppStyles.maindeepblue,
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios,color: Colors.white,),
+              icon: const Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white,
+              ),
               onPressed: () {
-                context.read<NavigationProvider>().updateIndex(0); // HomePage 인덱스
+                context
+                    .read<NavigationProvider>()
+                    .updateIndex(0); // HomePage 인덱스
               },
             ),
             title: _buildAppBarTitle(isKorean),
-            centerTitle: false,
+            centerTitle: true,
             actions: const [],
           ),
           body: Column(
             children: [
               // 메시지 리스트
-              Expanded(child: _buildMessageList(chatProvider, context, isKorean)),
+              Expanded(
+                  child: _buildMessageList(chatProvider, context, isKorean)),
 
               // 메시지 입력 필드
               _buildMessageInput(chatProvider, isKorean, context),
@@ -46,7 +53,7 @@ class Chatbot extends StatelessWidget {
 
   Widget _buildAppBarTitle(bool isKorean) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
       children: [
         const Spacer(),
         Image.asset(
@@ -66,7 +73,8 @@ class Chatbot extends StatelessWidget {
     );
   }
 
-  Widget _buildMessageList(ChatProvider chatProvider, BuildContext context, bool isKorean) {
+  Widget _buildMessageList(
+      ChatProvider chatProvider, BuildContext context, bool isKorean) {
     return Column(
       children: [
         Expanded(
@@ -84,7 +92,8 @@ class Chatbot extends StatelessWidget {
                 // 가장 오래된 메시지 위에 날짜 구분선 추가
                 showDateSeparator = true;
               } else {
-                final previousMessageDate = _formatDate(chatProvider.messageList[index + 1].date!);
+                final previousMessageDate =
+                    _formatDate(chatProvider.messageList[index + 1].date!);
                 final currentMessageDate = _formatDate(message.date!);
                 if (previousMessageDate != currentMessageDate) {
                   showDateSeparator = true;
@@ -97,7 +106,8 @@ class Chatbot extends StatelessWidget {
                   GestureDetector(
                     onLongPress: () => chatProvider.deleteMessage(index),
                     child: Align(
-                      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+                      alignment:
+                          isMe ? Alignment.centerRight : Alignment.centerLeft,
                       child: _buildMessageBubble(message, isMe, context),
                     ),
                   ),
@@ -119,7 +129,7 @@ class Chatbot extends StatelessWidget {
                 child: AnimatedTextKit(
                   repeatForever: true,
                   animatedTexts: [
-                    TyperAnimatedText( 'Typing ...'),
+                    TyperAnimatedText('Typing ...'),
                   ],
                 ),
               ),
@@ -162,7 +172,8 @@ class Chatbot extends StatelessWidget {
     );
   }
 
-  Widget _buildMessageBubble(MessageLog message, bool isMe, BuildContext context) {
+  Widget _buildMessageBubble(
+      MessageLog message, bool isMe, BuildContext context) {
     return SafeArea(
       child: Container(
         constraints: BoxConstraints(
@@ -192,7 +203,8 @@ class Chatbot extends StatelessWidget {
     );
   }
 
-  Widget _buildMessageInput(ChatProvider chatProvider, bool isKorean, BuildContext context) {
+  Widget _buildMessageInput(
+      ChatProvider chatProvider, bool isKorean, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
@@ -218,7 +230,10 @@ class Chatbot extends StatelessWidget {
             ),
           ),
           IconButton(
-            icon: Icon(Icons.send,color: AppStyles.maindeepblue,),
+            icon: Icon(
+              Icons.send,
+              color: AppStyles.maindeepblue,
+            ),
             onPressed: () => chatProvider.sendMessage(context),
           ),
         ],
