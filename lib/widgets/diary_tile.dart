@@ -29,7 +29,7 @@ class DiaryTile extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       decoration: BoxDecoration(
         color: memory.isUser == false ? AppStyles.primaryColor : Colors.white,
-        borderRadius: BorderRadius.circular(25.0),
+        borderRadius: BorderRadius.circular(20.0),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.2),
@@ -111,7 +111,7 @@ class DiaryTile extends StatelessWidget {
                 Text(
                   _formatDate(memory.timestamp!), // 날짜 표시
                   style: const TextStyle(
-                    fontSize: 11,
+                    fontSize:11,
                     fontWeight: FontWeight.w400,
                     color: Colors.black,
                   ),

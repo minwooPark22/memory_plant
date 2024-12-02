@@ -38,7 +38,7 @@ class _AddPageState extends State<AddPage> {
         ),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back_ios),
           onPressed: () {
             context.read<NavigationProvider>().updateIndex(0); // HomePage 인덱스
           },

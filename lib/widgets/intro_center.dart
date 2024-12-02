@@ -27,7 +27,7 @@ class IntroCenter extends StatelessWidget {
           mainAxisSize: MainAxisSize.min, // 텍스트 높이에 맞춰 상자 크기 조절
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            /*Text(
               isKorean ? '🏭기억발전소 알아보기' : '🏭Learn About Memory Plant',
               style: const TextStyle(
                   fontSize: 20,
@@ -35,7 +35,9 @@ class IntroCenter extends StatelessWidget {
                   color: Colors.black),
               textAlign: TextAlign.left,
             ),
-            const SizedBox(height: 16), // 제목과 본문 사이 간격 추가
+
+             */
+            const SizedBox(height: 10), // 제목과 본문 사이 간격 추가
             Text(
               isKorean
                   ? '''안녕하세요! 저는 여러분들의 일상 기록을 관리하고
@@ -57,7 +59,7 @@ class IntroCenter extends StatelessWidget {
 기억관리소장 드림.
                   '''
                   : '''
-Hello there! I’m your Memory Curator, here to help you record and care for your daily moments.
+Hello there! I’m your Memory Keeper, here to help you record and care for your daily moments.
 
 The Memory Plant is a special space where you can gather all your precious daily memories in one place, with weekly or monthly summaries delivered as unique memory reports. Even those fleeting moments you might otherwise overlook will transform into treasures you can revisit anytime, with me by your side.
 
