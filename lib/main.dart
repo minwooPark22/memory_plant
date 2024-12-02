@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memory_plant_application/providers/chatbot_provider.dart';
 import 'package:memory_plant_application/providers/language_provider.dart';
 import 'package:memory_plant_application/providers/memory_log_provider.dart';
 import 'package:provider/provider.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
             create: (_) => MemoryLogProvider()..loadMemoryLogs()),
         ChangeNotifierProvider(create: (_) => NameProvider()..loadName()),
         ChangeNotifierProvider(create: (_) => LanguageProvider()),
+        ChangeNotifierProvider(create: (_) => ChatProvider()..loadMessages()), // ChatbotProvider 추가
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
