@@ -14,20 +14,25 @@ class LearningPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: AppStyles.maindeepblue,
+        backgroundColor:  Colors.white,
         title: Text(
-          isKorean ? "설정" : "Settings",
+          isKorean ? "기억발전소 알아보기" : "Learn About Memory Plant",
           style:
-              const TextStyle(fontWeight: FontWeight.w700, color: Colors.white),
+              const TextStyle(fontWeight: FontWeight.w700, color: Colors.black),
         ),
         centerTitle: true,
         iconTheme:
-            const IconThemeData(color: Colors.white), // 뒤로가기 아이콘 색상을 흰색으로 설정
+            const IconThemeData(color: Colors.black), // 뒤로가기 아이콘 색상을 흰색으로 설정
       ),
       body: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 32.0),
+            padding: const EdgeInsets.only(
+              top: 10.0,   // 상단 패딩 줄임
+              bottom: 0.0, // 하단 패딩 줄임
+              left: 10.0,  // 기존 가로 패딩 유지
+              right: 10.0, // 기존 가로 패딩 유지
+            ),
             child: IntroCenter(isKorean: isKorean),
           ),
         ],
