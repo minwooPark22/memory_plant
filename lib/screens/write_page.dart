@@ -138,23 +138,35 @@ class _WritePageState extends State<WritePage> {
                 ? const CircularProgressIndicator(
                     valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
                   )
-                : Text(
-                    isKorean ? "저장" : "Save",
-                    style: TextStyle(
-                      color: _isSaveEnabled
-                          ? Colors.black
-                          : Colors.grey, // 비활성화 시 회색
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                : Row(
+              mainAxisSize: MainAxisSize.min, // 아이콘과 텍스트 사이의 간격 최소화
+              children: [
+                const Icon(
+                  Icons.expand_more,
+                  color: Colors.grey, // 아이콘 색상
+                  size: 20, // 아이콘 크기
+                ),
+                const SizedBox(width: 4), // 아이콘과 텍스트 사이 간격
+                Text(
+                  isKorean ? "저장" : "Save",
+                  style: TextStyle(
+                    color: _isSaveEnabled
+                        ? Colors.black
+                        : Colors.grey, // 비활성화 시 회색
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
                   ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
+
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start, // 아이템 왼쪽 정렬
           children: [
             TextField(
               controller: _titleController,
@@ -171,7 +183,7 @@ class _WritePageState extends State<WritePage> {
               thickness: 0.5, // 선 두께
               height: 1, // 선의 높이
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 8), // 선과 내용 사이 간격
             Expanded(
               child: TextField(
                 controller: _contentController,
