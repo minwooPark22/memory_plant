@@ -7,15 +7,8 @@ class MemoryLogService {
   // JSON 파일 경로를 가져오는 메서드
   Future<String> _getLocalFilePath() async {
     late final Directory? directory;
-
-    if (Platform.isAndroid) {
-      // 안드로이드에서 외부 저장소 디렉토리
-      directory = await getExternalStorageDirectory();
-    } else if (Platform.isIOS) {
-      // iOS에서는 Documents 디렉토리를 사용
-      directory = await getApplicationDocumentsDirectory();
-    }
-    return '${directory!.path}/memories_log.json'; // 파일 이름 지정 // 파일 이름 지정
+    directory = await getApplicationDocumentsDirectory();
+    return '${directory.path}/memories_log.json'; // 파일 이름 지정 // 파일 이름 지정
   }
 
   // 데이터 저장 메서드

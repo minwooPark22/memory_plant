@@ -7,7 +7,6 @@ import 'package:memory_plant_application/screens/learning_page.dart';
 import 'package:provider/provider.dart';
 import 'package:memory_plant_application/providers/name_provider.dart';
 
-
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
 
@@ -24,7 +23,7 @@ class _SettingPageState extends State<SettingPage> {
           currentName: currentName,
           onNameSaved: (newName) {
             final nameProvider =
-            Provider.of<NameProvider>(context, listen: false);
+                Provider.of<NameProvider>(context, listen: false);
             nameProvider.updateName(newName); // 새로운 이름 저장
           },
         ),
@@ -46,9 +45,9 @@ class _SettingPageState extends State<SettingPage> {
       ),
       body: ListView(
         padding: const EdgeInsets.only(
-          top: 0.0,   // 상단 패딩 줄임
+          top: 0.0, // 상단 패딩 줄임
           bottom: 8.0, // 하단 패딩 줄임
-          left: 16.0,  // 기존 가로 패딩 유지
+          left: 16.0, // 기존 가로 패딩 유지
           right: 16.0, // 기존 가로 패딩 유지
         ),
         children: [
@@ -64,10 +63,25 @@ class _SettingPageState extends State<SettingPage> {
           const SizedBox(height: 8),
           // Account Section
           _buildSectionTitle(isKorean ? "계정" : "Account"),
-          _buildListTile(
-            isKorean ? "프로필 수정" : "Edit profile",
-            Icons.person,
-                () {
+          // _buildListTile(
+          //   isKorean ? "프로필 수정" : "Edit profile",
+          //   Icons.person,
+          //   () {
+          //     _showEditNameDialog(nameProvider.name);
+          //   },
+          // ),
+
+          ListTile(
+            leading: Icon(
+              Icons.person, // 공장을 나타내는 아이콘
+              color: AppStyles.mainblack,
+            ),
+            title: Text(
+              isKorean ? "프로필 수정" : "Edit profile",
+              style: TextStyle(color: AppStyles.mainblack, fontSize: 14),
+            ),
+            trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+            onTap: () {
               _showEditNameDialog(nameProvider.name);
             },
           ),
@@ -99,8 +113,8 @@ class _SettingPageState extends State<SettingPage> {
           _buildSectionTitle(isKorean ? "더 보기" : "More"),
           ListTile(
             leading: Icon(
-                Icons.business, // 공장을 나타내는 아이콘
-                color: AppStyles.mainblack,
+              Icons.business, // 공장을 나타내는 아이콘
+              color: AppStyles.mainblack,
             ),
             title: Text(
               isKorean ? "센터에 대해 배우기" : "Learn About Centers",
@@ -134,7 +148,7 @@ class _SettingPageState extends State<SettingPage> {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       leading: SizedBox(
-        width: 55, // 고정된 너비 설정
+        width: 24, // 고정된 너비 설정
         child: Icon(
           icon,
           color: AppStyles.mainblack,
@@ -151,7 +165,8 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   // Toggle ListTile Widget
-  Widget _buildToggleTile(String title, bool value, ValueChanged<bool> onChanged) {
+  Widget _buildToggleTile(
+      String title, bool value, ValueChanged<bool> onChanged) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       title: Text(

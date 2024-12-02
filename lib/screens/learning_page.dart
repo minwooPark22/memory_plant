@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:memory_plant_application/providers/language_provider.dart';
-import 'package:memory_plant_application/styles/app_styles.dart';
 import 'package:memory_plant_application/widgets/intro_center.dart';
 import 'package:provider/provider.dart';
 
@@ -14,7 +13,7 @@ class LearningPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor:  Colors.white,
+        backgroundColor: Colors.white,
         title: Text(
           isKorean ? "기억발전소 알아보기" : "Learn About Memory Plant",
           style:
@@ -28,9 +27,9 @@ class LearningPage extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(
-              top: 10.0,   // 상단 패딩 줄임
+              top: 10.0, // 상단 패딩 줄임
               bottom: 0.0, // 하단 패딩 줄임
-              left: 10.0,  // 기존 가로 패딩 유지
+              left: 10.0, // 기존 가로 패딩 유지
               right: 10.0, // 기존 가로 패딩 유지
             ),
             child: IntroCenter(isKorean: isKorean),
