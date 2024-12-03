@@ -114,13 +114,15 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
                         '${DateTime.now().year}',
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 63,
-                          fontWeight: FontWeight.w800,
+                          fontFamily: 'NanumFontSetup_TTF_SQUARE_Bold',
+                          fontSize: 64,
+                          fontWeight: FontWeight.w900,
                           height: 1,
                         ),
                       ),
                     ),
                   ),
+                  const SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.only(left: 35),
                     child: Align(
@@ -129,7 +131,8 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
                         '${_getMonthAbbreviation(DateTime.now().month)} ${DateTime.now().day}',
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 55,
+                          fontFamily: 'NanumFontSetup_TTF_SQUARE_Bold',
+                          fontSize: 50,
                           fontWeight: FontWeight.w600,
                           height: 1,
                         ),
@@ -147,7 +150,7 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
                             : "Welcome ${nameProvider.name}!",
                         style: const TextStyle(
                           color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                          fontFamily: 'NanumFontSetup_TTF_SQUARE_Bold',
                           fontSize: 18,
                         ),
                       ),
@@ -163,7 +166,8 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
                             : "$memoryCount Journals",
                         style: const TextStyle(
                           color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                          fontFamily: 'NanumFontSetup_TTF_SQUARE_Bold',
+                          fontWeight: FontWeight.w600,
                           fontSize: 30,
                         ),
                       ),
@@ -174,6 +178,7 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
                     isKorean ? "아래로 스와이프하여 시작하기" : "Swipe down to start",
                     style: TextStyle(
                       color: AppStyles.primaryColor,
+                      fontFamily: 'NanumFontSetup_TTF_SQUARE_Bold',
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
                     ),

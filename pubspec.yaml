@@ -30,6 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
   flutter_swipe_action_cell: ^3.1.5
   flutter_slidable: ^3.1.1
 
@@ -73,6 +74,23 @@ flutter:
   assets:
     - assets/images/
     - assets/dummy_json/dummy_memory_list.json
+
+  fonts:
+    - family: NanumFontSetup_TTF_GOTHIC
+      fonts:
+        - asset: assets/fonts/NanumFontSetup_TTF_GOTHIC/NanumGothic.ttf
+        - asset: assets/fonts/NanumFontSetup_TTF_GOTHIC/NanumGothicBold.ttf
+        - asset: assets/fonts/NanumFontSetup_TTF_GOTHIC/NanumGothicExtraBold.ttf
+        - asset: assets/fonts/NanumFontSetup_TTF_GOTHIC/NanumGothicLight.ttf
+    - family: NanumFontSetup_TTF_SQUARE
+      fonts:
+        - asset: assets/fonts/NanumFontSetup_TTF_SQUARE/NanumSquare_acB.ttf
+
+    - family: NanumFontSetup_TTF_SQUARE_Bold
+      fonts:
+        - asset: assets/fonts/NanumFontSetup_TTF_SQUARE/NanumSquare_acEB.ttf
+
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

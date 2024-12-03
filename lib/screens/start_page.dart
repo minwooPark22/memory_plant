@@ -115,6 +115,7 @@ class _StartPageState extends State<StartPage>
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 50,
+                    fontFamily: 'NanumFontSetup_TTF_SQUARE',
                     fontWeight: FontWeight.w900,
                     color: Colors.white,
                     shadows: [
@@ -135,6 +136,7 @@ class _StartPageState extends State<StartPage>
                           : 'Select the account to log in',
                   style: const TextStyle(
                     fontSize: 18,
+                    fontFamily: 'NanumFontSetup_TTF_SQUARE',
                     fontWeight: FontWeight.w400,
                     color: Colors.white,
                   ),
