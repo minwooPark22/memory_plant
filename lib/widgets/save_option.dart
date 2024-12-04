@@ -26,7 +26,7 @@ class SaveOptionDropdown extends StatelessWidget {
           PopupMenuItem<String>(
             value: '요약',
             child: Text(
-              'Leave the summary to the plant keeper',
+              'summary',
               style: TextStyle(fontSize: 12, color: Colors.black,fontWeight: FontWeight.w400),
             ),
           ),

@@ -135,11 +135,11 @@ class _WritePageState extends State<WritePage> {
               if (selectedOption == '요약') {
                 // 드래프트 저장 처리
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(isKorean ? "요약" : "Leave the summary to the plant manager!")),
+                  SnackBar(content: Text(isKorean ? "요약" : "summary")),
                 );
               } else if (selectedOption == '노 요약') {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(isKorean ? "노 요약" : "Don\'t leave the summary to the plant manager!")),
+                    SnackBar(content: Text(isKorean ? "노 요약" : "Do not summary")),
                   );
               }
             },
