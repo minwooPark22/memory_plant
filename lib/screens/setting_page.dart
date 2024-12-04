@@ -53,6 +53,8 @@ class _SettingPageState extends State<SettingPage> {
         children: [
           // 상단 Settings 제목
           Text(
+            isKorean ?
+            '설정':
             'Settings',
             style: TextStyle(
               fontSize: 32, // 큰 폰트 크기
