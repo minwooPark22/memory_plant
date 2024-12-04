@@ -32,7 +32,8 @@ class _StartPageState extends State<StartPage>
     // 각 페이지의 [한국어 텍스트, 영어 텍스트]
     ['한국어', 'English'], // 언어 선택 페이지
     ['Sign in with Google', 'Sign in with Apple'], // 로그인 선택 페이지
-    ['이름을 입력해주세요.', 'Please enter your name'] // 이름 입력 페이지 힌트 메시지
+    ['이름을 입력해주세요.', 'Please enter your name'], // 이름 입력 페이지 힌트 메시지
+    ['제출','Comfirm']
   ];
 
   final List<String> pageMessages = [
@@ -172,19 +173,7 @@ class _StartPageState extends State<StartPage>
                   ),
                 ),
                 const SizedBox(height: 60),
-                Text(/*
-                  currentButtonIndex == 0
-                      ? 'Please select your preferred language'
-                      : isKorean
-                      ? '로그인할 계정을 선택해주세요'
-                      : 'Select the account to log in',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontFamily: 'NanumFontSetup_TTF_SQUARE',
-                    fontWeight: FontWeight.w400,
-                    color: Colors.white,
-                  ),
-                  */
+                Text(
                   currentButtonIndex == 0
                       ? (isKorean
                       ? pageMessages[0] // 한국어: 언어 선택
@@ -246,7 +235,7 @@ class _StartPageState extends State<StartPage>
                     child:
                     SizedBox(
                       width: 250,
-                      height: 53,
+                      height: 50,
                       child: TextField(
                         controller: _nameController,
                         decoration: InputDecoration(
@@ -289,7 +278,7 @@ class _StartPageState extends State<StartPage>
                       side: const BorderSide(color: Colors.white),
                     ),
                     child: Text(
-                      buttonTexts[currentButtonIndex][isKorean ? 0 : 1], // 버튼 텍스트 변경
+                      buttonTexts[3][isKorean ? 0 : 1], // 버튼 텍스트를 '제출' 또는 'Confirm'으로 설정
                       style: TextStyle(color: AppStyles.maindeepblue),
                     ),
                   ),
