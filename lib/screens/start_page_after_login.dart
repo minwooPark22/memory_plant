@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memory_plant_application/providers/language_provider.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
-import 'package:memory_plant_application/widgets/primary_box.dart';
 import 'package:provider/provider.dart';
 import 'package:memory_plant_application/providers/name_provider.dart';
 import 'package:memory_plant_application/providers/memory_log_provider.dart';
@@ -13,19 +12,32 @@ class StartPageAfterLogin extends StatefulWidget {
   State<StartPageAfterLogin> createState() => _StartPageAfterLoginState();
 }
 
-class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
-  double primaryBoxHeight = 0.30;
-  double verticalDragOffset = 0;
-  double primaryBoxTopPosition = 0;
+class _StartPageAfterLoginState extends State<StartPageAfterLogin>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, () {
-      setState(() {
-        primaryBoxTopPosition = MediaQuery.of(context).size.height * 0.00;
-      });
-    });
+
+    // AnimationController 설정
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 3),
+    )..repeat(reverse: true);
+
+    // Animation 정의
+    _animation = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    ));
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   String _getMonthAbbreviation(int month) {
@@ -50,36 +62,20 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
   Widget build(BuildContext context) {
     final nameProvider = Provider.of<NameProvider>(context, listen: true);
     final memoryLogProvider =
-        Provider.of<MemoryLogProvider>(context); // MemoryLogProvider 가져오기
+    Provider.of<MemoryLogProvider>(context); // MemoryLogProvider 가져오기
     final isKorean =
         context.watch<LanguageProvider>().currentLanguage == Language.ko;
-    final memoryCount = memoryLogProvider.memoryList.length; // 메모리 개수
+    final memoryCount = memoryLogProvider.memoryList
+        .where((memory) => memory.isUser == true)
+        .length; // 내가 쓴 메모리 개수
 
     return GestureDetector(
-      onVerticalDragUpdate: (details) {
-        setState(() {
-          // 아래에서 위로 드래그 시 verticalDragOffset이 증가
-          verticalDragOffset += details.delta.dy; // 아래에서 위로 드래그하면 delta.dy는 음수
-          verticalDragOffset = verticalDragOffset.clamp(
-              0, MediaQuery.of(context).size.height * 0.3);
-        });
-      },
-      onVerticalDragEnd: (details) {
-        if (verticalDragOffset > 150) {
-          setState(() {
-            primaryBoxTopPosition =
-                MediaQuery.of(context).size.height * 0.0; // 상자가 최종 위치로 이동
-            verticalDragOffset = 0; // 드래그 상태 초기화
-          });
-          Navigator.pushNamed(context, "/bottomNavPage");
-        } else {
-          setState(() {
-            verticalDragOffset = 0; // 원래 상태로 복귀
-          });
-        }
+      onTap: () {
+        // 화면 탭 시 다음 페이지로 이동
+        Navigator.pushNamed(context, "/bottomNavPage");
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: AppStyles.maindeepblue,
         appBar: AppBar(
           backgroundColor: AppStyles.maindeepblue,
           elevation: 0,
@@ -92,16 +88,49 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
         ),
         body: Stack(
           children: [
-            AnimatedPositioned(
-              duration: const Duration(milliseconds: 800),
-              curve: Curves.easeOut,
-              top: primaryBoxTopPosition - verticalDragOffset,
-              left: 0,
-              right: 0,
-              child: PrimaryBox(
-                  height:
-                      MediaQuery.of(context).size.height * primaryBoxHeight),
+            // 파도 애니메이션 배경
+            AnimatedBuilder(
+              animation: _animation,
+              builder: (context, child) {
+                return Stack(
+                  children: [
+                    Positioned.fill(
+                      child: ClipPath(
+                        clipper: WaveClipper(1, _animation.value),
+                        child: Container(
+                          color: Colors.white.withOpacity(0.3),
+                        ),
+                      ),
+                    ),
+                    Positioned.fill(
+                      child: ClipPath(
+                        clipper: WaveClipper(2, _animation.value),
+                        child: Container(
+                          color: Colors.white.withOpacity(0.2),
+                        ),
+                      ),
+                    ),
+                    Positioned.fill(
+                      child: ClipPath(
+                        clipper: WaveClipper(3, _animation.value),
+                        child: Container(
+                          color: Colors.white.withOpacity(0.15),
+                        ),
+                      ),
+                    ),
+                    Positioned.fill(
+                      child: ClipPath(
+                        clipper: WaveClipper(4, _animation.value),
+                        child: Container(
+                          color: Colors.white.withOpacity(0.1),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
+            // 메인 콘텐츠
             Center(
               child: Column(
                 children: [
@@ -175,7 +204,7 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
                   ),
                   const SizedBox(height: 80),
                   Text(
-                    isKorean ? "아래로 스와이프하여 시작하기" : "Swipe down to start",
+                    isKorean ? "화면을 탭하여 시작하기" : "Tap the screen to start",
                     style: TextStyle(
                       color: AppStyles.primaryColor,
                       fontFamily: 'NanumFontSetup_TTF_SQUARE_Bold',
@@ -191,4 +220,42 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin> {
       ),
     );
   }
+}
+
+// 파도 애니메이션을 위한 클리퍼
+class WaveClipper extends CustomClipper<Path> {
+  final int waveLevel;
+  final double animationValue;
+
+  WaveClipper(this.waveLevel, this.animationValue);
+
+  @override
+  Path getClip(Size size) {
+    var path = Path();
+    double waveHeight = 50.0 * waveLevel * (1 + 0.1 * animationValue);
+
+    path.lineTo(0, size.height - waveHeight);
+
+    path.quadraticBezierTo(
+      size.width * 0.25,
+      size.height - (waveHeight + 30),
+      size.width * 0.5,
+      size.height - waveHeight,
+    );
+    path.quadraticBezierTo(
+      size.width * 0.75,
+      size.height - (waveHeight - 30),
+      size.width,
+      size.height - waveHeight,
+    );
+
+    path.lineTo(size.width, size.height);
+    path.lineTo(0, size.height);
+
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => true;
 }
