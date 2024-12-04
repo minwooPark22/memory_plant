@@ -118,7 +118,8 @@ class DiaryTile extends StatelessWidget {
                 ),
                 Text(
                   memory.title ?? 'Untitled Memory', // 제목
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontWeight: FontWeight.bold,),
+
                 ),
               ],
             ),

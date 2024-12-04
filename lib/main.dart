@@ -4,7 +4,6 @@ import 'package:memory_plant_application/providers/language_provider.dart';
 import 'package:memory_plant_application/providers/memory_log_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:memory_plant_application/screens/bottom_nav_page.dart';
-import 'package:memory_plant_application/screens/name_input_page.dart';
 import 'package:memory_plant_application/screens/setting_page.dart';
 import 'package:memory_plant_application/screens/start_page.dart';
 import 'package:memory_plant_application/screens/start_page_after_login.dart';
@@ -33,7 +32,6 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         routes: {
           "/": (context) => const StartPage(),
-          "/nameInputPage": (context) => const NameInputPage(),
           "/startPageAfterLogin": (context) => const StartPageAfterLogin(),
           "/bottomNavPage": (context) => const BottomNavPage(),
           "/settingPage": (context) => const SettingPage(),

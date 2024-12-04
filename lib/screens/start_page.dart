@@ -2,10 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:memory_plant_application/providers/language_provider.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
 import 'package:provider/provider.dart';
+import 'package:memory_plant_application/providers/name_provider.dart';
+
+// 사용자 정의 예외 클래스
+class EmptyNameException implements Exception {
+  final String message;
+  EmptyNameException(this.message);
+
+  @override
+  String toString() => message;
+}
 
 class StartPage extends StatefulWidget {
-  static var selectedLanguage = 'ko';
-
   const StartPage({super.key});
 
   @override
@@ -17,10 +25,24 @@ class _StartPageState extends State<StartPage>
   int currentButtonIndex = 0;
   late AnimationController _controller;
   late Animation<double> _animation;
+  final TextEditingController _nameController = TextEditingController();
+  String? _errorMessage;
 
   final List<List<String>> buttonTexts = [
-    ['한국어', 'English'],
-    ['Sign in with Google', 'Sign in with Apple'],
+    // 각 페이지의 [한국어 텍스트, 영어 텍스트]
+    ['한국어', 'English'], // 언어 선택 페이지
+    ['Sign in with Google', 'Sign in with Apple'], // 로그인 선택 페이지
+    ['이름을 입력해주세요.', 'Please enter your name'], // 이름 입력 페이지 힌트 메시지
+    ['제출','Comfirm']
+  ];
+
+  final List<String> pageMessages = [
+    'Please select your preferred language', // 한국어: 언어 선택 페이지 메시지
+    '로그인할 계정을 선택해주세요', // 한국어: 로그인 선택 페이지 메시지
+    '이름을 작성해주세요', // 한국어: 이름 입력 페이지 메시지
+    'Please select your preferred language', // 영어: 언어 선택 페이지 메시지
+    'Select the account to log in', // 영어: 로그인 선택 페이지 메시지
+    'Please enter your name' // 영어: 이름 입력 페이지 메시지
   ];
 
   @override
@@ -34,7 +56,7 @@ class _StartPageState extends State<StartPage>
     )..repeat(reverse: true);
 
     // Animation 정의
-    _animation = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
+    _animation = Tween<double>(begin: 0, end: 2).animate(CurvedAnimation(
       parent: _controller,
       curve: Curves.easeInOut,
     ));
@@ -43,6 +65,7 @@ class _StartPageState extends State<StartPage>
   @override
   void dispose() {
     _controller.dispose();
+    _nameController.dispose();
     super.dispose();
   }
 
@@ -52,6 +75,29 @@ class _StartPageState extends State<StartPage>
         currentButtonIndex++;
       }
     });
+  }
+
+  void _submitName() {
+    try {
+      final name = _nameController.text.trim();
+
+      if (name.isEmpty) {
+        throw EmptyNameException(
+            context.read<LanguageProvider>().currentLanguage == Language.ko
+                ? '이름을 입력해주세요!'
+                : 'Please enter your name!');
+      }
+
+      // 이름 상태를 업데이트
+      context.read<NameProvider>().updateName(name);
+
+      // 다음 페이지로 이동
+      Navigator.pushNamed(context, "/startPageAfterLogin");
+    } on EmptyNameException catch (e) {
+      setState(() {
+        _errorMessage = e.message;
+      });
+    }
   }
 
   @override
@@ -107,7 +153,6 @@ class _StartPageState extends State<StartPage>
           // 메인 콘텐츠
           Center(
             child: Column(
-              //mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 180),
                 Text(
@@ -115,6 +160,7 @@ class _StartPageState extends State<StartPage>
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 50,
+                    fontFamily: 'NanumFontSetup_TTF_SQUARE',
                     fontWeight: FontWeight.w900,
                     color: Colors.white,
                     shadows: [
@@ -129,68 +175,114 @@ class _StartPageState extends State<StartPage>
                 const SizedBox(height: 60),
                 Text(
                   currentButtonIndex == 0
-                      ? 'Please select your preferred language'
-                      : isKorean
-                          ? '로그인할 계정을 선택해주세요'
-                          : 'Select the account to log in',
+                      ? (isKorean
+                      ? pageMessages[0] // 한국어: 언어 선택
+                      : pageMessages[3]) // 영어: 언어 선택
+                      : currentButtonIndex == 1
+                      ? (isKorean
+                      ? pageMessages[1] // 한국어: 로그인 선택
+                      : pageMessages[4]) // 영어: 로그인 선택
+                      : (isKorean
+                      ? pageMessages[2] // 한국어: 이름 입력
+                      : pageMessages[5]), // 영어: 이름 입력
                   style: const TextStyle(
                     fontSize: 18,
+                    fontFamily: 'NanumFontSetup_TTF_SQUARE',
                     fontWeight: FontWeight.w400,
                     color: Colors.white,
                   ),
                 ),
                 const SizedBox(height: 30),
-                Column(
-                  children: [
-                    OutlinedButton(
-                      onPressed: () {
-                        if (currentButtonIndex == 0) {
-                          context
-                              .read<LanguageProvider>()
-                              .setLanguage(Language.ko);
-                        } else if (currentButtonIndex == 1) {
-                          Navigator.pushNamed(context, "/nameInputPage");
-                        }
-                        changeButton();
-                      },
-                      style: OutlinedButton.styleFrom(
-                        minimumSize: const Size(250, 50),
-                        backgroundColor: Colors.white, // 버튼 배경을 흰색으로 설정
-                        side: const BorderSide(color: Colors.white),
-                      ),
-                      child: Text(
-                        buttonTexts[currentButtonIndex][0],
-                        style: TextStyle(
-                            color: AppStyles
-                                .maindeepblue), // 텍스트 색상을 maindeepblue로 설정
+                if (currentButtonIndex < 2) ...[
+                  OutlinedButton(
+                    onPressed: () {
+                      if (currentButtonIndex == 0) {
+                        context.read<LanguageProvider>().setLanguage(Language.ko);
+                      }
+                      changeButton();
+                    },
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size(250, 50),
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.white),
+                    ),
+                    child: Text(
+                      buttonTexts[currentButtonIndex][0],
+                      style: TextStyle(color: AppStyles.maindeepblue),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  OutlinedButton(
+                    onPressed: () {
+                      if (currentButtonIndex == 0) {
+                        context.read<LanguageProvider>().setLanguage(Language.en);
+                      }
+                      changeButton();
+                    },
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size(250, 50),
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.white),
+                    ),
+                    child: Text(
+                      buttonTexts[currentButtonIndex][1],
+                      style: TextStyle(color: AppStyles.maindeepblue),
+                    ),
+                  ),
+                ] else ...[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                    child:
+                    SizedBox(
+                      width: 250,
+                      height: 50,
+                      child: TextField(
+                        controller: _nameController,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: buttonTexts[2][isKorean ? 0 : 1], // 힌트 메시지 변경
+                          hintStyle: TextStyle(
+                            color: AppStyles.maindeepblue.withOpacity(0.5),
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(50),
+                            borderSide: BorderSide.none,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 20,
+                          ),
+                        ),
+                        style: TextStyle(color: AppStyles.maindeepblue),
+                        textAlignVertical: TextAlignVertical.center,
+                        textAlign: TextAlign.center,
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    OutlinedButton(
-                      onPressed: () {
-                        if (currentButtonIndex == 0) {
-                          context
-                              .read<LanguageProvider>()
-                              .setLanguage(Language.en);
-                        } else if (currentButtonIndex == 1) {
-                          Navigator.pushNamed(context, "/nameInputPage");
-                        }
-                        changeButton();
-                      },
-                      style: OutlinedButton.styleFrom(
-                        minimumSize: const Size(250, 50),
-                        backgroundColor: Colors.white,
-                        side: const BorderSide(color: Colors.white),
-                      ),
+                  ),
+                  if (_errorMessage != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
                       child: Text(
-                        buttonTexts[currentButtonIndex][1],
-                        style: TextStyle(
-                            color: AppStyles
-                                .maindeepblue), // 텍스트 색상을 maindeepblue로 설정
+                        _errorMessage!,
+                        style: const TextStyle(color: Colors.red, fontSize: 14),
                       ),
                     ),
-                  ],
-                ),
+                  const SizedBox(height: 20),
+                  OutlinedButton(
+                    onPressed: _submitName,
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size(250, 50),
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.white),
+                    ),
+                    child: Text(
+                      buttonTexts[3][isKorean ? 0 : 1], // 버튼 텍스트를 '제출' 또는 'Confirm'으로 설정
+                      style: TextStyle(color: AppStyles.maindeepblue),
+                    ),
+                  ),
+                ],
               ],
             ),
           ),

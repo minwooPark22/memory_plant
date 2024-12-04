@@ -4,6 +4,8 @@ import 'package:memory_plant_application/providers/navigation_provider.dart';
 import 'package:memory_plant_application/providers/language_provider.dart';
 import 'package:memory_plant_application/services/groq_service.dart';
 import 'package:memory_plant_application/services/memory_log.dart';
+import 'package:memory_plant_application/styles/app_styles.dart';
+import 'package:memory_plant_application/widgets/save_option.dart';
 import 'package:provider/provider.dart';
 
 class WritePage extends StatefulWidget {
@@ -128,6 +130,20 @@ class _WritePageState extends State<WritePage> {
         ),
         centerTitle: true,
         actions: [
+          SaveOptionDropdown(
+            onOptionSelected: (String selectedOption) async {
+              if (selectedOption == '요약') {
+                // 드래프트 저장 처리
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(isKorean ? "요약" : "summary")),
+                );
+              } else if (selectedOption == '노 요약') {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(isKorean ? "노 요약" : "Do not summary")),
+                  );
+              }
+            },
+          ),
           TextButton(
             onPressed: _isSaveEnabled && !_isLoading
                 ? () async {
@@ -141,17 +157,12 @@ class _WritePageState extends State<WritePage> {
                 : Row(
               mainAxisSize: MainAxisSize.min, // 아이콘과 텍스트 사이의 간격 최소화
               children: [
-                const Icon(
-                  Icons.expand_more,
-                  color: Colors.grey, // 아이콘 색상
-                  size: 20, // 아이콘 크기
-                ),
                 const SizedBox(width: 4), // 아이콘과 텍스트 사이 간격
                 Text(
                   isKorean ? "저장" : "Save",
                   style: TextStyle(
                     color: _isSaveEnabled
-                        ? Colors.black
+                        ? AppStyles.maindeepblue
                         : Colors.grey, // 비활성화 시 회색
                     fontSize: 16,
                     fontWeight: FontWeight.bold,

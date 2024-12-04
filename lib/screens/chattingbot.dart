@@ -230,9 +230,12 @@ class Chatbot extends StatelessWidget {
             ),
           ),
           IconButton(
-            icon: Icon(
-              Icons.send,
-              color: AppStyles.maindeepblue,
+            icon: Transform.rotate(
+              angle: -30 * (3.14159 / 180), // 45도를 라디안 값으로 변환 (반시계 방향)
+              child: Icon(
+                Icons.send,
+                color: AppStyles.maindeepblue,
+              ),
             ),
             onPressed: () => chatProvider.sendMessage(context),
           ),
