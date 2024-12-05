@@ -73,7 +73,7 @@ With warm regards,
 
 Your Memory Curator
                   ''',
-              style: const TextStyle(fontSize: 12, color: Colors.black),
+              style: const TextStyle(fontSize: 12, color: Colors.black,fontFamily: 'NanumFontSetup_TTF_SQUARE',),
               textAlign: TextAlign.left,
             ),
           ],

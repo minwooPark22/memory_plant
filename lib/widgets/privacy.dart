@@ -34,7 +34,7 @@ class Privacy extends StatelessWidget {
                   '''
                   : '''When using the AI summary service, the content of your diary entries may be utilized for analysis to provide summarized results.\nTherefore, please ensure that sensitive personal information, such as names, addresses, phone numbers, or account details, is not included.\n\nThe data will only be used for summary processing purposes and will be strictly protected from external sharing.\nHowever, the app developer cannot be held responsible for any issues arising from personal information included in the content provided by users.\n\nPlease use the service carefully and responsibly.
                   ''',
-              style: const TextStyle(fontSize: 12, color: Colors.black),
+              style: const TextStyle(fontSize: 12, color: Colors.black,fontFamily: 'NanumFontSetup_TTF_SQUARE',),
               textAlign: TextAlign.left,
             ),
           ],
