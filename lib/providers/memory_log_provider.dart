@@ -56,12 +56,12 @@ class MemoryLogProvider with ChangeNotifier {
   // 일기 요약 시키기
   void updateOrCreateMonthlySummary(
       String monthSummaryTitle, String newContent, String timestamp) {
-    // 월별 기억 요약을 검색
-    final index =
-        memoryList.indexWhere((memory) => memory.title == monthSummaryTitle);
-
     // 월별 마지막 날짜를 계산
     final adjustedTimestamp = _getSummaryTimestamp(timestamp);
+
+    // 월별 기억 요약을 검색
+    final index = memoryList
+        .indexWhere((memory) => memory.timestamp == adjustedTimestamp);
 
     if (index != -1) {
       // 기존 요약이 있을 경우, 내용을 갱신

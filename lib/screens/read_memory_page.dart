@@ -48,13 +48,21 @@ class ReadMemoryPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: Text(
-          _formattedDate(context, memory.timestamp),
-          style: const TextStyle(
-            fontWeight: FontWeight.w700,
-            color: Colors.black,
-          ),
-        ),
+        title: memory.isUser!
+            ? Text(
+                _formattedDate(context, memory.timestamp),
+                style: const TextStyle(
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black,
+                ),
+              )
+            : const Text(
+                "Summary",
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black,
+                ),
+              ),
         centerTitle: true,
       ),
       body: Padding(

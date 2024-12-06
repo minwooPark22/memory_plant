@@ -47,15 +47,35 @@ class _WritePageState extends State<WritePage> {
     });
   }
 
+  String _getMonthAbbreviation(int month) {
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
+    ];
+    return months[month - 1];
+  }
+
   Future<void> addMemory(bool isKorean) async {
     try {
       setState(() {
         _isLoading = true;
       });
       if (_selectedOption == 'summary') {
-        final botResponse = await _cohereService.sendMessage(
-            "${_contentController.text}   you must summary about this very shortly");
-        final monthSummaryTitle = '${widget.selectedDay.month}월의 기억 요약';
+        final botResponse = await _cohereService.sendMemory(
+            """${_contentController.text} Here is a diary, and you must summarize it very briefly using the same language as the diary.""");
+        final monthSummaryTitle = isKorean
+            ? '${widget.selectedDay.year}년 ${widget.selectedDay.month}월의 기억 요약'
+            : 'Summary of Memories in ${_getMonthAbbreviation(widget.selectedDay.month)} ${widget.selectedDay.year}';
 
         if (mounted) {
           context.read<MemoryLogProvider>().updateOrCreateMonthlySummary(
