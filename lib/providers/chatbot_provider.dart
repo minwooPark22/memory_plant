@@ -6,10 +6,10 @@ import 'package:memory_plant_application/services/groq_service.dart';
 class ChatProvider with ChangeNotifier {
   List<MessageLog> messageList = [];
   final MessageLogService messageLogService = MessageLogService();
-  final CohereService cohereService = CohereService();
   TextEditingController controller = TextEditingController();
   FocusNode focusNode = FocusNode();
   bool _isTyping = false;
+  final CohereService cohereService = CohereService();
 
   // 타이핑 상태 접근자
   bool get isTyping => _isTyping;
@@ -39,7 +39,6 @@ class ChatProvider with ChangeNotifier {
       debugPrint("Failed to save message logs: $e");
     }
   }
-
 
   // 메시지 추가
   void addMessage(MessageLog message) {
@@ -73,16 +72,18 @@ class ChatProvider with ChangeNotifier {
     focusNode.unfocus();
 
     // 봇 응답 처리
-    await _handleBotResponse(userMessage);
+    await _handleBotResponse(context, userMessage);
   }
 
   // 봇 응답 처리
-  Future<void> _handleBotResponse(MessageLog userMessage) async {
+  Future<void> _handleBotResponse(
+      BuildContext context, MessageLog userMessage) async {
     setTyping(true);
 
     try {
       // Cohere API 호출
-      final response = await cohereService.sendMessage(userMessage.content ?? "");
+      final response =
+          await cohereService.sendMessage(context, userMessage.content ?? "");
 
       // 타이핑 상태 비활성화
       setTyping(false);

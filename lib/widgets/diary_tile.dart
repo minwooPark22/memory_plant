@@ -108,18 +108,20 @@ class DiaryTile extends StatelessWidget {
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  _formatDate(memory.timestamp!), // 날짜 표시
-                  style: const TextStyle(
-                    fontSize:11,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.black,
+                if (memory.isUser!) // memory.isUser가 true일 때만 날짜 텍스트를 렌더링
+                  Text(
+                    _formatDate(memory.timestamp!), // 날짜 표시
+                    style: const TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black,
+                    ),
                   ),
-                ),
                 Text(
                   memory.title ?? 'Untitled Memory', // 제목
-                  style: const TextStyle(fontWeight: FontWeight.bold,),
-
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
@@ -157,15 +159,15 @@ class DiaryTile extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
-              child:  Text("No",
-                  style: TextStyle(color: AppStyles.maindeepblue)),
+              child:
+                  Text("No", style: TextStyle(color: AppStyles.maindeepblue)),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
-              child: Text("Yes",
-                  style: TextStyle(color: AppStyles.maindeepblue)),
+              child:
+                  Text("Yes", style: TextStyle(color: AppStyles.maindeepblue)),
             ),
           ],
         );
