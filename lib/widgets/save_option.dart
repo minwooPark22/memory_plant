@@ -6,8 +6,7 @@ import 'package:provider/provider.dart';
 class SaveOptionDropdown extends StatefulWidget {
   final void Function(String) onOptionSelected;
 
-  const SaveOptionDropdown({Key? key, required this.onOptionSelected})
-      : super(key: key);
+  const SaveOptionDropdown({super.key, required this.onOptionSelected});
 
   @override
   State<SaveOptionDropdown> createState() => _SaveOptionDropdownState();
@@ -27,13 +26,14 @@ class _SaveOptionDropdownState extends State<SaveOptionDropdown> {
           popupMenuTheme: PopupMenuThemeData(
             color: Colors.white, // 드롭다운 배경 흰색
             shape: RoundedRectangleBorder(
-              side: BorderSide(color: Colors.grey, width: 0.3), // 회색 테두리 추가
+              side:
+                  const BorderSide(color: Colors.grey, width: 0.3), // 회색 테두리 추가
               borderRadius: BorderRadius.circular(8), // 모서리 둥글게
             ),
           ),
         ),
         child: PopupMenuButton<String>(
-          offset: const Offset(0, 28), // 드롭다운 위치
+          offset: const Offset(0, 40), // 드롭다운 위치
           onSelected: (String selectedOption) {
             setState(() {
               _selectedOption = selectedOption; // 선택된 옵션 업데이트
@@ -44,16 +44,17 @@ class _SaveOptionDropdownState extends State<SaveOptionDropdown> {
             PopupMenuItem<String>(
               value: 'summary',
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween, // 왼쪽 아이콘과 오른쪽 체크 정렬
+                mainAxisAlignment:
+                    MainAxisAlignment.spaceBetween, // 왼쪽 아이콘과 오른쪽 체크 정렬
                 children: [
                   Row(
                     children: [
                       Icon(Icons.auto_awesome,
                           color: AppStyles.maindeepblue, size: 16), // 반짝이는 아이콘
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       Text(
                         isKorean ? 'AI 요약' : 'AI summary',
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 12,
                             color: Colors.black,
                             fontWeight: FontWeight.w400),
@@ -73,14 +74,16 @@ class _SaveOptionDropdownState extends State<SaveOptionDropdown> {
             PopupMenuItem<String>(
               value: 'memo',
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween, // 왼쪽 텍스트와 오른쪽 체크 정렬
+                mainAxisAlignment:
+                    MainAxisAlignment.spaceBetween, // 왼쪽 텍스트와 오른쪽 체크 정렬
                 children: [
                   Row(
                     children: [
-                      SizedBox(width: 24), // 아이콘 자리 공간 확보 (아이콘 크기 + 간격 맞춤)
+                      const SizedBox(
+                          width: 24), // 아이콘 자리 공간 확보 (아이콘 크기 + 간격 맞춤)
                       Text(
                         isKorean ? '메모만 저장' : 'Just memo',
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 12,
                             color: Colors.black,
                             fontWeight: FontWeight.w400),
@@ -100,8 +103,16 @@ class _SaveOptionDropdownState extends State<SaveOptionDropdown> {
           ],
           child: Row(
             children: [
-              Icon(Icons.expand_more, color: AppStyles.textColor, size: 20),
-              SizedBox(width: 4),
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 8.0,
+                  left: 8.0,
+                  bottom: 8.0,
+                ), // 상단에만 패딩
+                child: Icon(Icons.expand_more,
+                    color: AppStyles.textColor, size: 20),
+              ),
+              const SizedBox(width: 4),
             ],
           ),
         ),
