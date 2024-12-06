@@ -20,7 +20,7 @@ class _WritePageState extends State<WritePage> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
   bool _isSaveEnabled = false; // 저장 활성화 이거 추가
-  final CohereService _groqService = CohereService();
+  final CohereService _cohereService = CohereService();
   bool _isLoading = false;
   String _selectedOption = 'summary'; // 기본 선택된 옵션
 
@@ -47,47 +47,55 @@ class _WritePageState extends State<WritePage> {
     });
   }
 
-  Future<void> addMemory() async {
-    setState(() {
-      _isLoading = true;
-    });
-    final newMemory = MemoryLog(
-        title: _titleController.text,
-        contents: _contentController.text,
-        timestamp: widget.selectedDay.toString(),
-        isUser: true // 작성 페이지에서 쓴 글은 무조건 isUser 가 true
-        );
-    context.read<MemoryLogProvider>().addMemory(newMemory);
+  Future<void> addMemory(bool isKorean) async {
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+      if (_selectedOption == 'summary') {
+        final botResponse = await _cohereService.sendMessage(
+            "${_contentController.text}   you must summary about this very shortly");
+        final monthSummaryTitle = '${widget.selectedDay.month}월의 기억 요약';
 
-    /*final botResponse = await _groqService.sendMessage(
-        "${_contentController.text}   you must summary about this very shortly");
-    final monthSummaryTitle = '${widget.selectedDay.month}월의 기억 요약';
-    if (mounted) {
-      context.read<MemoryLogProvider>().updateOrCreateMonthlySummary(
-          monthSummaryTitle, botResponse, widget.selectedDay.toString());
-    }*/
-    // 선택된 옵션에 따라 월간 요약 반영 여부 결정
-    if (_selectedOption == 'summary') {
-      final botResponse = await _groqService.sendMessage(
-          "${_contentController.text}   you must summary about this very shortly");
-      final monthSummaryTitle = '${widget.selectedDay.month}월의 기억 요약';
+        if (mounted) {
+          context.read<MemoryLogProvider>().updateOrCreateMonthlySummary(
+              monthSummaryTitle, botResponse, widget.selectedDay.toString());
+        }
+      }
+
+      setState(() {
+        _isLoading = false;
+      });
 
       if (mounted) {
-        context.read<MemoryLogProvider>().updateOrCreateMonthlySummary(
-            monthSummaryTitle, botResponse, widget.selectedDay.toString());
+        final newMemory = MemoryLog(
+            title: _titleController.text,
+            contents: _contentController.text,
+            timestamp: widget.selectedDay.toString(),
+            isUser: true // 작성 페이지에서 쓴 글은 무조건 isUser 가 true
+            );
+        context.read<MemoryLogProvider>().addMemory(newMemory);
+        context.read<NavigationProvider>().updateIndex(0); // HomePage 인덱스
+        Navigator.of(context).pop();
       }
-    }
-    setState(() {
-      _isLoading = false;
-    });
-
-    if (mounted) {
-      context.read<NavigationProvider>().updateIndex(0); // HomePage 인덱스
-      Navigator.of(context).pop();
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(isKorean
+                ? "네트워크 연결상태를 확인하세요"
+                : "Please check your network connection"),
+            duration: const Duration(seconds: 1),
+          ),
+        );
+      }
     }
   }
 
-  String formattedDate(BuildContext context) {
+  String formattedDate(BuildContext context, bool isKorean) {
     final day = widget.selectedDay.day;
     final month = widget.selectedDay.month;
     final weekdaysKorean = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'];
@@ -115,10 +123,6 @@ class _WritePageState extends State<WritePage> {
       'Dec'
     ];
     final weekday = widget.selectedDay.weekday;
-
-    final isKorean =
-        context.watch<LanguageProvider>().currentLanguage == Language.ko;
-
     return isKorean
         ? '$month월 $day일 ${weekdaysKorean[weekday - 1]}'
         : '${weekdaysEnglish[weekday - 1]}, ${monthNames[month - 1]} $day';
@@ -135,7 +139,7 @@ class _WritePageState extends State<WritePage> {
         backgroundColor: Colors.white,
         elevation: 0, // 그림자 제거
         title: Text(
-          formattedDate(context),
+          formattedDate(context, isKorean),
           style: const TextStyle(
             fontWeight: FontWeight.w700,
             color: Colors.black,
@@ -148,22 +152,12 @@ class _WritePageState extends State<WritePage> {
               setState(() {
                 _selectedOption = selectedOption; // 선택된 옵션 상태 업데이트
               });
-
-              if (selectedOption == 'summary') {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(isKorean ? "기억발전소장이 내 기억을 요약해줘요!" : "The memory manager summarizes my memories!")),
-                );
-              } else if (selectedOption == 'memo') {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(isKorean ? "기억발전소장이 내 기억을 요약하지 않아요." : "The memory manager doesn't summarize my memory.")),
-                );
-              }
             },
           ),
           TextButton(
             onPressed: _isSaveEnabled && !_isLoading
                 ? () async {
-                    await addMemory();
+                    await addMemory(isKorean);
                   }
                 : null, //활성화 되지 않은 상태에서는 null 처리
             child: _isLoading
@@ -171,25 +165,24 @@ class _WritePageState extends State<WritePage> {
                     valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
                   )
                 : Row(
-              mainAxisSize: MainAxisSize.min, // 아이콘과 텍스트 사이의 간격 최소화
-              children: [
-                const SizedBox(width: 4), // 아이콘과 텍스트 사이 간격
-                Text(
-                  isKorean ? "저장" : "Save",
-                  style: TextStyle(
-                    color: _isSaveEnabled
-                        ? AppStyles.maindeepblue
-                        : Colors.grey, // 비활성화 시 회색
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                    mainAxisSize: MainAxisSize.min, // 아이콘과 텍스트 사이의 간격 최소화
+                    children: [
+                      const SizedBox(width: 4), // 아이콘과 텍스트 사이 간격
+                      Text(
+                        isKorean ? "저장" : "Save",
+                        style: TextStyle(
+                          color: _isSaveEnabled
+                              ? AppStyles.maindeepblue
+                              : Colors.grey, // 비활성화 시 회색
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
           ),
         ],
       ),
-
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

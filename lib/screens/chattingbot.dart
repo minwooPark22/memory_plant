@@ -55,7 +55,6 @@ class Chatbot extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Spacer(),
         Image.asset(
           'assets/images/sojang.png',
           height: 40,
@@ -68,7 +67,6 @@ class Chatbot extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        const Spacer(flex: 2),
       ],
     );
   }
