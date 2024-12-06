@@ -22,6 +22,8 @@ class _WritePageState extends State<WritePage> {
   bool _isSaveEnabled = false; // 저장 활성화 이거 추가
   final CohereService _groqService = CohereService();
   bool _isLoading = false;
+  String _selectedOption = 'summary'; // 기본 선택된 옵션
+
   @override
   void initState() {
     super.initState();
@@ -57,12 +59,23 @@ class _WritePageState extends State<WritePage> {
         );
     context.read<MemoryLogProvider>().addMemory(newMemory);
 
-    final botResponse = await _groqService.sendMessage(
+    /*final botResponse = await _groqService.sendMessage(
         "${_contentController.text}   you must summary about this very shortly");
     final monthSummaryTitle = '${widget.selectedDay.month}월의 기억 요약';
     if (mounted) {
       context.read<MemoryLogProvider>().updateOrCreateMonthlySummary(
           monthSummaryTitle, botResponse, widget.selectedDay.toString());
+    }*/
+    // 선택된 옵션에 따라 월간 요약 반영 여부 결정
+    if (_selectedOption == 'summary') {
+      final botResponse = await _groqService.sendMessage(
+          "${_contentController.text}   you must summary about this very shortly");
+      final monthSummaryTitle = '${widget.selectedDay.month}월의 기억 요약';
+
+      if (mounted) {
+        context.read<MemoryLogProvider>().updateOrCreateMonthlySummary(
+            monthSummaryTitle, botResponse, widget.selectedDay.toString());
+      }
     }
     setState(() {
       _isLoading = false;
@@ -131,16 +144,19 @@ class _WritePageState extends State<WritePage> {
         centerTitle: true,
         actions: [
           SaveOptionDropdown(
-            onOptionSelected: (String selectedOption) async {
-              if (selectedOption == '요약') {
-                // 드래프트 저장 처리
+            onOptionSelected: (String selectedOption) {
+              setState(() {
+                _selectedOption = selectedOption; // 선택된 옵션 상태 업데이트
+              });
+
+              if (selectedOption == 'summary') {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(isKorean ? "요약" : "summary")),
+                  SnackBar(content: Text(isKorean ? "기억발전소장이 내 기억을 요약해줘요!" : "The memory manager summarizes my memories!")),
                 );
-              } else if (selectedOption == '노 요약') {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(isKorean ? "노 요약" : "Do not summary")),
-                  );
+              } else if (selectedOption == 'memo') {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(isKorean ? "기억발전소장이 내 기억을 요약하지 않아요." : "The memory manager doesn't summarize my memory.")),
+                );
               }
             },
           ),

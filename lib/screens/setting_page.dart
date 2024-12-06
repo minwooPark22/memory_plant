@@ -6,6 +6,7 @@ import 'package:memory_plant_application/widgets/language.dart';
 import 'package:memory_plant_application/screens/learning_page.dart';
 import 'package:provider/provider.dart';
 import 'package:memory_plant_application/providers/name_provider.dart';
+import 'package:memory_plant_application/screens/privacy_page.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -126,6 +127,22 @@ class _SettingPageState extends State<SettingPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const LearningPage()),
+              );
+            },
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.security,
+              color: AppStyles.mainblack,
+            ),
+            title: Text(
+              isKorean ? "개인정보 보호 안내" : "Privacy Notice",
+              style: TextStyle(color: AppStyles.mainblack, fontSize: 14),
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const PrivacyPage()),
               );
             },
           ),
