@@ -10,9 +10,11 @@ import 'package:memory_plant_application/screens/start_page_after_login.dart';
 import 'package:memory_plant_application/providers/navigation_provider.dart'; // NavigationProvider import
 import 'package:memory_plant_application/providers/name_provider.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void  main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(); // Firebase 초기화
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,   // 세로 모드
     DeviceOrientation.portraitDown, // 세로 모드 (거꾸로)

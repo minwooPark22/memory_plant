@@ -44,25 +44,25 @@ class _AddPageState extends State<AddPage> {
           },
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // 제목
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
-              child: Text(
-                isKorean ? "날짜를 선택해주세요." : "Please select a date.",
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // 제목
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+            child: Text(
+              isKorean ? "날짜를 선택해주세요." : "Please select a date.",
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
               ),
+              textAlign: TextAlign.center,
             ),
-            // 캘린더
-            Padding(
+          ),
+          // 캘린더
+          Expanded(
+            child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: TableCalendar(
                 firstDay: DateTime.utc(2000, 1, 1),
@@ -105,41 +105,41 @@ class _AddPageState extends State<AddPage> {
                 ),
               ),
             ),
-            // 하단 고정 선택 버튼
-            Padding(
-              padding: const EdgeInsets.all(16.0), // 전체적으로 여백 추가
-              child: SizedBox(
-                width: double.infinity,
-                height: 60, // 버튼 높이 조정
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppStyles.maindeepblue,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
+          ),
+          // 하단 고정 선택 버튼
+          Padding(
+            padding: const EdgeInsets.all(16.0), // 전체적으로 여백 추가
+            child: SizedBox(
+              width: double.infinity,
+              height: 60, // 버튼 높이 조정
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppStyles.maindeepblue,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0),
                   ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => WritePage(
-                            selectedDay: _selectedDay ?? DateTime.now()),
-                      ),
-                    );
-                  },
-                  child: Text(
-                    isKorean ? "선택하기" : "Select Date",
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => WritePage(
+                          selectedDay: _selectedDay ?? DateTime.now()),
                     ),
+                  );
+                },
+                child: Text(
+                  isKorean ? "선택하기" : "Select Date",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

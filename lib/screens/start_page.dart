@@ -3,6 +3,8 @@ import 'package:memory_plant_application/providers/language_provider.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
 import 'package:provider/provider.dart';
 import 'package:memory_plant_application/providers/name_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 // 사용자 정의 예외 클래스
 class EmptyNameException implements Exception {
@@ -27,6 +29,34 @@ class _StartPageState extends State<StartPage>
   late Animation<double> _animation;
   final TextEditingController _nameController = TextEditingController();
   String? _errorMessage;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+
+  Future<void> _signInWithGoogle() async {
+    try {
+      // 구글 로그인 시도
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        // 사용자가 로그인을 취소했을 때
+        return;
+      }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final OAuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      // Firebase에 로그인 인증 시도
+      await _auth.signInWithCredential(credential);
+
+      // 로그인 후 페이지 전환
+      Navigator.pushNamed(context, "/startPageAfterLogin");
+    } catch (e) {
+      // 예외 처리
+      print("구글 로그인 오류: $e");
+    }
+  }
 
   final List<List<String>> buttonTexts = [
     // 각 페이지의 [한국어 텍스트, 영어 텍스트]
@@ -201,11 +231,16 @@ class _StartPageState extends State<StartPage>
                 ),
                 if (currentButtonIndex < 2) ...[
                   OutlinedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (currentButtonIndex == 0) {
                         context.read<LanguageProvider>().setLanguage(Language.ko);
+                        changeButton();
                       }
-                      changeButton();
+                      else if (currentButtonIndex == 1) {
+                        await _signInWithGoogle(); // 구글 로그인 결과 확인
+                        changeButton();
+                      }
+
                     },
                     style: OutlinedButton.styleFrom(
                       minimumSize: const Size(250, 50),
@@ -237,7 +272,10 @@ class _StartPageState extends State<StartPage>
                       style: TextStyle(color: AppStyles.maindeepblue),
                     ),
                   ),
-                ] else ...[
+
+                ]
+
+              else ...[
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30.0),
                     child:
