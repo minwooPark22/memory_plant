@@ -9,9 +9,16 @@ import 'package:memory_plant_application/screens/start_page.dart';
 import 'package:memory_plant_application/screens/start_page_after_login.dart';
 import 'package:memory_plant_application/providers/navigation_provider.dart'; // NavigationProvider import
 import 'package:memory_plant_application/providers/name_provider.dart';
+import 'package:flutter/services.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,   // 세로 모드
+    DeviceOrientation.portraitDown, // 세로 모드 (거꾸로)
+  ]).then((_) {
+    runApp(const MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {
