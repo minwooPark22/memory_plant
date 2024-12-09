@@ -33,7 +33,6 @@ dependencies:
 
   flutter_swipe_action_cell: ^3.1.5
   flutter_slidable: ^3.1.1
-
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
@@ -49,6 +48,9 @@ dependencies:
   material_design_icons_flutter: ^5.0.6596
   firebase_core: ^3.8.1
   cloud_firestore: ^5.5.1
+  firebase_analytics: ^11.3.6 # 필요한 Firebase 라이브러리 추가
+  google_sign_in: ^5.0.7  # 최신 버전을 확인하고 사용하세요.
+  firebase_auth: ^5.3.4   # Firebase 인증을 사용하려면 추가
 
 dev_dependencies:
   flutter_test:

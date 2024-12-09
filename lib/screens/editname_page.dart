@@ -94,7 +94,7 @@ class _EditNamePageState extends State<EditNamePage> {
                 CircleAvatar(
                   radius: 60,
                   backgroundColor: AppStyles.primaryColor, // 배경색
-                  child: Icon(
+                  child: const Icon(
                     MdiIcons.robot, // 물고기로 설정
                     size: 70,
                     color: Colors.white,
