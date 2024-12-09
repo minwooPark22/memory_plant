@@ -1,3 +1,19 @@
+buildscript {
+    repositories {
+        google() // Google Maven 저장소
+        mavenCentral()
+    }
+    dependencies {
+        // Google services Gradle 플러그인 추가
+        classpath 'com.google.gms:google-services:4.4.2'
+    }
+}
+
+plugins {
+    // Firebase 플러그인 적용 설정을 추가합니다. (이 부분은 'apply false'로 설정해 프로젝트 수준에서만 플러그인을 가져오게 합니다.)
+    id 'com.google.gms.google-services' version '4.4.2' apply false
+}
+
 allprojects {
     repositories {
         google()

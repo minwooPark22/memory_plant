@@ -47,6 +47,8 @@ dependencies:
   provider: ^6.1.2
   animated_text_kit: ^4.2.2
   material_design_icons_flutter: ^5.0.6596
+  firebase_core: ^3.8.1
+  cloud_firestore: ^5.5.1
 
 dev_dependencies:
   flutter_test:

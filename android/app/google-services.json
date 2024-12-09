@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "101124118205",
+    "firebase_url": "https://seokjins-6319f-default-rtdb.firebaseio.com",
+    "project_id": "seokjins-6319f",
+    "storage_bucket": "seokjins-6319f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:101124118205:android:71711a40732f588c8189d4",
+        "android_client_info": {
+          "package_name": "com.example.memory_plant_application"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "101124118205-r8u0hhusnktinspc3res3hjccfet7l92.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClsbljp12O2DfUhB8-el4gzmp91nckwr4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "101124118205-r8u0hhusnktinspc3res3hjccfet7l92.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "101124118205-495sv0h0s3bbi69gdnpo6hgsn0h107nv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.memoryPlantApplication"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
