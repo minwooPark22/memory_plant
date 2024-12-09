@@ -277,7 +277,9 @@ class _StartPageState extends State<StartPage>
                         style: const TextStyle(color: Colors.red, fontSize: 14),
                       ),
                     ),
-                  const SizedBox(height: 20),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.02,
+                  ),
                   OutlinedButton(
                     onPressed: _submitName,
                     style: OutlinedButton.styleFrom(
