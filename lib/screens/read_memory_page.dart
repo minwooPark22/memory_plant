@@ -92,7 +92,9 @@ class ReadMemoryPage extends StatelessWidget {
                 child: Text(
                   memory.contents ?? "",
                   maxLines: null,
-                  style: const TextStyle(fontSize: 16),
+                  style: const TextStyle(fontSize: 16,
+                    fontFamily: 'NanumFontSetup_TTF_SQUARE',
+                  ),
                 ),
               ),
             ),

@@ -154,7 +154,9 @@ class _StartPageState extends State<StartPage>
           Center(
             child: Column(
               children: [
-                const SizedBox(height: 180),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.22,
+                ),
                 Text(
                   'AI for\nrecording life',
                   textAlign: TextAlign.center,
@@ -172,7 +174,9 @@ class _StartPageState extends State<StartPage>
                     ],
                   ),
                 ),
-                const SizedBox(height: 60),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.05,
+                ),
                 Text(
                   currentButtonIndex == 0
                       ? (isKorean
@@ -192,7 +196,9 @@ class _StartPageState extends State<StartPage>
                     color: Colors.white,
                   ),
                 ),
-                const SizedBox(height: 30),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.03,
+                ),
                 if (currentButtonIndex < 2) ...[
                   OutlinedButton(
                     onPressed: () {
@@ -211,7 +217,9 @@ class _StartPageState extends State<StartPage>
                       style: TextStyle(color: AppStyles.maindeepblue),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.02,
+                  ),
                   OutlinedButton(
                     onPressed: () {
                       if (currentButtonIndex == 0) {
