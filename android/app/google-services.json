@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "725831989948-iania0n7ok8n0p9no8snqdb1c33uqmpg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.memoryplantapplication",
+            "certificate_hash": "412f367afe39763740fe27fe7cf2b2172a618ce6"
+          }
+        },
+        {
           "client_id": "725831989948-ugdiknp9j7pbfg8fuuj0rbgn61eltahe.apps.googleusercontent.com",
           "client_type": 3
         }
