@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:memory_plant_application/providers/name_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 // 사용자 정의 예외 클래스
 class EmptyNameException implements Exception {
   final String message;
@@ -30,7 +30,9 @@ class _StartPageState extends State<StartPage>
   final TextEditingController _nameController = TextEditingController();
   String? _errorMessage;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: ['email', 'profile'],
+  );
 
   Future<void> _signInWithGoogle() async {
     try {
@@ -48,10 +50,30 @@ class _StartPageState extends State<StartPage>
       );
 
       // Firebase에 로그인 인증 시도
-      await _auth.signInWithCredential(credential);
+      UserCredential userCredential = await _auth.signInWithCredential(credential);
+      User? user = userCredential.user;
 
-      // 로그인 후 페이지 전환
-      Navigator.pushNamed(context, "/startPageAfterLogin");
+      // Firestore에 사용자 정보 저장
+      if (user != null) {
+        try {
+          final userRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
+          // 사용자의 정보를 Firestore에 저장. 기존 데이터가 있다면 덮어쓰기
+          await userRef.set({
+            'uid': user.uid,
+            'email': user.email,
+            'displayName': user.displayName,
+            'photoURL': user.photoURL,
+            'lastSignInTime': user.metadata.lastSignInTime,
+            'creationTime': user.metadata.creationTime,
+          }, SetOptions(merge: true)); // merge: true로 설정하면 기존 데이터와 병합됩니다.
+
+          print('사용자 정보가 Firestore에 성공적으로 저장되었습니다.');
+        } catch (e) {
+          print('Firestore에 사용자 정보를 저장하는 중 오류 발생: $e');
+        }
+      } else {
+        print('로그인한 사용자 정보가 없습니다.');
+      }
     } catch (e) {
       // 예외 처리
       print("구글 로그인 오류: $e");
@@ -79,6 +101,16 @@ class _StartPageState extends State<StartPage>
   void initState() {
     super.initState();
 
+    void _signOut() async {
+      try {
+        await _googleSignIn.signOut();
+        await _auth.signOut();
+        print('로그아웃 성공');
+      } catch (e) {
+        print("로그아웃 중 오류 발생: $e");
+      }
+    }
+    _signOut();
     // AnimationController 설정
     _controller = AnimationController(
       vsync: this,
@@ -275,7 +307,7 @@ class _StartPageState extends State<StartPage>
 
                 ]
 
-              else ...[
+                else ...[
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30.0),
                     child:
