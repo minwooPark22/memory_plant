@@ -21,7 +21,7 @@ class NameProvider with ChangeNotifier {
   }
 
   // Firestore에 이름 저장
-  Future<void> _saveNameToFirestore(String newName) async {
+  Future<void> saveNameToFirestore(String newName) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
@@ -30,32 +30,12 @@ class NameProvider with ChangeNotifier {
     }
   }
 
-  // 이름 업데이트
-  Future<void> updateName(String newName) async {
-    _name = newName;
-    notifyListeners(); // 상태 변경 알림
-
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('user_name', newName); // 이름을 SharedPreferences에 저장
-
-    // Firestore에 저장
-    await _saveNameToFirestore(newName);
-  }
-
-  // SharedPreferences에서 이름 로드
-  Future<void> _loadNameFromPreferences() async {
-    final prefs = await SharedPreferences.getInstance();
-    _name = prefs.getString('user_name') ?? "guest"; // 저장된 이름 불러오기
-    notifyListeners();
-  }
-
   // SharedPreferences에서 이름 로드
   Future<void> loadName() async {
     try {
       await _loadNameFromFirestore(); // Firestore에서 먼저 로드
     } catch (e) {
       print("Firestore에서 이름 로드 실패: $e");
-      await _loadNameFromPreferences(); // 실패하면 SharedPreferences에서 로드
     }
   }
 }

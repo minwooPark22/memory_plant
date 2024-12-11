@@ -80,6 +80,20 @@ class _StartPageState extends State<StartPage>
     }
   }
 
+  // 로그인 상태 확인 함수
+  Future<void> _checkLoginStatus() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      // 화면이 빌드된 후 네비게이션을 호출하기 위해 지연 추가
+      Future.delayed(Duration.zero, () {
+        Navigator.pushReplacementNamed(context, "/startPageAfterLogin");
+      });
+    } else {
+      print('사용자가 로그인되어 있지 않습니다.');
+    }
+  }
+
   final List<List<String>> buttonTexts = [
     // 각 페이지의 [한국어 텍스트, 영어 텍스트]
     ['한국어', 'English'], // 언어 선택 페이지
@@ -100,7 +114,7 @@ class _StartPageState extends State<StartPage>
   @override
   void initState() {
     super.initState();
-
+    /*
     void _signOut() async {
       try {
         await _googleSignIn.signOut();
@@ -111,6 +125,16 @@ class _StartPageState extends State<StartPage>
       }
     }
     _signOut();
+    */
+    //==========================================================
+
+    //화면이 시작될 떄, 로그인이 되어있는지 여부 확인 -> 로그인 중인건 true/ false 로받아주는 함수가 있을수있음
+    //만약 로그인이 되어있으면 start_after_loginpage로 nav를 보내면 됨
+    _checkLoginStatus(); // 로그인 상태 확인
+
+    //==========================================================
+
+
     // AnimationController 설정
     _controller = AnimationController(
       vsync: this,
@@ -159,7 +183,7 @@ class _StartPageState extends State<StartPage>
       }
 
       // SharedPreferences와 상태 업데이트
-      await context.read<NameProvider>().updateName(name);
+      await context.read<NameProvider>().saveNameToFirestore(name);
 
       // 다음 페이지로 이동
       Navigator.pushNamed(context, "/startPageAfterLogin");
