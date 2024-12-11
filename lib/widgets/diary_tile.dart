@@ -45,7 +45,11 @@ class DiaryTile extends StatelessWidget {
             onTap: (CompletionHandler handler) async {
               final confirmed = await _confirmDelete(context);
               if (confirmed ?? false) {
-                context.read<MemoryLogProvider>().deleteMemory(memory.memoryId!);
+                if (context.mounted) {
+                  context
+                      .read<MemoryLogProvider>()
+                      .deleteMemory(memory.memoryId!);
+                }
               } else {
                 await handler(false);
               }
@@ -73,7 +77,12 @@ class DiaryTile extends StatelessWidget {
               );
 
               if (updatedMemory != null && updatedMemory is MemoryLog) {
-                context.read<MemoryLogProvider>().editMemory(memory.memoryId!, updatedMemory);
+                if (context.mounted) {
+                  // mounted 체크
+                  context
+                      .read<MemoryLogProvider>()
+                      .editMemory(memory.memoryId!, updatedMemory);
+                }
               }
             },
             color: Colors.blue,

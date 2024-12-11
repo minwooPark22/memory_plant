@@ -6,6 +6,7 @@ import 'package:memory_plant_application/providers/name_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 // 사용자 정의 예외 클래스
 class EmptyNameException implements Exception {
   final String message;
@@ -33,7 +34,6 @@ class _StartPageState extends State<StartPage>
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: ['email', 'profile'],
   );
-  bool _isCheckingLoginStatus = true; // 로그인 상태 확인 중인지 나타내는 변수
 
   Future<void> _signInWithGoogle() async {
     try {
@@ -44,26 +44,31 @@ class _StartPageState extends State<StartPage>
         return;
       }
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
       final OAuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
       // Firebase에 로그인 인증 시도
-      UserCredential userCredential = await _auth.signInWithCredential(credential);
+      UserCredential userCredential =
+          await _auth.signInWithCredential(credential);
       User? user = userCredential.user;
 
       // Firestore에 사용자 정보 저장
       if (user != null) {
         try {
-          final userRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
+          final userRef =
+              FirebaseFirestore.instance.collection('users').doc(user.uid);
           // 사용자의 정보를 Firestore에 저장. 기존 데이터가 있다면 덮어쓰기
           final userDoc = await userRef.get();
 
           if (userDoc.exists && userDoc.data()?['nickname'] != null) {
             // nickname 필드가 이미 존재하면 바로 페이지로 이동
-            Navigator.pushReplacementNamed(context, "/startPageAfterLogin");
+            if (mounted) {
+              Navigator.pushReplacementNamed(context, "/startPageAfterLogin");
+            }
           } else {
             // nickname이 없으면 사용자 정보를 Firestore에 저장하고 nickname 초기화
             await userRef.set({
@@ -75,17 +80,16 @@ class _StartPageState extends State<StartPage>
               'creationTime': user.metadata.creationTime,
             }, SetOptions(merge: true));
           }
-          print('사용자 정보가 Firestore에 성공적으로 저장되었습니다.');
-        }
-        catch (e) {
-          print('Firestore에 사용자 정보를 저장하는 중 오류 발생: $e');
+          // print('사용자 정보가 Firestore에 성공적으로 저장되었습니다.');
+        } catch (e) {
+          // print('Firestore에 사용자 정보를 저장하는 중 오류 발생: $e');
         }
       } else {
-        print('로그인한 사용자 정보가 없습니다.');
+        // print('로그인한 사용자 정보가 없습니다.');
       }
     } catch (e) {
       // 예외 처리
-      print("구글 로그인 오류: $e");
+      // print("구글 로그인 오류: $e");
     }
   }
 
@@ -96,24 +100,25 @@ class _StartPageState extends State<StartPage>
     if (user != null) {
       // 화면이 빌드된 후 네비게이션을 호출하기 위해 지연 추가
       Future.delayed(Duration.zero, () {
-        Navigator.pushReplacementNamed(context, "/startPageAfterLogin");
+        if (mounted) {
+          Navigator.pushReplacementNamed(context, "/startPageAfterLogin");
+        }
       });
     } else {
-      print('사용자가 로그인되어 있지 않습니다.');
+      // print('사용자가 로그인되어 있지 않습니다.');
       setState(() {
-        _isCheckingLoginStatus = false; // 상태 확인 완료
         _signOut();
       });
     }
   }
 
-  Future<void> _signOut() async{
+  Future<void> _signOut() async {
     try {
       await _googleSignIn.signOut();
       await _auth.signOut();
-      print('로그아웃 성공');
+      // print('로그아웃 성공');
     } catch (e) {
-      print("로그아웃 중 오류 발생: $e");
+      // print("로그아웃 중 오류 발생: $e");
     }
   }
 
@@ -122,7 +127,7 @@ class _StartPageState extends State<StartPage>
     ['한국어', 'English'], // 언어 선택 페이지
     ['Sign in with Google', 'Sign in with Apple'], // 로그인 선택 페이지
     ['이름을 입력해주세요.', 'Please enter your name'], // 이름 입력 페이지 힌트 메시지
-    ['제출','Comfirm']
+    ['제출', 'Comfirm']
   ];
 
   final List<String> pageMessages = [
@@ -145,7 +150,6 @@ class _StartPageState extends State<StartPage>
     _checkLoginStatus(); // 로그인 상태 확인
 
     //==========================================================
-
 
     // AnimationController 설정
     _controller = AnimationController(
@@ -189,28 +193,35 @@ class _StartPageState extends State<StartPage>
       // Firestore에 이름 저장
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .update({
           'nickname': name,
         });
       }
 
       // SharedPreferences와 상태 업데이트
-      await context.read<NameProvider>().updateName(name);
 
       // 다음 페이지로 이동
-      Navigator.pushNamed(context, "/startPageAfterLogin");
+      if (mounted) {
+        await context.read<NameProvider>().updateName(name);
+        if (mounted) {
+          Navigator.pushNamed(context, "/startPageAfterLogin");
+        }
+      }
     } on EmptyNameException catch (e) {
       setState(() {
         _errorMessage = e.message;
       });
     } catch (e) {
       setState(() {
-        _errorMessage = context.read<LanguageProvider>().currentLanguage ==
-            Language.ko
-            ? '이름 저장에 실패했습니다.'
-            : 'Failed to save the name.';
+        _errorMessage =
+            context.read<LanguageProvider>().currentLanguage == Language.ko
+                ? '이름 저장에 실패했습니다.'
+                : 'Failed to save the name.';
       });
-      print("Error saving name: $e");
+      // print("Error saving name: $e");
     }
   }
 
@@ -294,15 +305,15 @@ class _StartPageState extends State<StartPage>
                 Text(
                   currentButtonIndex == 0
                       ? (isKorean
-                      ? pageMessages[0] // 한국어: 언어 선택
-                      : pageMessages[3]) // 영어: 언어 선택
+                          ? pageMessages[0] // 한국어: 언어 선택
+                          : pageMessages[3]) // 영어: 언어 선택
                       : currentButtonIndex == 1
-                      ? (isKorean
-                      ? pageMessages[1] // 한국어: 로그인 선택
-                      : pageMessages[4]) // 영어: 로그인 선택
-                      : (isKorean
-                      ? pageMessages[2] // 한국어: 이름 입력
-                      : pageMessages[5]), // 영어: 이름 입력
+                          ? (isKorean
+                              ? pageMessages[1] // 한국어: 로그인 선택
+                              : pageMessages[4]) // 영어: 로그인 선택
+                          : (isKorean
+                              ? pageMessages[2] // 한국어: 이름 입력
+                              : pageMessages[5]), // 영어: 이름 입력
                   style: const TextStyle(
                     fontSize: 18,
                     fontFamily: 'NanumFontSetup_TTF_SQUARE',
@@ -317,14 +328,14 @@ class _StartPageState extends State<StartPage>
                   OutlinedButton(
                     onPressed: () async {
                       if (currentButtonIndex == 0) {
-                        context.read<LanguageProvider>().setLanguage(Language.ko);
+                        context
+                            .read<LanguageProvider>()
+                            .setLanguage(Language.ko);
                         changeButton();
-                      }
-                      else if (currentButtonIndex == 1) {
+                      } else if (currentButtonIndex == 1) {
                         await _signInWithGoogle(); // 구글 로그인 결과 확인
                         changeButton();
                       }
-
                     },
                     style: OutlinedButton.styleFrom(
                       minimumSize: const Size(250, 50),
@@ -342,7 +353,9 @@ class _StartPageState extends State<StartPage>
                   OutlinedButton(
                     onPressed: () {
                       if (currentButtonIndex == 0) {
-                        context.read<LanguageProvider>().setLanguage(Language.en);
+                        context
+                            .read<LanguageProvider>()
+                            .setLanguage(Language.en);
                       }
                       changeButton();
                     },
@@ -356,14 +369,10 @@ class _StartPageState extends State<StartPage>
                       style: TextStyle(color: AppStyles.maindeepblue),
                     ),
                   ),
-
-                ]
-
-                else ...[
+                ] else ...[
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                    child:
-                    SizedBox(
+                    child: SizedBox(
                       width: 250,
                       height: 50,
                       child: TextField(
@@ -371,7 +380,8 @@ class _StartPageState extends State<StartPage>
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.white,
-                          hintText: buttonTexts[2][isKorean ? 0 : 1], // 힌트 메시지 변경
+                          hintText: buttonTexts[2]
+                              [isKorean ? 0 : 1], // 힌트 메시지 변경
                           hintStyle: TextStyle(
                             color: AppStyles.maindeepblue.withOpacity(0.5),
                             fontSize: 15,
@@ -410,7 +420,8 @@ class _StartPageState extends State<StartPage>
                       side: const BorderSide(color: Colors.white),
                     ),
                     child: Text(
-                      buttonTexts[3][isKorean ? 0 : 1], // 버튼 텍스트를 '제출' 또는 'Confirm'으로 설정
+                      buttonTexts[3]
+                          [isKorean ? 0 : 1], // 버튼 텍스트를 '제출' 또는 'Confirm'으로 설정
                       style: TextStyle(color: AppStyles.maindeepblue),
                     ),
                   ),

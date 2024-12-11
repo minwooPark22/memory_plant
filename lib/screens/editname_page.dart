@@ -44,7 +44,10 @@ class _EditNamePageState extends State<EditNamePage> {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       try {
-        final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+        final doc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
         if (doc.exists) {
           setState(() {
             _photoURL = doc.data()?['photoURL']; // photoURL 가져오기
@@ -53,7 +56,7 @@ class _EditNamePageState extends State<EditNamePage> {
           });
         }
       } catch (e) {
-        print("사용자 데이터 로드 중 오류 발생: $e");
+        // print("사용자 데이터 로드 중 오류 발생: $e");
       }
     }
   }
@@ -62,16 +65,19 @@ class _EditNamePageState extends State<EditNamePage> {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       try {
-        await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .update({
           'nickname': name,
         });
-        print("Firestore에 이름이 성공적으로 업데이트되었습니다.");
+        // print("Firestore에 이름이 성공적으로 업데이트되었습니다.");
       } catch (e) {
-        print("Firestore 이름 업데이트 오류: $e");
+        // print("Firestore 이름 업데이트 오류: $e");
         throw Exception("Failed to update name in Firestore.");
       }
     } else {
-      print("로그인된 사용자 정보가 없습니다.");
+      // print("로그인된 사용자 정보가 없습니다.");
       throw Exception("User not logged in.");
     }
   }
@@ -80,13 +86,13 @@ class _EditNamePageState extends State<EditNamePage> {
   Future<void> _signOut() async {
     try {
       await FirebaseAuth.instance.signOut(); // Firebase Auth 로그아웃
-      print('로그아웃 성공');
+      // print('로그아웃 성공');
     } catch (e) {
-      print('로그아웃 중 오류 발생: $e');
+      // print('로그아웃 중 오류 발생: $e');
     }
   }
 
-  void _saveName() async{
+  void _saveName() async {
     final name = _nameController.text.trim();
     if (name.isEmpty) {
       setState(() {
@@ -104,13 +110,15 @@ class _EditNamePageState extends State<EditNamePage> {
       widget.onNameSaved(name);
 
       // 페이지 닫기
-      Navigator.of(context).pop();
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
     } catch (e) {
       setState(() {
-        _errorMessage = context.read<LanguageProvider>().currentLanguage ==
-            Language.ko
-            ? '이름 저장에 실패했습니다.'
-            : 'Failed to save the name.';
+        _errorMessage =
+            context.read<LanguageProvider>().currentLanguage == Language.ko
+                ? '이름 저장에 실패했습니다.'
+                : 'Failed to save the name.';
       });
     }
   }
@@ -131,7 +139,8 @@ class _EditNamePageState extends State<EditNamePage> {
         ),
         title: Text(
           isKorean ? '프로필 수정' : 'Edit Profile', // 언어 설정
-          style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          style:
+              const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         actions: [
@@ -161,14 +170,15 @@ class _EditNamePageState extends State<EditNamePage> {
                 CircleAvatar(
                   radius: 60,
                   backgroundColor: AppStyles.primaryColor,
-                  backgroundImage:
-                  _photoURL != null ? NetworkImage(_photoURL!) : null, // photoURL 적용
+                  backgroundImage: _photoURL != null
+                      ? NetworkImage(_photoURL!)
+                      : null, // photoURL 적용
                   child: _photoURL == null
                       ? const Icon(
-                    MdiIcons.robot, // 기본 아이콘
-                    size: 70,
-                    color: Colors.white,
-                  )
+                          MdiIcons.robot, // 기본 아이콘
+                          size: 70,
+                          color: Colors.white,
+                        )
                       : null, // photoURL이 없으면 기본 아이콘 표시
                 ),
               ],
@@ -185,16 +195,24 @@ class _EditNamePageState extends State<EditNamePage> {
             TextButton(
               onPressed: () async {
                 await _signOut(); // 로그아웃 처리
-                Navigator.pushNamedAndRemoveUntil(
-                    context, "/", (Route<dynamic> route) => false); // StartPage로 이동
+
+                // context가 여전히 유효하다면 Navigator를 호출
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (mounted) {
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      "/",
+                      (Route<dynamic> route) => false,
+                    ); // StartPage로 이동
+                  }
+                });
               },
               child: Text(
                 isKorean ? '로그아웃' : 'Log out', // 언어 설정
                 style: const TextStyle(
-                  color: Colors.red,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700
-                ),
+                    color: Colors.red,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700),
               ),
             ),
             const SizedBox(height: 10),
@@ -226,15 +244,18 @@ class _EditNamePageState extends State<EditNamePage> {
           decoration: InputDecoration(
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Colors.grey, width: 1.5), // 기본 테두리
+              borderSide:
+                  const BorderSide(color: Colors.grey, width: 1.5), // 기본 테두리
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Colors.grey, width: 1.5), // 활성 상태 테두리
+              borderSide:
+                  const BorderSide(color: Colors.grey, width: 1.5), // 활성 상태 테두리
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: AppStyles.maindeepblue, width: 2), // 포커스 상태 테두리
+              borderSide: BorderSide(
+                  color: AppStyles.maindeepblue, width: 2), // 포커스 상태 테두리
             ),
             errorText: errorMessage,
           ),

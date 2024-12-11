@@ -12,12 +12,15 @@ class NameProvider with ChangeNotifier {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       try {
-        final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+        final doc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
         if (doc.exists) {
           _name = doc.data()?['nickname'] ?? "guest"; // nickname 로드
         }
       } catch (e) {
-        print("Firestore에서 이름 로드 중 오류 발생: $e");
+        // print("Firestore에서 이름 로드 중 오류 발생: $e");
       }
     } else {
       _name = "guest";
@@ -30,13 +33,16 @@ class NameProvider with ChangeNotifier {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       try {
-        await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .update({
           'nickname': newName,
         });
         _name = newName;
         notifyListeners(); // 상태 변경 알림
       } catch (e) {
-        print("Firestore에 이름 업데이트 중 오류 발생: $e");
+        // print("Firestore에 이름 업데이트 중 오류 발생: $e");
       }
     }
   }
