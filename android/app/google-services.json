@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "725831989948-9q4c2qdaaobkcr5rcc9idaroplragvtl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.memoryplantapplication",
+            "certificate_hash": "37638d9e2b21609f4cc63a75e423d66aa8539d44"
+          }
+        },
+        {
           "client_id": "725831989948-f4d4tsje771jumhv6vnharplo7qpota3.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
