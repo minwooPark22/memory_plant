@@ -25,7 +25,7 @@ class _SettingPageState extends State<SettingPage> {
           onNameSaved: (newName) {
             final nameProvider =
                 Provider.of<NameProvider>(context, listen: false);
-            nameProvider.saveNameToFirestore(newName); // 새로운 이름 저장
+            nameProvider.updateName(newName); // 새로운 이름 저장
           },
         ),
       ),

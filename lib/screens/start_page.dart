@@ -187,7 +187,7 @@ class _StartPageState extends State<StartPage>
       }
 
       // SharedPreferences와 상태 업데이트
-      await context.read<NameProvider>().saveNameToFirestore(name);
+      await context.read<NameProvider>().updateName(name);
 
       // 다음 페이지로 이동
       Navigator.pushNamed(context, "/startPageAfterLogin");

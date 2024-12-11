@@ -24,12 +24,13 @@ class _EditNamePageState extends State<EditNamePage> {
   late TextEditingController _nameController;
   String? _errorMessage;
   String? _photoURL; // Firestore에서 가져온 photoURL
+  String? _nickname; // Firestore에서 가져온 nickname
 
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.currentName);
-    _loadPhotoURL(); // photoURL 로드
+    _loadUserData(); // 사용자 데이터 로드
   }
 
   @override
@@ -38,8 +39,8 @@ class _EditNamePageState extends State<EditNamePage> {
     super.dispose();
   }
 
-  // Firestore에서 photoURL 로드
-  Future<void> _loadPhotoURL() async {
+  // Firestore에서 사용자 데이터 로드 (photoURL 및 nickname)
+  Future<void> _loadUserData() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       try {
@@ -47,10 +48,12 @@ class _EditNamePageState extends State<EditNamePage> {
         if (doc.exists) {
           setState(() {
             _photoURL = doc.data()?['photoURL']; // photoURL 가져오기
+            _nickname = doc.data()?['nickname']; // nickname 가져오기
+            _nameController.text = _nickname ?? ""; // TextField에 nickname 설정
           });
         }
       } catch (e) {
-        print("photoURL 로드 중 오류 발생: $e");
+        print("사용자 데이터 로드 중 오류 발생: $e");
       }
     }
   }
