@@ -54,9 +54,7 @@ class _SettingPageState extends State<SettingPage> {
         children: [
           // 상단 Settings 제목
           Text(
-            isKorean ?
-            '설정':
-            'Settings',
+            isKorean ? '설정' : 'Settings',
             style: TextStyle(
               fontSize: 32, // 큰 폰트 크기
               fontWeight: FontWeight.w700,
@@ -151,44 +149,6 @@ class _SettingPageState extends State<SettingPage> {
       child: Text(
         title,
         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-      ),
-    );
-  }
-
-  // ListTile with Icon Widget
-  Widget _buildListTile(String title, IconData icon, VoidCallback onTap) {
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      leading: SizedBox(
-        width: 24, // 고정된 너비 설정
-        child: Icon(
-          icon,
-          color: AppStyles.mainblack,
-          size: 24, // 모든 아이콘 크기를 통일
-        ),
-      ),
-      title: Text(
-        title,
-        style: const TextStyle(fontSize: 14),
-      ),
-      trailing: const Icon(Icons.chevron_right, color: Colors.grey),
-      onTap: onTap,
-    );
-  }
-
-  // Toggle ListTile Widget
-  Widget _buildToggleTile(
-      String title, bool value, ValueChanged<bool> onChanged) {
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      title: Text(
-        title,
-        style: const TextStyle(fontSize: 14),
-      ),
-      trailing: Switch(
-        value: value,
-        onChanged: onChanged,
-        activeColor: AppStyles.maindeepblue,
       ),
     );
   }
