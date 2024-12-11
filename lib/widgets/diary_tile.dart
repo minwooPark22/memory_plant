@@ -45,12 +45,7 @@ class DiaryTile extends StatelessWidget {
             onTap: (CompletionHandler handler) async {
               final confirmed = await _confirmDelete(context);
               if (confirmed ?? false) {
-                if (context.mounted) {
-                  // mounted 체크
-                  context
-                      .read<MemoryLogProvider>()
-                      .deleteMemory(index); // MemoryLogProvider를 통해 메모리 삭제
-                }
+                context.read<MemoryLogProvider>().deleteMemory(memory.memoryId!);
               } else {
                 await handler(false);
               }
@@ -70,21 +65,15 @@ class DiaryTile extends StatelessWidget {
           SwipeAction(
             onTap: (CompletionHandler handler) async {
               handler(false);
-              // 메모리 수정 화면으로 이동
               final updatedMemory = await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => EditMemoryPage(memory: memory),
                 ),
               );
+
               if (updatedMemory != null && updatedMemory is MemoryLog) {
-                // MemoryLogProvider를 통해 메모리 수정
-                if (context.mounted) {
-                  // mounted 체크
-                  context
-                      .read<MemoryLogProvider>()
-                      .editMemory(index, updatedMemory);
-                }
+                context.read<MemoryLogProvider>().editMemory(memory.memoryId!, updatedMemory);
               }
             },
             color: Colors.blue,

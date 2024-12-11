@@ -33,6 +33,7 @@ class _StartPageState extends State<StartPage>
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: ['email', 'profile'],
   );
+  bool _isCheckingLoginStatus = true; // 로그인 상태 확인 중인지 나타내는 변수
 
   Future<void> _signInWithGoogle() async {
     try {
@@ -58,17 +59,25 @@ class _StartPageState extends State<StartPage>
         try {
           final userRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
           // 사용자의 정보를 Firestore에 저장. 기존 데이터가 있다면 덮어쓰기
-          await userRef.set({
-            'uid': user.uid,
-            'email': user.email,
-            'displayName': user.displayName,
-            'photoURL': user.photoURL,
-            'lastSignInTime': user.metadata.lastSignInTime,
-            'creationTime': user.metadata.creationTime,
-          }, SetOptions(merge: true)); // merge: true로 설정하면 기존 데이터와 병합됩니다.
+          final userDoc = await userRef.get();
 
+          if (userDoc.exists && userDoc.data()?['nickname'] != null) {
+            // nickname 필드가 이미 존재하면 바로 페이지로 이동
+            Navigator.pushReplacementNamed(context, "/startPageAfterLogin");
+          } else {
+            // nickname이 없으면 사용자 정보를 Firestore에 저장하고 nickname 초기화
+            await userRef.set({
+              'uid': user.uid,
+              'email': user.email,
+              'displayName': user.displayName,
+              'photoURL': user.photoURL,
+              'lastSignInTime': user.metadata.lastSignInTime,
+              'creationTime': user.metadata.creationTime,
+            }, SetOptions(merge: true));
+          }
           print('사용자 정보가 Firestore에 성공적으로 저장되었습니다.');
-        } catch (e) {
+        }
+        catch (e) {
           print('Firestore에 사용자 정보를 저장하는 중 오류 발생: $e');
         }
       } else {
@@ -77,6 +86,34 @@ class _StartPageState extends State<StartPage>
     } catch (e) {
       // 예외 처리
       print("구글 로그인 오류: $e");
+    }
+  }
+
+  // 로그인 상태 확인 함수
+  Future<void> _checkLoginStatus() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      // 화면이 빌드된 후 네비게이션을 호출하기 위해 지연 추가
+      Future.delayed(Duration.zero, () {
+        Navigator.pushReplacementNamed(context, "/startPageAfterLogin");
+      });
+    } else {
+      print('사용자가 로그인되어 있지 않습니다.');
+      setState(() {
+        _isCheckingLoginStatus = false; // 상태 확인 완료
+        _signOut();
+      });
+    }
+  }
+
+  Future<void> _signOut() async{
+    try {
+      await _googleSignIn.signOut();
+      await _auth.signOut();
+      print('로그아웃 성공');
+    } catch (e) {
+      print("로그아웃 중 오류 발생: $e");
     }
   }
 
@@ -101,16 +138,15 @@ class _StartPageState extends State<StartPage>
   void initState() {
     super.initState();
 
-    void _signOut() async {
-      try {
-        await _googleSignIn.signOut();
-        await _auth.signOut();
-        print('로그아웃 성공');
-      } catch (e) {
-        print("로그아웃 중 오류 발생: $e");
-      }
-    }
-    _signOut();
+    //==========================================================
+
+    //화면이 시작될 떄, 로그인이 되어있는지 여부 확인 -> 로그인 중인건 true/ false 로받아주는 함수가 있을수있음
+    //만약 로그인이 되어있으면 start_after_loginpage로 nav를 보내면 됨
+    _checkLoginStatus(); // 로그인 상태 확인
+
+    //==========================================================
+
+
     // AnimationController 설정
     _controller = AnimationController(
       vsync: this,
@@ -139,7 +175,7 @@ class _StartPageState extends State<StartPage>
     });
   }
 
-  void _submitName() {
+  Future<void> _submitName() async {
     try {
       final name = _nameController.text.trim();
 
@@ -150,8 +186,16 @@ class _StartPageState extends State<StartPage>
                 : 'Please enter your name!');
       }
 
-      // 이름 상태를 업데이트
-      context.read<NameProvider>().updateName(name);
+      // Firestore에 이름 저장
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+          'nickname': name,
+        });
+      }
+
+      // SharedPreferences와 상태 업데이트
+      await context.read<NameProvider>().updateName(name);
 
       // 다음 페이지로 이동
       Navigator.pushNamed(context, "/startPageAfterLogin");
@@ -159,6 +203,14 @@ class _StartPageState extends State<StartPage>
       setState(() {
         _errorMessage = e.message;
       });
+    } catch (e) {
+      setState(() {
+        _errorMessage = context.read<LanguageProvider>().currentLanguage ==
+            Language.ko
+            ? '이름 저장에 실패했습니다.'
+            : 'Failed to save the name.';
+      });
+      print("Error saving name: $e");
     }
   }
 

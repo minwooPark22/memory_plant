@@ -32,8 +32,8 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => NavigationProvider()),
         ChangeNotifierProvider(
-            create: (_) => MemoryLogProvider()..loadMemoryLogs()),
-        ChangeNotifierProvider(create: (_) => NameProvider()..loadName()),
+            create: (_) => MemoryLogProvider()),
+        ChangeNotifierProvider(create: (_) => NameProvider()),
         ChangeNotifierProvider(create: (_) => LanguageProvider()),
         ChangeNotifierProvider(create: (_) => ChatProvider()..loadMessages()), // ChatbotProvider 추가
       ],
