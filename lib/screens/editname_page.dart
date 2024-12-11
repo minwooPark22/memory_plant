@@ -73,6 +73,16 @@ class _EditNamePageState extends State<EditNamePage> {
     }
   }
 
+// 로그아웃 처리 함수
+  Future<void> _signOut() async {
+    try {
+      await FirebaseAuth.instance.signOut(); // Firebase Auth 로그아웃
+      print('로그아웃 성공');
+    } catch (e) {
+      print('로그아웃 중 오류 발생: $e');
+    }
+  }
+
   void _saveName() async{
     final name = _nameController.text.trim();
     if (name.isEmpty) {
@@ -167,6 +177,24 @@ class _EditNamePageState extends State<EditNamePage> {
               controller: _nameController,
               errorMessage: _errorMessage,
             ),
+            const Spacer(),
+            // 로그아웃 버튼
+            TextButton(
+              onPressed: () async {
+                await _signOut(); // 로그아웃 처리
+                Navigator.pushNamedAndRemoveUntil(
+                    context, "/", (Route<dynamic> route) => false); // StartPage로 이동
+              },
+              child: Text(
+                isKorean ? '로그아웃' : 'Log out', // 언어 설정
+                style: const TextStyle(
+                  color: Colors.red,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
           ],
         ),
       ),

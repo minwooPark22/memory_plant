@@ -33,6 +33,7 @@ class _StartPageState extends State<StartPage>
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: ['email', 'profile'],
   );
+  bool _isCheckingLoginStatus = true; // 로그인 상태 확인 중인지 나타내는 변수
 
   Future<void> _signInWithGoogle() async {
     try {
@@ -91,6 +92,20 @@ class _StartPageState extends State<StartPage>
       });
     } else {
       print('사용자가 로그인되어 있지 않습니다.');
+      setState(() {
+        _isCheckingLoginStatus = false; // 상태 확인 완료
+        _signOut();
+      });
+    }
+  }
+
+  Future<void> _signOut() async{
+    try {
+      await _googleSignIn.signOut();
+      await _auth.signOut();
+      print('로그아웃 성공');
+    } catch (e) {
+      print("로그아웃 중 오류 발생: $e");
     }
   }
 
@@ -114,18 +129,7 @@ class _StartPageState extends State<StartPage>
   @override
   void initState() {
     super.initState();
-    /*
-    void _signOut() async {
-      try {
-        await _googleSignIn.signOut();
-        await _auth.signOut();
-        print('로그아웃 성공');
-      } catch (e) {
-        print("로그아웃 중 오류 발생: $e");
-      }
-    }
-    _signOut();
-    */
+
     //==========================================================
 
     //화면이 시작될 떄, 로그인이 되어있는지 여부 확인 -> 로그인 중인건 true/ false 로받아주는 함수가 있을수있음

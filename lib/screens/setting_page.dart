@@ -66,13 +66,6 @@ class _SettingPageState extends State<SettingPage> {
           const SizedBox(height: 8),
           // Account Section
           _buildSectionTitle(isKorean ? "계정" : "Account"),
-          // _buildListTile(
-          //   isKorean ? "프로필 수정" : "Edit profile",
-          //   Icons.person,
-          //   () {
-          //     _showEditNameDialog(nameProvider.name);
-          //   },
-          // ),
 
           ListTile(
             leading: Icon(
