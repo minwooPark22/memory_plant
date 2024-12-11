@@ -23,17 +23,36 @@ class EditNamePage extends StatefulWidget {
 class _EditNamePageState extends State<EditNamePage> {
   late TextEditingController _nameController;
   String? _errorMessage;
+  String? _photoURL; // Firestore에서 가져온 photoURL
 
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.currentName);
+    _loadPhotoURL(); // photoURL 로드
   }
 
   @override
   void dispose() {
     _nameController.dispose();
     super.dispose();
+  }
+
+  // Firestore에서 photoURL 로드
+  Future<void> _loadPhotoURL() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      try {
+        final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+        if (doc.exists) {
+          setState(() {
+            _photoURL = doc.data()?['photoURL']; // photoURL 가져오기
+          });
+        }
+      } catch (e) {
+        print("photoURL 로드 중 오류 발생: $e");
+      }
+    }
   }
 
   Future<void> _saveNameToFirestore(String name) async {
@@ -128,12 +147,16 @@ class _EditNamePageState extends State<EditNamePage> {
               children: [
                 CircleAvatar(
                   radius: 60,
-                  backgroundColor: AppStyles.primaryColor, // 배경색
-                  child: const Icon(
-                    MdiIcons.robot, // 물고기로 설정
+                  backgroundColor: AppStyles.primaryColor,
+                  backgroundImage:
+                  _photoURL != null ? NetworkImage(_photoURL!) : null, // photoURL 적용
+                  child: _photoURL == null
+                      ? const Icon(
+                    MdiIcons.robot, // 기본 아이콘
                     size: 70,
                     color: Colors.white,
-                  ),
+                  )
+                      : null, // photoURL이 없으면 기본 아이콘 표시
                 ),
               ],
             ),
