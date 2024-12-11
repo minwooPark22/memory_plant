@@ -32,6 +32,11 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin>
       parent: _controller,
       curve: Curves.easeInOut,
     ));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // 위젯 트리가 완전히 빌드된 후에 호출
+      context.read<MemoryLogProvider>().loadMemoryLogs();
+      context.read<NameProvider>().loadName();
+    });
   }
 
   @override

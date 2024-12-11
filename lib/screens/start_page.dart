@@ -59,17 +59,25 @@ class _StartPageState extends State<StartPage>
         try {
           final userRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
           // 사용자의 정보를 Firestore에 저장. 기존 데이터가 있다면 덮어쓰기
-          await userRef.set({
-            'uid': user.uid,
-            'email': user.email,
-            'displayName': user.displayName,
-            'photoURL': user.photoURL,
-            'lastSignInTime': user.metadata.lastSignInTime,
-            'creationTime': user.metadata.creationTime,
-          }, SetOptions(merge: true)); // merge: true로 설정하면 기존 데이터와 병합됩니다.
+          final userDoc = await userRef.get();
 
+          if (userDoc.exists && userDoc.data()?['nickname'] != null) {
+            // nickname 필드가 이미 존재하면 바로 페이지로 이동
+            Navigator.pushReplacementNamed(context, "/startPageAfterLogin");
+          } else {
+            // nickname이 없으면 사용자 정보를 Firestore에 저장하고 nickname 초기화
+            await userRef.set({
+              'uid': user.uid,
+              'email': user.email,
+              'displayName': user.displayName,
+              'photoURL': user.photoURL,
+              'lastSignInTime': user.metadata.lastSignInTime,
+              'creationTime': user.metadata.creationTime,
+            }, SetOptions(merge: true));
+          }
           print('사용자 정보가 Firestore에 성공적으로 저장되었습니다.');
-        } catch (e) {
+        }
+        catch (e) {
           print('Firestore에 사용자 정보를 저장하는 중 오류 발생: $e');
         }
       } else {
