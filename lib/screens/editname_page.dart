@@ -3,6 +3,8 @@ import 'package:memory_plant_application/providers/language_provider.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class EditNamePage extends StatefulWidget {
   final String currentName;
@@ -34,7 +36,25 @@ class _EditNamePageState extends State<EditNamePage> {
     super.dispose();
   }
 
-  void _saveName() {
+  Future<void> _saveNameToFirestore(String name) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      try {
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+          'nickname': name,
+        });
+        print("Firestore에 이름이 성공적으로 업데이트되었습니다.");
+      } catch (e) {
+        print("Firestore 이름 업데이트 오류: $e");
+        throw Exception("Failed to update name in Firestore.");
+      }
+    } else {
+      print("로그인된 사용자 정보가 없습니다.");
+      throw Exception("User not logged in.");
+    }
+  }
+
+  void _saveName() async{
     final name = _nameController.text.trim();
     if (name.isEmpty) {
       setState(() {
@@ -44,8 +64,23 @@ class _EditNamePageState extends State<EditNamePage> {
       });
       return;
     }
-    widget.onNameSaved(name); // 콜백 호출
-    Navigator.of(context).pop(); // 페이지 닫기
+    try {
+      // Firestore에 이름 저장
+      await _saveNameToFirestore(name);
+
+      // 앱 상태에 이름 저장
+      widget.onNameSaved(name);
+
+      // 페이지 닫기
+      Navigator.of(context).pop();
+    } catch (e) {
+      setState(() {
+        _errorMessage = context.read<LanguageProvider>().currentLanguage ==
+            Language.ko
+            ? '이름 저장에 실패했습니다.'
+            : 'Failed to save the name.';
+      });
+    }
   }
 
   @override

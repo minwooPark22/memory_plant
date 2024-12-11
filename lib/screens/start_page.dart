@@ -139,7 +139,7 @@ class _StartPageState extends State<StartPage>
     });
   }
 
-  void _submitName() {
+  Future<void> _submitName() async {
     try {
       final name = _nameController.text.trim();
 
@@ -150,8 +150,16 @@ class _StartPageState extends State<StartPage>
                 : 'Please enter your name!');
       }
 
-      // 이름 상태를 업데이트
-      context.read<NameProvider>().updateName(name);
+      // Firestore에 이름 저장
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+          'nickname': name,
+        });
+      }
+
+      // SharedPreferences와 상태 업데이트
+      await context.read<NameProvider>().updateName(name);
 
       // 다음 페이지로 이동
       Navigator.pushNamed(context, "/startPageAfterLogin");
@@ -159,6 +167,14 @@ class _StartPageState extends State<StartPage>
       setState(() {
         _errorMessage = e.message;
       });
+    } catch (e) {
+      setState(() {
+        _errorMessage = context.read<LanguageProvider>().currentLanguage ==
+            Language.ko
+            ? '이름 저장에 실패했습니다.'
+            : 'Failed to save the name.';
+      });
+      print("Error saving name: $e");
     }
   }
 
