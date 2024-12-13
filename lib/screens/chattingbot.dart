@@ -101,11 +101,24 @@ class Chatbot extends StatelessWidget {
               return Column(
                 children: [
                   if (showDateSeparator) _buildDateSeparator(message.date!),
-                  GestureDetector(
+                  /*GestureDetector(
                     onLongPress: () => chatProvider.deleteMessage(index),
                     child: Align(
                       alignment:
                           isMe ? Alignment.centerRight : Alignment.centerLeft,
+                      child: _buildMessageBubble(message, isMe, context),
+                    ),
+                  ),*/
+                  GestureDetector(
+                    onLongPress: () {
+                      if (message.id != null) { // 메시지의 Firestore 문서 ID가 존재할 때만 삭제
+                        chatProvider.deleteMessage(message.id!); // Firestore에서 삭제
+                      } else {
+                        debugPrint("Message ID is null. Cannot delete.");
+                      }
+                    },
+                    child: Align(
+                      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
                       child: _buildMessageBubble(message, isMe, context),
                     ),
                   ),
