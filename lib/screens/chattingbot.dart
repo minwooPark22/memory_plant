@@ -158,7 +158,7 @@ class Chatbot extends StatelessWidget {
           Expanded(
             child: Divider(
               color: AppStyles.textColor,
-              thickness: 1.0,
+              thickness: 0.7,
               endIndent: 20,
               indent: 20,
             ),
@@ -167,13 +167,13 @@ class Chatbot extends StatelessWidget {
             _formatDate(date),
             style: TextStyle(
               color: AppStyles.textColor,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w400,
             ),
           ),
           Expanded(
             child: Divider(
               color: AppStyles.textColor,
-              thickness: 1.0,
+              thickness: 0.7,
               endIndent: 20,
               indent: 20,
             ),
@@ -194,21 +194,25 @@ class Chatbot extends StatelessWidget {
         padding: const EdgeInsets.all(10.0),
         decoration: BoxDecoration(
           color: isMe ? AppStyles.maingray : AppStyles.maindeepblue,
-          borderRadius: BorderRadius.circular(12.0),
-          boxShadow: [
+          borderRadius: BorderRadius.circular(17.0),
+          /*boxShadow: [
             BoxShadow(
               color: Colors.grey.withOpacity(0.5),
               spreadRadius: 1,
               blurRadius: 4,
               offset: const Offset(0, 2),
             ),
-          ],
+          ],*/
         ),
         child: Text(
           message.content ?? "(빈 메시지)",
           style: isMe
-              ? const TextStyle(color: Colors.black)
-              : const TextStyle(color: Colors.white),
+              ? const TextStyle(color: Colors.black,
+              fontWeight: FontWeight.w400
+          )
+              : const TextStyle(color: Colors.white,
+              fontWeight: FontWeight.w400
+          ),
         ),
       ),
     );
