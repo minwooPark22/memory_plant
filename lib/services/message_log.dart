@@ -14,15 +14,7 @@ class MessageLog {
     date = json['date'];
     isSentByMe = json['isSentByMe'];
   }
-/*
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['content'] = content;
-    data['time'] = time;
-    data['date'] = date;
-    data['isSentByMe'] = isSentByMe;
-    return data;
-  }*/
+
   Map<String, dynamic> toJson() {
     return {
       'content': content,
