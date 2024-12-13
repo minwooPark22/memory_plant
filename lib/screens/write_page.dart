@@ -67,10 +67,10 @@ class _WritePageState extends State<WritePage> {
 
   Future<void> addMemory(bool isKorean) async {
     try {
-      setState(() {
-        _isLoading = true;
-      });
       if (_selectedOption == 'summary') {
+        setState(() {
+          _isLoading = true;
+        });
         final botResponse = await _cohereService.sendMemory(
             """${_contentController.text} Here is a diary, and you must summarize it very briefly using the same language as the diary.""");
         final monthSummaryTitle = isKorean
@@ -81,11 +81,10 @@ class _WritePageState extends State<WritePage> {
           context.read<MemoryLogProvider>().updateOrCreateMonthlySummary(
               monthSummaryTitle, botResponse, widget.selectedDay.toString());
         }
+        setState(() {
+          _isLoading = false;
+        });
       }
-
-      setState(() {
-        _isLoading = false;
-      });
 
       if (mounted) {
         final newMemory = MemoryLog(

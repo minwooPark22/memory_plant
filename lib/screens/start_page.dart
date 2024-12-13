@@ -63,27 +63,28 @@ class _StartPageState extends State<StartPage>
           final userRef =
               FirebaseFirestore.instance.collection('users').doc(user.uid);
           // 사용자의 정보를 Firestore에 저장. 기존 데이터가 있다면 덮어쓰기
-          final userDoc = await userRef.get();
 
-          if (userDoc.exists && userDoc.data()?['nickname'] != null) {
-            // nickname 필드가 이미 존재하면 바로 페이지로 이동
-            if (mounted) {
-              Navigator.pushReplacementNamed(context, "/startPageAfterLogin");
-            }
-          } else {
-            // nickname이 없으면 사용자 정보를 Firestore에 저장하고 nickname 초기화
-            await userRef.set({
-              'uid': user.uid,
-              'email': user.email,
-              'displayName': user.displayName,
-              'photoURL': user.photoURL,
-              'lastSignInTime': user.metadata.lastSignInTime,
-              'creationTime': user.metadata.creationTime,
-            }, SetOptions(merge: true));
-          }
+          await userRef.set({
+            'uid': user.uid,
+            'email': user.email,
+            'displayName': user.displayName,
+            'photoURL': user.photoURL,
+            'lastSignInTime': user.metadata.lastSignInTime,
+            'creationTime': user.metadata.creationTime,
+          }, SetOptions(merge: true));
+
           // print('사용자 정보가 Firestore에 성공적으로 저장되었습니다.');
         } catch (e) {
           // print('Firestore에 사용자 정보를 저장하는 중 오류 발생: $e');
+        }
+        final userRef =
+            FirebaseFirestore.instance.collection('users').doc(user.uid);
+        final userDoc = await userRef.get();
+        if (userDoc.exists && userDoc.data()?['nickname'] != null) {
+          // nickname 필드가 이미 존재하면 바로 페이지로 이동
+          if (mounted) {
+            Navigator.pushReplacementNamed(context, "/startPageAfterLogin");
+          }
         }
       } else {
         // print('로그인한 사용자 정보가 없습니다.');
@@ -360,7 +361,8 @@ class _StartPageState extends State<StartPage>
                         changeButton();
                       } else if (currentButtonIndex == 1) {
                         try {
-                          await AppleSignInService.signInWithApple(context); // 애플 로그인
+                          await AppleSignInService.signInWithApple(
+                              context); // 애플 로그인
                         } catch (e) {
                           debugPrint("Apple Sign-In failed: $e");
                         }

@@ -80,7 +80,7 @@ class ChatProvider with ChangeNotifier {
     try {
       // Cohere API 호출
       final response =
-      await cohereService.sendMessage(context, userMessage.content ?? "");
+          await cohereService.sendMessage(context, userMessage.content ?? "");
 
       // 타이핑 상태 비활성화
       setTyping(false);
