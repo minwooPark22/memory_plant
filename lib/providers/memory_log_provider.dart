@@ -60,6 +60,22 @@ class MemoryLogProvider with ChangeNotifier {
     }
   }
 
+  // 요약 삭제
+  Future<void> deleteSummary(String memoryId) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('summarized')
+          .doc(memoryId)
+          .delete();
+
+      memoryList.removeWhere((memory) => memory.memoryId == memoryId);
+      notifyListeners();
+    }
+  }
+
   // 메모리 수정
   Future<void> editMemory(String memoryId, MemoryLog updatedMemory) async {
     final user = FirebaseAuth.instance.currentUser;
@@ -80,6 +96,7 @@ class MemoryLogProvider with ChangeNotifier {
     }
   }
 
+  // 요약 수정
   Future<void> editSummary(String memoryId, MemoryLog updatedMemory) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
