@@ -20,39 +20,36 @@ class ChatProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // 메시지 불러오기
+  // Firestore에서 메시지 불러오기
   Future<void> loadMessages() async {
     try {
       final loadedMessages = await messageLogService.loadMessageLogs();
-      messageList.addAll(loadedMessages); // 메시지를 리스트에 추가
-      notifyListeners(); // 상태 갱신
+      messageList = loadedMessages; // Firestore 데이터 가져오기
+      notifyListeners();
     } catch (e) {
       debugPrint("Failed to load messages: $e");
     }
   }
 
-  // 메시지 저장
-  Future<void> _saveMessageLogs() async {
+  // Firestore에 메시지 저장
+  Future<void> addMessage(MessageLog message) async {
     try {
-      await messageLogService.saveMessageLogs(messageList);
+      await messageLogService.saveMessageLog(message); // Firestore에 저장
+      messageList.insert(0, message);
+      notifyListeners();
     } catch (e) {
-      debugPrint("Failed to save message logs: $e");
+      debugPrint("Failed to save message: $e");
     }
   }
 
-  // 메시지 추가
-  void addMessage(MessageLog message) {
-    messageList.insert(0, message);
-    _saveMessageLogs();
-    notifyListeners();
-  }
-
   // 메시지 삭제
-  void deleteMessage(int index) {
-    if (index >= 0 && index < messageList.length) {
-      messageList.removeAt(index);
-      _saveMessageLogs();
+  Future<void> deleteMessage(String messageId) async {
+    try {
+      await messageLogService.deleteMessage(messageId); // Firestore에서 삭제
+      messageList.removeWhere((msg) => msg.id == messageId);
       notifyListeners();
+    } catch (e) {
+      debugPrint("Failed to delete message: $e");
     }
   }
 
@@ -66,8 +63,8 @@ class ChatProvider with ChangeNotifier {
       isSentByMe: true,
     );
 
-    // 사용자 메시지 추가
-    addMessage(userMessage);
+    // Firestore에 사용자 메시지 추가
+    await addMessage(userMessage);
     controller.clear();
     focusNode.unfocus();
 
@@ -83,7 +80,7 @@ class ChatProvider with ChangeNotifier {
     try {
       // Cohere API 호출
       final response =
-          await cohereService.sendMessage(context, userMessage.content ?? "");
+      await cohereService.sendMessage(context, userMessage.content ?? "");
 
       // 타이핑 상태 비활성화
       setTyping(false);

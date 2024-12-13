@@ -71,7 +71,7 @@ class _SettingPageState extends State<SettingPage> {
               color: AppStyles.mainblack,
             ),
             title: Text(
-              isKorean ? "프로필 수정" : "Edit profile",
+              isKorean ? "계정 관리" : "My Account",
               style: TextStyle(color: AppStyles.mainblack, fontSize: 14),
             ),
             trailing: const Icon(Icons.chevron_right, color: Colors.grey),

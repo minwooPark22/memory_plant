@@ -25,6 +25,7 @@ class _EditNamePageState extends State<EditNamePage> {
   String? _errorMessage;
   String? _photoURL; // Firestore에서 가져온 photoURL
   String? _nickname; // Firestore에서 가져온 nickname
+  String? _email; // Firebase에서 가져온 사용자 이메일
 
   @override
   void initState() {
@@ -44,6 +45,9 @@ class _EditNamePageState extends State<EditNamePage> {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       try {
+        setState(() {
+          _email = user.email; // 사용자 이메일 설정
+        });
         final doc = await FirebaseFirestore.instance
             .collection('users')
             .doc(user.uid)
@@ -116,9 +120,9 @@ class _EditNamePageState extends State<EditNamePage> {
     } catch (e) {
       setState(() {
         _errorMessage =
-            context.read<LanguageProvider>().currentLanguage == Language.ko
-                ? '이름 저장에 실패했습니다.'
-                : 'Failed to save the name.';
+        context.read<LanguageProvider>().currentLanguage == Language.ko
+            ? '이름 저장에 실패했습니다.'
+            : 'Failed to save the name.';
       });
     }
   }
@@ -138,9 +142,9 @@ class _EditNamePageState extends State<EditNamePage> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          isKorean ? '프로필 수정' : 'Edit Profile', // 언어 설정
+          isKorean ? "계정 관리" : "My Account",
           style:
-              const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         actions: [
@@ -175,19 +179,21 @@ class _EditNamePageState extends State<EditNamePage> {
                       : null, // photoURL 적용
                   child: _photoURL == null
                       ? const Icon(
-                          MdiIcons.robot, // 기본 아이콘
-                          size: 70,
-                          color: Colors.white,
-                        )
+                    MdiIcons.robot, // 기본 아이콘
+                    size: 70,
+                    color: Colors.white,
+                  )
                       : null, // photoURL이 없으면 기본 아이콘 표시
                 ),
               ],
             ),
             const SizedBox(height: 30),
-            // USER NAME
-            _buildTextField(
-              label: isKorean ? '사용자 이름' : 'USER NAME', // 언어 설정
+            // 사용자 이름 및 이메일
+            _buildNameAndEmailField(
+              nameLabel: isKorean ? '사용자 이름' : 'USER NAME',
+              emailLabel: isKorean ? '로그인된 이메일' : 'Signed-in Email',
               controller: _nameController,
+              email: _email ?? '',
               errorMessage: _errorMessage,
             ),
             const Spacer(),
@@ -202,7 +208,7 @@ class _EditNamePageState extends State<EditNamePage> {
                     Navigator.pushNamedAndRemoveUntil(
                       context,
                       "/",
-                      (Route<dynamic> route) => false,
+                          (Route<dynamic> route) => false,
                     ); // StartPage로 이동
                   }
                 });
@@ -222,42 +228,62 @@ class _EditNamePageState extends State<EditNamePage> {
     );
   }
 
-  Widget _buildTextField({
-    required String label,
+  Widget _buildNameAndEmailField({
+    required String nameLabel,
+    required String emailLabel,
     required TextEditingController controller,
+    required String email,
     String? errorMessage,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          label,
+          nameLabel,
           style: const TextStyle(
             fontSize: 12,
-            color: Colors.grey,
+            color: Colors.black54,
             fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 8),
-        TextField(
-          controller: controller,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide:
-                  const BorderSide(color: Colors.grey, width: 1.5), // 기본 테두리
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide:
-                  const BorderSide(color: Colors.grey, width: 1.5), // 활성 상태 테두리
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(
-                  color: AppStyles.maindeepblue, width: 2), // 포커스 상태 테두리
-            ),
-            errorText: errorMessage,
+        Container(
+          padding: const EdgeInsets.all(8.0),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey, width: 1.5),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: controller,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        errorText: errorMessage,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.clear, color: Colors.grey),
+                    onPressed: () {
+                      controller.clear(); // 이름 필드 지우기
+                    },
+                  ),
+                ],
+              ),
+              const Divider(color: Colors.grey),
+              Text(
+                '$emailLabel: $email',
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: Colors.black54,
+                ),
+              ),
+            ],
           ),
         ),
       ],

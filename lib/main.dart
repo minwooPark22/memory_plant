@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
             create: (_) => MemoryLogProvider()),
         ChangeNotifierProvider(create: (_) => NameProvider()),
         ChangeNotifierProvider(create: (_) => LanguageProvider()),
-        ChangeNotifierProvider(create: (_) => ChatProvider()..loadMessages()), // ChatbotProvider 추가
+        ChangeNotifierProvider(create: (_) => ChatProvider()), // ChatbotProvider 추가
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
