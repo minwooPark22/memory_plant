@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:memory_plant_application/providers/name_provider.dart';
 import 'package:memory_plant_application/providers/memory_log_provider.dart';
 
+import '../providers/chatbot_provider.dart';
+
 class StartPageAfterLogin extends StatefulWidget {
   const StartPageAfterLogin({super.key});
 
@@ -36,6 +38,8 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin>
       // 위젯 트리가 완전히 빌드된 후에 호출
       context.read<MemoryLogProvider>().loadMemoryLogs();
       context.read<NameProvider>().loadName();
+      context.read<ChatProvider>().loadMessages();
+
     });
   }
 

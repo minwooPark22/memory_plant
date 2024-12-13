@@ -52,6 +52,7 @@ dependencies:
   google_sign_in: ^5.0.7  # 최신 버전을 확인하고 사용하세요.
   firebase_auth: ^5.3.4   # Firebase 인증을 사용하려면 추가
   #firebase_database: ^11.2.0
+  sign_in_with_apple: ^6.1.4
 
 
 dev_dependencies:

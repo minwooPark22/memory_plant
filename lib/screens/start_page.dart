@@ -6,6 +6,7 @@ import 'package:memory_plant_application/providers/name_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:memory_plant_application/services/apple_sign_in_service.dart';
 
 // 사용자 정의 예외 클래스
 class EmptyNameException implements Exception {
@@ -351,13 +352,19 @@ class _StartPageState extends State<StartPage>
                     height: MediaQuery.of(context).size.height * 0.02,
                   ),
                   OutlinedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (currentButtonIndex == 0) {
                         context
                             .read<LanguageProvider>()
                             .setLanguage(Language.en);
+                        changeButton();
+                      } else if (currentButtonIndex == 1) {
+                        try {
+                          await AppleSignInService.signInWithApple(context); // 애플 로그인
+                        } catch (e) {
+                          debugPrint("Apple Sign-In failed: $e");
+                        }
                       }
-                      changeButton();
                     },
                     style: OutlinedButton.styleFrom(
                       minimumSize: const Size(250, 50),
