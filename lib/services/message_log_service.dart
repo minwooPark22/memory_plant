@@ -5,15 +5,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 class MessageLogService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // 메시지 저장
   Future<void> saveMessageLog(MessageLog message) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      final chatLogCollection = _firestore
+      final chatLogCollection = FirebaseFirestore.instance
           .collection('users')
           .doc(user.uid)
           .collection('chatlog');
-      await chatLogCollection.add(message.toJson()); // Firestore에 메시지 추가
+      final docRef =
+          await chatLogCollection.add(message.toJson()); // Firestore에 메시지 추가
+      message.id = docRef.id; // 새로 생성된 문서의 ID 저장
     }
   }
 
@@ -39,10 +40,8 @@ class MessageLogService {
   Future<void> deleteMessage(String messageId) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      final chatLogCollection = _firestore
-          .collection('users')
-          .doc(user.uid)
-          .collection('chatlog');
+      final chatLogCollection =
+          _firestore.collection('users').doc(user.uid).collection('chatlog');
       await chatLogCollection.doc(messageId).delete(); // Firestore에서 메시지 삭제
     }
   }

@@ -71,8 +71,8 @@ class _WritePageState extends State<WritePage> {
         setState(() {
           _isLoading = true;
         });
-        final botResponse = await _cohereService.sendMemory(
-            """${_contentController.text} Here is a diary, and you must summarize it very briefly using the same language as the diary.""");
+        final botResponse =
+            await _cohereService.sendMemory(_contentController.text);
         final monthSummaryTitle = isKorean
             ? '${widget.selectedDay.year}년 ${widget.selectedDay.month}월의 기억 요약'
             : 'Summary of Memories in ${_getMonthAbbreviation(widget.selectedDay.month)} ${widget.selectedDay.year}';

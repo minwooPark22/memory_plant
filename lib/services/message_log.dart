@@ -7,8 +7,8 @@ class MessageLog {
 
   MessageLog({this.id, this.content, this.time, this.date, this.isSentByMe});
 
-  MessageLog.fromJson(Map<String, dynamic> json, String id) {
-    this.id = id;
+  MessageLog.fromJson(Map<String, dynamic> json, String this.id) {
+    id = id;
     content = json['content'];
     time = json['time'];
     date = json['date'];
