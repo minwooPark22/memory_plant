@@ -60,9 +60,11 @@ What follows is the main text: $messageContent""", // 사용자 입력 메시지
 
     final requestBody = jsonEncode({
       "model": "command-r-08-2024", // 사용할 모델 (Cohere 제공 모델 중 선택)
-      "prompt": messageContent, // 사용자 입력 메시지
+      "prompt":
+          """Summarize the following diary entry very briefly, keeping its original tone and language:
+            $messageContent""", // 사용자 입력 메시지
       "max_tokens": 200, // 생성할 최대 토큰 수 (필요에 따라 조정)
-      "temperature": 0.7, // 텍스트의 창의성 정도 (0~1 사이 값)
+      "temperature": 0, // 텍스트의 창의성 정도 (0~1 사이 값)
     });
 
     final response = await http.post(
