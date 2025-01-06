@@ -37,6 +37,12 @@ class _BottomNavPageState extends State<BottomNavPage> {
               currentIndex == 2 // addpage 랑 Chatbot 페이지에서는 AppBar를 숨김
           ? null
           : AppBar(
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back_ios),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
               backgroundColor: Colors.white,
               title: Text(
                 isKorean ? "기억발전소" : "Memory Plant",

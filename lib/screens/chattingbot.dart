@@ -111,14 +111,17 @@ class Chatbot extends StatelessWidget {
                   ),*/
                   GestureDetector(
                     onLongPress: () {
-                      if (message.id != null) { // 메시지의 Firestore 문서 ID가 존재할 때만 삭제
-                        chatProvider.deleteMessage(message.id!); // Firestore에서 삭제
+                      if (message.id != null) {
+                        // 메시지의 Firestore 문서 ID가 존재할 때만 삭제
+                        chatProvider
+                            .deleteMessage(message.id!); // Firestore에서 삭제
                       } else {
                         debugPrint("Message ID is null. Cannot delete.");
                       }
                     },
                     child: Align(
-                      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+                      alignment:
+                          isMe ? Alignment.centerRight : Alignment.centerLeft,
                       child: _buildMessageBubble(message, isMe, context),
                     ),
                   ),
@@ -207,12 +210,10 @@ class Chatbot extends StatelessWidget {
         child: Text(
           message.content ?? "(빈 메시지)",
           style: isMe
-              ? const TextStyle(color: Colors.black,
-              fontWeight: FontWeight.w400
-          )
-              : const TextStyle(color: Colors.white,
-              fontWeight: FontWeight.w400
-          ),
+              ? const TextStyle(
+                  color: Colors.black, fontWeight: FontWeight.w400)
+              : const TextStyle(
+                  color: Colors.white, fontWeight: FontWeight.w400),
         ),
       ),
     );
@@ -228,7 +229,7 @@ class Chatbot extends StatelessWidget {
             child: TextField(
               controller: chatProvider.controller,
               focusNode: chatProvider.focusNode,
-              maxLines: null,
+              maxLines: 5,
               minLines: 1,
               decoration: InputDecoration(
                 hintText: isKorean ? "메세지 보내기" : "Enter your message",

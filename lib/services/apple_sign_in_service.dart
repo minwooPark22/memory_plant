@@ -25,26 +25,22 @@ class AppleSignInService {
       );
 
       // Firebase 인증
-      final authResult = await FirebaseAuth.instance.signInWithCredential(credential);
+      final authResult =
+          await FirebaseAuth.instance.signInWithCredential(credential);
       final user = authResult.user;
 
       if (user != null) {
         // Firestore에 사용자 정보 저장
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user.uid)
-            .set({
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
           'uid': user.uid,
           'email': user.email,
           'displayName': user.displayName ?? "",
           'lastSignInTime': user.metadata.lastSignInTime,
           'creationTime': user.metadata.creationTime,
         }, SetOptions(merge: true)); // 병합 옵션
-        print('로그인 시도 성공인가?');
 
         // 로그인 성공 시 다음 페이지로 이동
         Navigator.pushReplacementNamed(context, "/startPageAfterLogin");
-        print('로그인 시도 성공');
       } else {
         throw Exception("Apple Sign-In failed: No user data");
       }
