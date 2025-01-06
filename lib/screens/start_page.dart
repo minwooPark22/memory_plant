@@ -27,8 +27,6 @@ class StartPage extends StatefulWidget {
 class _StartPageState extends State<StartPage>
     with SingleTickerProviderStateMixin {
   int currentButtonIndex = 0;
-  late AnimationController _controller;
-  late Animation<double> _animation;
   final TextEditingController _nameController = TextEditingController();
   String? _errorMessage;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -152,25 +150,6 @@ class _StartPageState extends State<StartPage>
     _checkLoginStatus(); // 로그인 상태 확인
 
     //==========================================================
-
-    // AnimationController 설정
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 3),
-    )..repeat(reverse: true);
-
-    // Animation 정의
-    _animation = Tween<double>(begin: 0, end: 2).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    _nameController.dispose();
-    super.dispose();
   }
 
   void changeButton() {
@@ -232,73 +211,23 @@ class _StartPageState extends State<StartPage>
     final isKorean =
         context.watch<LanguageProvider>().currentLanguage == Language.ko;
     return Scaffold(
-      backgroundColor: AppStyles.maindeepblue, // 배경을 maindeepblue로 설정
+      backgroundColor: Colors.white, // 배경을 maindeepblue로 설정
       body: Stack(
         children: [
-          // 다층 흰색 울렁이는 배경 애니메이션 추가
-          AnimatedBuilder(
-            animation: _animation,
-            builder: (context, child) {
-              return Stack(
-                children: [
-                  Positioned.fill(
-                    child: ClipPath(
-                      clipper: WaveClipper(1, _animation.value),
-                      child: Container(
-                        color: Colors.white.withOpacity(0.3),
-                      ),
-                    ),
-                  ),
-                  Positioned.fill(
-                    child: ClipPath(
-                      clipper: WaveClipper(2, _animation.value),
-                      child: Container(
-                        color: Colors.white.withOpacity(0.2),
-                      ),
-                    ),
-                  ),
-                  Positioned.fill(
-                    child: ClipPath(
-                      clipper: WaveClipper(3, _animation.value),
-                      child: Container(
-                        color: Colors.white.withOpacity(0.15),
-                      ),
-                    ),
-                  ),
-                  Positioned.fill(
-                    child: ClipPath(
-                      clipper: WaveClipper(4, _animation.value),
-                      child: Container(
-                        color: Colors.white.withOpacity(0.1),
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
-          // 메인 콘텐츠
           Center(
             child: Column(
               children: [
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.22,
                 ),
-                Text(
+                const Text(
                   'AI for\nrecording life',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 50,
                     fontFamily: 'NanumFontSetup_TTF_SQUARE',
                     fontWeight: FontWeight.w900,
-                    color: Colors.white,
-                    shadows: [
-                      Shadow(
-                        offset: const Offset(3.0, 3.0),
-                        blurRadius: 6.0,
-                        color: Colors.black.withOpacity(0.05),
-                      ),
-                    ],
+                    color: Colors.black,
                   ),
                 ),
                 SizedBox(
@@ -320,7 +249,7 @@ class _StartPageState extends State<StartPage>
                     fontSize: 18,
                     fontFamily: 'NanumFontSetup_TTF_SQUARE',
                     fontWeight: FontWeight.w400,
-                    color: Colors.white,
+                    color: Colors.black,
                   ),
                 ),
                 SizedBox(
@@ -342,11 +271,11 @@ class _StartPageState extends State<StartPage>
                     style: OutlinedButton.styleFrom(
                       minimumSize: const Size(250, 50),
                       backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.white),
+                      side: const BorderSide(color: Colors.black),
                     ),
                     child: Text(
                       buttonTexts[currentButtonIndex][0],
-                      style: TextStyle(color: AppStyles.maindeepblue),
+                      style: const TextStyle(color: Colors.black),
                     ),
                   ),
                   SizedBox(
@@ -371,11 +300,11 @@ class _StartPageState extends State<StartPage>
                     style: OutlinedButton.styleFrom(
                       minimumSize: const Size(250, 50),
                       backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.white),
+                      side: const BorderSide(color: Colors.black),
                     ),
                     child: Text(
                       buttonTexts[currentButtonIndex][1],
-                      style: TextStyle(color: AppStyles.maindeepblue),
+                      style: const TextStyle(color: Colors.black),
                     ),
                   ),
                 ] else ...[
@@ -391,8 +320,8 @@ class _StartPageState extends State<StartPage>
                           fillColor: Colors.white,
                           hintText: buttonTexts[2]
                               [isKorean ? 0 : 1], // 힌트 메시지 변경
-                          hintStyle: TextStyle(
-                            color: AppStyles.maindeepblue.withOpacity(0.5),
+                          hintStyle: const TextStyle(
+                            color: Colors.black,
                             fontSize: 15,
                             fontWeight: FontWeight.w400,
                           ),
@@ -404,7 +333,7 @@ class _StartPageState extends State<StartPage>
                             vertical: 20,
                           ),
                         ),
-                        style: TextStyle(color: AppStyles.maindeepblue),
+                        style: const TextStyle(color: Colors.black),
                         textAlignVertical: TextAlignVertical.center,
                         textAlign: TextAlign.center,
                       ),
@@ -431,7 +360,7 @@ class _StartPageState extends State<StartPage>
                     child: Text(
                       buttonTexts[3]
                           [isKorean ? 0 : 1], // 버튼 텍스트를 '제출' 또는 'Confirm'으로 설정
-                      style: TextStyle(color: AppStyles.maindeepblue),
+                      style: const TextStyle(color: Colors.black),
                     ),
                   ),
                 ],
@@ -442,43 +371,4 @@ class _StartPageState extends State<StartPage>
       ),
     );
   }
-}
-
-class WaveClipper extends CustomClipper<Path> {
-  final int waveLevel;
-  final double animationValue;
-
-  WaveClipper(this.waveLevel, this.animationValue);
-
-  @override
-  Path getClip(Size size) {
-    var path = Path();
-    double waveHeight =
-        50.0 * waveLevel * (1 + 0.1 * animationValue); // 애니메이션 값에 따라 높이 조정
-
-    path.lineTo(0, size.height - waveHeight);
-
-    // 곡선 효과 추가
-    path.quadraticBezierTo(
-      size.width * 0.25,
-      size.height - (waveHeight + 30),
-      size.width * 0.5,
-      size.height - waveHeight,
-    );
-    path.quadraticBezierTo(
-      size.width * 0.75,
-      size.height - (waveHeight - 30),
-      size.width,
-      size.height - waveHeight,
-    );
-
-    path.lineTo(size.width, size.height);
-    path.lineTo(0, size.height);
-
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => true;
 }
