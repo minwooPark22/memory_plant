@@ -11,36 +11,45 @@ import 'package:memory_plant_application/providers/navigation_provider.dart'; //
 import 'package:memory_plant_application/providers/name_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // Firebase Authentication import
 
-void  main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(); // Firebase 초기화
+
+  // Firebase 인증 상태 체크
+  User? user = FirebaseAuth.instance.currentUser; // 현재 로그인된 사용자 확인
+
   SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,   // 세로 모드
+    DeviceOrientation.portraitUp, // 세로 모드
     DeviceOrientation.portraitDown, // 세로 모드 (거꾸로)
   ]).then((_) {
-    runApp(const MyApp());
+    runApp(MyApp(user: user));
   });
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final User? user;
+
+  const MyApp({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => NavigationProvider()),
-        ChangeNotifierProvider(
-            create: (_) => MemoryLogProvider()),
+        ChangeNotifierProvider(create: (_) => MemoryLogProvider()),
         ChangeNotifierProvider(create: (_) => NameProvider()),
         ChangeNotifierProvider(create: (_) => LanguageProvider()),
-        ChangeNotifierProvider(create: (_) => ChatProvider()), // ChatbotProvider 추가
+        ChangeNotifierProvider(
+            create: (_) => ChatProvider()), // ChatbotProvider 추가
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         routes: {
-          "/": (context) => const StartPage(),
+          "/": (context) => user != null
+              ? const StartPageAfterLogin() // 로그인 상태이면 StartPageAfterLogin
+              : const StartPage(), // 로그인 상태가 아니면 StartPage
           "/startPageAfterLogin": (context) => const StartPageAfterLogin(),
           "/bottomNavPage": (context) => const BottomNavPage(),
           "/settingPage": (context) => const SettingPage(),

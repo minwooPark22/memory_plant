@@ -93,35 +93,6 @@ class _StartPageState extends State<StartPage>
     }
   }
 
-  // 로그인 상태 확인 함수
-  Future<void> _checkLoginStatus() async {
-    final user = FirebaseAuth.instance.currentUser;
-
-    if (user != null) {
-      // 화면이 빌드된 후 네비게이션을 호출하기 위해 지연 추가
-      Future.delayed(Duration.zero, () {
-        if (mounted) {
-          Navigator.pushReplacementNamed(context, "/startPageAfterLogin");
-        }
-      });
-    } else {
-      // print('사용자가 로그인되어 있지 않습니다.');
-      setState(() {
-        _signOut();
-      });
-    }
-  }
-
-  Future<void> _signOut() async {
-    try {
-      await _googleSignIn.signOut();
-      await _auth.signOut();
-      // print('로그아웃 성공');
-    } catch (e) {
-      // print("로그아웃 중 오류 발생: $e");
-    }
-  }
-
   final List<List<String>> buttonTexts = [
     // 각 페이지의 [한국어 텍스트, 영어 텍스트]
     ['한국어', 'English'], // 언어 선택 페이지
@@ -142,12 +113,6 @@ class _StartPageState extends State<StartPage>
   @override
   void initState() {
     super.initState();
-
-    //==========================================================
-
-    _checkLoginStatus(); // 로그인 상태 확인
-
-    //==========================================================
   }
 
   void changeButton() {
