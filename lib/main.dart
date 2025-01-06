@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:memory_plant_application/providers/chatbot_provider.dart';
 import 'package:memory_plant_application/providers/language_provider.dart';
 import 'package:memory_plant_application/providers/memory_log_provider.dart';
@@ -16,9 +19,10 @@ import 'package:firebase_auth/firebase_auth.dart'; // Firebase Authentication im
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(); // Firebase 초기화
-
-  // Firebase 인증 상태 체크
   User? user = FirebaseAuth.instance.currentUser; // 현재 로그인된 사용자 확인
+
+  WidgetsFlutterBinding.ensureInitialized(); // 광고 ads mobile
+  unawaited(MobileAds.instance.initialize());
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp, // 세로 모드

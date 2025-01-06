@@ -4,6 +4,7 @@ import 'package:memory_plant_application/screens/editname_page.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
 import 'package:memory_plant_application/widgets/language.dart';
 import 'package:memory_plant_application/screens/learning_page.dart';
+import 'package:memory_plant_application/widgets/my_banner_ad_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:memory_plant_application/providers/name_provider.dart';
 import 'package:memory_plant_application/screens/privacy_page.dart';
@@ -61,6 +62,7 @@ class _SettingPageState extends State<SettingPage> {
               color: AppStyles.mainblack,
             ),
           ),
+          MyBannerAdWidget(),
           const SizedBox(height: 8),
           // Account Section
           _buildSectionTitle(isKorean ? "계정" : "Account"),
