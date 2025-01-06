@@ -14,13 +14,23 @@ class AddPage extends StatefulWidget {
 }
 
 class _AddPageState extends State<AddPage> {
-  DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
+  // ValueNotifier를 사용하여 상태 변경을 최적화
+  final ValueNotifier<DateTime> _focusedDay =
+      ValueNotifier<DateTime>(DateTime.now());
+  final ValueNotifier<DateTime?> _selectedDay =
+      ValueNotifier<DateTime?>(DateTime.now());
 
   @override
   void initState() {
     super.initState();
-    _selectedDay = DateTime.now(); // 기본적으로 오늘 날짜가 선택된 상태로 시작
+  }
+
+  @override
+  void dispose() {
+    // 사용이 끝나면 ValueNotifier 해제
+    _focusedDay.dispose();
+    _selectedDay.dispose();
+    super.dispose();
   }
 
   @override
@@ -64,45 +74,48 @@ class _AddPageState extends State<AddPage> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: TableCalendar(
-                firstDay: DateTime.utc(2000, 1, 1),
-                lastDay: DateTime.utc(2100, 12, 31),
-                focusedDay: _focusedDay,
-                selectedDayPredicate: (day) {
-                  return isSameDay(_selectedDay, day);
+              child: ValueListenableBuilder<DateTime?>(
+                valueListenable: _selectedDay,
+                builder: (context, selectedDay, child) {
+                  return TableCalendar(
+                    firstDay: DateTime.utc(2000, 1, 1),
+                    lastDay: DateTime.utc(2100, 12, 31),
+                    focusedDay: _focusedDay.value,
+                    selectedDayPredicate: (day) {
+                      return isSameDay(selectedDay, day);
+                    },
+                    onDaySelected: (selectedDay, focusedDay) {
+                      _selectedDay.value = selectedDay;
+                      _focusedDay.value = focusedDay;
+                    },
+                    calendarStyle: CalendarStyle(
+                      todayDecoration: const BoxDecoration(
+                        color: Colors.transparent, // 오늘 날짜의 색상을 투명하게 처리
+                      ),
+                      todayTextStyle: const TextStyle(
+                        color: Colors.black, // 오늘 날짜 텍스트 색상 유지
+                      ),
+                      selectedDecoration: BoxDecoration(
+                        color: AppStyles.maindeepblue,
+                        shape: BoxShape.circle,
+                      ),
+                      selectedTextStyle: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    headerStyle: const HeaderStyle(
+                      formatButtonVisible: false,
+                      titleCentered: true,
+                      leftChevronVisible: true,
+                      rightChevronVisible: true,
+                      titleTextStyle: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  );
                 },
-                onDaySelected: (selectedDay, focusedDay) {
-                  setState(() {
-                    _selectedDay = selectedDay;
-                    _focusedDay = focusedDay;
-                  });
-                },
-                calendarStyle: CalendarStyle(
-                  todayDecoration: const BoxDecoration(
-                    color: Colors.transparent, // 오늘 날짜의 색상을 투명하게 처리
-                  ),
-                  todayTextStyle: const TextStyle(
-                    color: Colors.black, // 오늘 날짜 텍스트 색상 유지
-                  ),
-                  selectedDecoration: BoxDecoration(
-                    color: AppStyles.maindeepblue,
-                    shape: BoxShape.circle,
-                  ),
-                  selectedTextStyle: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                headerStyle: const HeaderStyle(
-                  formatButtonVisible: false,
-                  titleCentered: true,
-                  leftChevronVisible: true,
-                  rightChevronVisible: true,
-                  titleTextStyle: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
               ),
             ),
           ),
@@ -124,7 +137,7 @@ class _AddPageState extends State<AddPage> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => WritePage(
-                          selectedDay: _selectedDay ?? DateTime.now()),
+                          selectedDay: _selectedDay.value ?? DateTime.now()),
                     ),
                   );
                 },

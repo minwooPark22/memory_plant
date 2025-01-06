@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:memory_plant_application/providers/language_provider.dart';
-import 'package:memory_plant_application/styles/app_styles.dart';
 import 'package:provider/provider.dart';
 import 'package:memory_plant_application/providers/name_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
