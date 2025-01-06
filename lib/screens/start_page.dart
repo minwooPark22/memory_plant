@@ -83,6 +83,7 @@ class _StartPageState extends State<StartPage>
             Navigator.pushReplacementNamed(context, "/startPageAfterLogin");
           }
         }
+        changeButton();
       } else {
         // print('로그인한 사용자 정보가 없습니다.');
       }
@@ -144,8 +145,6 @@ class _StartPageState extends State<StartPage>
 
     //==========================================================
 
-    //화면이 시작될 떄, 로그인이 되어있는지 여부 확인 -> 로그인 중인건 true/ false 로받아주는 함수가 있을수있음
-    //만약 로그인이 되어있으면 start_after_loginpage로 nav를 보내면 됨
     _checkLoginStatus(); // 로그인 상태 확인
 
     //==========================================================
@@ -210,7 +209,7 @@ class _StartPageState extends State<StartPage>
     final isKorean =
         context.watch<LanguageProvider>().currentLanguage == Language.ko;
     return Scaffold(
-      backgroundColor: Colors.white, // 배경을 maindeepblue로 설정
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
           Center(
@@ -264,7 +263,6 @@ class _StartPageState extends State<StartPage>
                         changeButton();
                       } else if (currentButtonIndex == 1) {
                         await _signInWithGoogle(); // 구글 로그인 결과 확인
-                        changeButton();
                       }
                     },
                     style: OutlinedButton.styleFrom(

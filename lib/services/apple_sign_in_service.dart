@@ -12,7 +12,7 @@ class AppleSignInService {
           AppleIDAuthorizationScopes.fullName,
         ],
         webAuthenticationOptions: WebAuthenticationOptions(
-          clientId: 'com.your.bundle.id', // 여기에 번들 ID를 입력하세요
+          clientId: 'com.example.memoryplantapplication', // 여기에 번들 ID를 입력하세요
           redirectUri: Uri.parse(
               'https://fluttertest-bc391.firebaseapp.com/__/auth/handler'), // Firebase 인증 리디렉션 URI
         ),
@@ -33,8 +33,8 @@ class AppleSignInService {
         // Firestore에 사용자 정보 저장
         await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
           'uid': user.uid,
-          'email': user.email,
-          'displayName': user.displayName ?? "",
+          'email': user.email ?? "Unknown",
+          'displayName': user.displayName ?? "Unknown",
           'lastSignInTime': user.metadata.lastSignInTime,
           'creationTime': user.metadata.creationTime,
         }, SetOptions(merge: true)); // 병합 옵션
