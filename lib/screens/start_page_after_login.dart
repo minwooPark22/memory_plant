@@ -4,7 +4,6 @@ import 'package:memory_plant_application/styles/app_styles.dart';
 import 'package:provider/provider.dart';
 import 'package:memory_plant_application/providers/name_provider.dart';
 import 'package:memory_plant_application/providers/memory_log_provider.dart';
-
 import '../providers/chatbot_provider.dart';
 
 class StartPageAfterLogin extends StatefulWidget {
@@ -17,30 +16,26 @@ class StartPageAfterLogin extends StatefulWidget {
 class _StartPageAfterLoginState extends State<StartPageAfterLogin>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<double> _animation;
+  late Animation<double> _animation1;
+  late Animation<double> _animation2;
 
   @override
   void initState() {
     super.initState();
 
-    // AnimationController 설정
+    // Load providers
+    context.read<MemoryLogProvider>().loadMemoryLogs();
+    context.read<NameProvider>().loadName();
+    context.read<ChatProvider>().loadMessages();
+
+    // Initialize animation controller
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 3),
-    )..repeat(reverse: true);
+      duration: const Duration(seconds: 2),
+    );
 
-    // Animation 정의
-    _animation = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // 위젯 트리가 완전히 빌드된 후에 호출
-      context.read<MemoryLogProvider>().loadMemoryLogs();
-      context.read<NameProvider>().loadName();
-      context.read<ChatProvider>().loadMessages();
-
-    });
+    // Start animation
+    _controller.forward();
   }
 
   @override
@@ -49,20 +44,29 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin>
     super.dispose();
   }
 
+  int _getDiaryCountForDate(List<dynamic> memoryList, DateTime targetDate) {
+    return memoryList.where((memory) {
+      final timestamp = DateTime.parse(memory.timestamp);
+      return timestamp.year == targetDate.year &&
+          timestamp.month == targetDate.month &&
+          timestamp.day == targetDate.day;
+    }).length;
+  }
+
   String _getMonthAbbreviation(int month) {
     const months = [
-      'jan',
-      'feb',
-      'mar',
-      'apr',
-      'may',
-      'jun',
-      'jul',
-      'aug',
-      'sep',
-      'oct',
-      'nov',
-      'dec'
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
     ];
     return months[month - 1];
   }
@@ -71,12 +75,33 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin>
   Widget build(BuildContext context) {
     final nameProvider = Provider.of<NameProvider>(context, listen: true);
     final memoryLogProvider =
-    Provider.of<MemoryLogProvider>(context); // MemoryLogProvider 가져오기
+        Provider.of<MemoryLogProvider>(context); // MemoryLogProvider 가져오기
     final isKorean =
         context.watch<LanguageProvider>().currentLanguage == Language.ko;
     final memoryCount = memoryLogProvider.memoryList
         .where((memory) => memory.isUser == true)
         .length; // 내가 쓴 메모리 개수
+    final memoryList = memoryLogProvider.memoryList;
+    final today = DateTime.now();
+    final yesterday = today.subtract(const Duration(days: 1));
+    final todayCount = _getDiaryCountForDate(memoryList, today);
+    final yesterdayCount = _getDiaryCountForDate(memoryList, yesterday);
+
+    // 애니메이션 길이 계산
+    final maxContainerHeight = MediaQuery.of(context).size.height * 0.7;
+    final animation1Height =
+        (yesterdayCount * 100).clamp(0, maxContainerHeight);
+    final animation2Height = (todayCount * 100).clamp(0, maxContainerHeight);
+
+    // 애니메이션 늘어날 길이 조정정
+    _animation1 =
+        Tween<double>(begin: 0, end: animation1Height.toDouble()).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+    _animation2 =
+        Tween<double>(begin: 0, end: animation2Height.toDouble()).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
 
     return GestureDetector(
       onTap: () {
@@ -84,66 +109,13 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin>
         Navigator.pushNamed(context, "/bottomNavPage");
       },
       child: Scaffold(
-        backgroundColor: AppStyles.maindeepblue,
-        appBar: AppBar(
-          backgroundColor: AppStyles.maindeepblue,
-          elevation: 0,
-          automaticallyImplyLeading: false,
-          title: const Text(
-            "",
-            style: TextStyle(fontWeight: FontWeight.w700, color: Colors.white),
-          ),
-          centerTitle: true,
-        ),
+        backgroundColor: Colors.white,
         body: Stack(
           children: [
-            // 파도 애니메이션 배경
-            AnimatedBuilder(
-              animation: _animation,
-              builder: (context, child) {
-                return Stack(
-                  children: [
-                    Positioned.fill(
-                      child: ClipPath(
-                        clipper: WaveClipper(1, _animation.value),
-                        child: Container(
-                          color: Colors.white.withOpacity(0.3),
-                        ),
-                      ),
-                    ),
-                    Positioned.fill(
-                      child: ClipPath(
-                        clipper: WaveClipper(2, _animation.value),
-                        child: Container(
-                          color: Colors.white.withOpacity(0.2),
-                        ),
-                      ),
-                    ),
-                    Positioned.fill(
-                      child: ClipPath(
-                        clipper: WaveClipper(3, _animation.value),
-                        child: Container(
-                          color: Colors.white.withOpacity(0.15),
-                        ),
-                      ),
-                    ),
-                    Positioned.fill(
-                      child: ClipPath(
-                        clipper: WaveClipper(4, _animation.value),
-                        child: Container(
-                          color: Colors.white.withOpacity(0.1),
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
-            // 메인 콘텐츠
             Center(
               child: Column(
                 children: [
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 125),
                   Padding(
                     padding: const EdgeInsets.only(left: 35),
                     child: Align(
@@ -151,7 +123,7 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin>
                       child: Text(
                         '${DateTime.now().year}',
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: Colors.black,
                           fontFamily: 'NanumFontSetup_TTF_SQUARE_Bold',
                           fontSize: 64,
                           fontWeight: FontWeight.w900,
@@ -168,7 +140,7 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin>
                       child: Text(
                         '${_getMonthAbbreviation(DateTime.now().month)} ${DateTime.now().day}',
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: Colors.black,
                           fontFamily: 'NanumFontSetup_TTF_SQUARE_Bold',
                           fontSize: 50,
                           fontWeight: FontWeight.w600,
@@ -187,7 +159,7 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin>
                             ? '${nameProvider.name}님 환영합니다!'
                             : "Welcome ${nameProvider.name}!",
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: Colors.black,
                           fontFamily: 'NanumFontSetup_TTF_SQUARE_Bold',
                           fontSize: 18,
                         ),
@@ -201,9 +173,9 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin>
                       child: Text(
                         isKorean
                             ? "$memoryCount개의 일기" // 메모리 개수 표시
-                            : "$memoryCount Journals",
+                            : "$memoryCount Memories",
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: Colors.black,
                           fontFamily: 'NanumFontSetup_TTF_SQUARE_Bold',
                           fontWeight: FontWeight.w600,
                           fontSize: 30,
@@ -214,8 +186,8 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin>
                   const SizedBox(height: 80),
                   Text(
                     isKorean ? "화면을 탭하여 시작하기" : "Tap the screen to start",
-                    style: TextStyle(
-                      color: AppStyles.primaryColor,
+                    style: const TextStyle(
+                      color: Colors.black,
                       fontFamily: 'NanumFontSetup_TTF_SQUARE_Bold',
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
@@ -224,47 +196,38 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin>
                 ],
               ),
             ),
+            // Animated containers on the right
+            Positioned(
+              top: 0,
+              right: 40,
+              child: AnimatedBuilder(
+                animation: _controller,
+                builder: (context, child) {
+                  return Container(
+                    width: 10,
+                    height: _animation1.value,
+                    color: AppStyles.primaryColor,
+                  );
+                },
+              ),
+            ),
+            Positioned(
+              top: 0,
+              right: 20,
+              child: AnimatedBuilder(
+                animation: _controller,
+                builder: (context, child) {
+                  return Container(
+                    width: 10,
+                    height: _animation2.value,
+                    color: AppStyles.maindeepblue,
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
     );
   }
-}
-
-// 파도 애니메이션을 위한 클리퍼
-class WaveClipper extends CustomClipper<Path> {
-  final int waveLevel;
-  final double animationValue;
-
-  WaveClipper(this.waveLevel, this.animationValue);
-
-  @override
-  Path getClip(Size size) {
-    var path = Path();
-    double waveHeight = 50.0 * waveLevel * (1 + 0.1 * animationValue);
-
-    path.lineTo(0, size.height - waveHeight);
-
-    path.quadraticBezierTo(
-      size.width * 0.25,
-      size.height - (waveHeight + 30),
-      size.width * 0.5,
-      size.height - waveHeight,
-    );
-    path.quadraticBezierTo(
-      size.width * 0.75,
-      size.height - (waveHeight - 30),
-      size.width,
-      size.height - waveHeight,
-    );
-
-    path.lineTo(size.width, size.height);
-    path.lineTo(0, size.height);
-
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => true;
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:memory_plant_application/providers/language_provider.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -26,7 +27,9 @@ class _EditNamePageState extends State<EditNamePage> {
   String? _photoURL; // Firestore에서 가져온 photoURL
   String? _nickname; // Firestore에서 가져온 nickname
   String? _email; // Firebase에서 가져온 사용자 이메일
-
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: ['email', 'profile'],
+  );
   @override
   void initState() {
     super.initState();
@@ -90,6 +93,7 @@ class _EditNamePageState extends State<EditNamePage> {
   Future<void> _signOut() async {
     try {
       await FirebaseAuth.instance.signOut(); // Firebase Auth 로그아웃
+      await _googleSignIn.signOut();
       // print('로그아웃 성공');
     } catch (e) {
       // print('로그아웃 중 오류 발생: $e');
@@ -120,9 +124,9 @@ class _EditNamePageState extends State<EditNamePage> {
     } catch (e) {
       setState(() {
         _errorMessage =
-        context.read<LanguageProvider>().currentLanguage == Language.ko
-            ? '이름 저장에 실패했습니다.'
-            : 'Failed to save the name.';
+            context.read<LanguageProvider>().currentLanguage == Language.ko
+                ? '이름 저장에 실패했습니다.'
+                : 'Failed to save the name.';
       });
     }
   }
@@ -144,7 +148,7 @@ class _EditNamePageState extends State<EditNamePage> {
         title: Text(
           isKorean ? "계정 관리" : "My Account",
           style:
-          const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         actions: [
@@ -179,10 +183,10 @@ class _EditNamePageState extends State<EditNamePage> {
                       : null, // photoURL 적용
                   child: _photoURL == null
                       ? const Icon(
-                    MdiIcons.robot, // 기본 아이콘
-                    size: 70,
-                    color: Colors.white,
-                  )
+                          MdiIcons.robot, // 기본 아이콘
+                          size: 70,
+                          color: Colors.white,
+                        )
                       : null, // photoURL이 없으면 기본 아이콘 표시
                 ),
               ],
@@ -208,7 +212,7 @@ class _EditNamePageState extends State<EditNamePage> {
                     Navigator.pushNamedAndRemoveUntil(
                       context,
                       "/",
-                          (Route<dynamic> route) => false,
+                      (Route<dynamic> route) => false,
                     ); // StartPage로 이동
                   }
                 });
