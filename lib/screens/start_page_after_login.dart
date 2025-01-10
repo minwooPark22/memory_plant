@@ -1,10 +1,15 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:memory_plant_application/providers/language_provider.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
 import 'package:provider/provider.dart';
 import 'package:memory_plant_application/providers/name_provider.dart';
 import 'package:memory_plant_application/providers/memory_log_provider.dart';
 import '../providers/chatbot_provider.dart';
+import 'dart:developer' as developer;
 
 class StartPageAfterLogin extends StatefulWidget {
   const StartPageAfterLogin({super.key});
@@ -18,6 +23,9 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin>
   late AnimationController _controller;
   late Animation<double> _animation1;
   late Animation<double> _animation2;
+  List<ConnectivityResult> _connectionStatus = [ConnectivityResult.none];
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
 
   @override
   void initState() {
@@ -27,6 +35,11 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin>
     context.read<MemoryLogProvider>().loadMemoryLogs();
     context.read<NameProvider>().loadName();
     context.read<ChatProvider>().loadMessages();
+
+    // network status
+    initConnectivity();
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
 
     // Initialize animation controller
     _controller = AnimationController(
@@ -40,8 +53,63 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin>
 
   @override
   void dispose() {
+    _connectivitySubscription.cancel();
     _controller.dispose();
     super.dispose();
+  }
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> initConnectivity() async {
+    late List<ConnectivityResult> result;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      developer.log('Couldn\'t check connectivity status', error: e);
+      return;
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) {
+      return Future.value(null);
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(List<ConnectivityResult> result) async {
+    setState(() {
+      _connectionStatus = result;
+    });
+    // ignore: avoid_print
+    print('Connectivity changed: $_connectionStatus');
+    if (_connectionStatus.contains(ConnectivityResult.none)) {
+      _showNetworkErrorDialog();
+    }
+  }
+
+  void _showNetworkErrorDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("네트워크 연결 끊김"),
+          content: const Text("인터넷 연결이 끊어졌습니다. 연결을 확인해주세요."),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop(); // 다이얼로그 닫기
+                await initConnectivity(); // 연결 상태 다시 확인
+              },
+              child: const Text("다시 시도"),
+            ),
+          ],
+        );
+      },
+      barrierDismissible: false, // 다이얼로그 밖을 눌러도 닫히지 않음
+    );
   }
 
   int _getDiaryCountForDate(List<dynamic> memoryList, DateTime targetDate) {

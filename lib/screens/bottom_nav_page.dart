@@ -5,7 +5,6 @@ import 'package:memory_plant_application/providers/navigation_provider.dart';
 import 'package:memory_plant_application/screens/add_page.dart';
 import 'package:memory_plant_application/screens/home_page.dart';
 import 'chattingbot.dart';
-import 'package:memory_plant_application/styles/app_styles.dart';
 import 'package:provider/provider.dart';
 
 class BottomNavPage extends StatefulWidget {
