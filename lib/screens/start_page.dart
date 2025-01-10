@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:memory_plant_application/providers/language_provider.dart';
 import 'package:provider/provider.dart';
@@ -83,9 +85,8 @@ class _StartPageState extends State<StartPage>
             Navigator.pushReplacementNamed(context, "/startPageAfterLogin");
           }
         }
-        changeButton();
       } else {
-        // print('로그인한 사용자 정보가 없습니다.');
+        changeButton();
       }
     } catch (e) {
       // 예외 처리
@@ -251,11 +252,17 @@ class _StartPageState extends State<StartPage>
                             .setLanguage(Language.en);
                         changeButton();
                       } else if (currentButtonIndex == 1) {
-                        try {
-                          await AppleSignInService.signInWithApple(
-                              context); // 애플 로그인
-                        } catch (e) {
-                          debugPrint("Apple Sign-In failed: $e");
+                        if (Platform.isAndroid) {
+                          // 안드로이드에서만 애플 로그인 버튼 표시
+                          try {
+                            await AppleSignInService.signInWithApple(
+                                context); // 애플 로그인
+                          } catch (e) {
+                            debugPrint("Apple Sign-In failed: $e");
+                          }
+                        } else {
+                          // iOS에서는 구글 로그인으로 대체 나중에 apple 로그인 구현시 바꿀 것
+                          await _signInWithGoogle();
                         }
                       }
                     },

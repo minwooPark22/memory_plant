@@ -95,13 +95,7 @@ class _SettingPageState extends State<SettingPage> {
               "ENG/KOR",
               style: TextStyle(color: AppStyles.mainblack, fontSize: 14),
             ),
-            trailing: LanguageToggleSwitch(
-              onToggle: (isKorean) {
-                setState(() {
-                  // 필요 시 언어 업데이트 처리
-                });
-              },
-            ),
+            trailing: const LanguageToggleSwitch(),
           ),
           const Divider(),
 

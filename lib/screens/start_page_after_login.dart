@@ -172,7 +172,7 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin>
                       alignment: Alignment.centerLeft,
                       child: Text(
                         isKorean
-                            ? "$memoryCount개의 일기" // 메모리 개수 표시
+                            ? "$memoryCount개의 기억" // 메모리 개수 표시
                             : "$memoryCount Memories",
                         style: const TextStyle(
                           color: Colors.black,
