@@ -175,7 +175,6 @@ class _StartPageState extends State<StartPage>
     final isKorean =
         context.watch<LanguageProvider>().currentLanguage == Language.ko;
     return Scaffold(
-      backgroundColor: Colors.white,
       body: Stack(
         children: [
           Center(
@@ -191,7 +190,6 @@ class _StartPageState extends State<StartPage>
                     fontSize: 50,
                     fontFamily: 'NanumFontSetup_TTF_SQUARE',
                     fontWeight: FontWeight.w900,
-                    color: Colors.black,
                   ),
                 ),
                 SizedBox(
@@ -213,7 +211,6 @@ class _StartPageState extends State<StartPage>
                     fontSize: 18,
                     fontFamily: 'NanumFontSetup_TTF_SQUARE',
                     fontWeight: FontWeight.w400,
-                    color: Colors.black,
                   ),
                 ),
                 SizedBox(

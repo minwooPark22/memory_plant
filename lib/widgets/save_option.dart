@@ -101,18 +101,17 @@ class _SaveOptionDropdownState extends State<SaveOptionDropdown> {
               ),
             ),
           ],
-          child: Row(
+          child: const Row(
             children: [
               Padding(
-                padding: const EdgeInsets.only(
+                padding: EdgeInsets.only(
                   top: 8.0,
                   left: 8.0,
                   bottom: 8.0,
                 ), // 상단에만 패딩
-                child: Icon(Icons.expand_more,
-                    color: AppStyles.textColor, size: 20),
+                child: Icon(Icons.expand_more, size: 20),
               ),
-              const SizedBox(width: 4),
+              SizedBox(width: 4),
             ],
           ),
         ),

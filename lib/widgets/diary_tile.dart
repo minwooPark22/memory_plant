@@ -130,6 +130,7 @@ class DiaryTile extends StatelessWidget {
                 Text(
                   memory.title ?? 'Untitled Memory', // 제목
                   style: const TextStyle(
+                    color: Colors.black,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -139,6 +140,7 @@ class DiaryTile extends StatelessWidget {
               memory.contents ?? 'No content available',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
+              style: const TextStyle(color: Colors.black),
             ),
             trailing: const Icon(Icons.arrow_forward),
             onTap: () {

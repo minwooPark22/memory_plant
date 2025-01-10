@@ -18,7 +18,6 @@ class Chatbot extends StatelessWidget {
         final isKorean =
             context.watch<LanguageProvider>().currentLanguage == Language.ko;
         return Scaffold(
-          backgroundColor: Colors.white,
           appBar: AppBar(
             backgroundColor: AppStyles.maindeepblue,
             leading: IconButton(

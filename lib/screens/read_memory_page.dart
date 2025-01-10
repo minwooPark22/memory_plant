@@ -44,23 +44,18 @@ class ReadMemoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
         title: memory.isUser!
             ? Text(
                 _formattedDate(context, memory.timestamp),
                 style: const TextStyle(
                   fontWeight: FontWeight.w700,
-                  color: Colors.black,
                 ),
               )
             : const Text(
                 "Summary",
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
-                  color: Colors.black,
                 ),
               ),
         centerTitle: true,
@@ -92,7 +87,8 @@ class ReadMemoryPage extends StatelessWidget {
                 child: Text(
                   memory.contents ?? "",
                   maxLines: null,
-                  style: const TextStyle(fontSize: 16,
+                  style: const TextStyle(
+                    fontSize: 16,
                     fontFamily: 'NanumFontSetup_TTF_SQUARE',
                   ),
                 ),

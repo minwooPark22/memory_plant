@@ -17,7 +17,7 @@ class IntroCenter extends StatelessWidget {
           borderRadius: BorderRadius.circular(12.0), // 둥근 모서리
           boxShadow: const [
             BoxShadow(
-              color: Colors.black26,
+              color: Colors.grey,
               blurRadius: 5,
               offset: Offset(0, 3),
             ),
@@ -73,7 +73,11 @@ With warm regards,
 
 Your Memory Curator
                   ''',
-              style: const TextStyle(fontSize: 12, color: Colors.black,fontFamily: 'NanumFontSetup_TTF_SQUARE',),
+              style: const TextStyle(
+                fontSize: 12,
+                color: Colors.black,
+                fontFamily: 'NanumFontSetup_TTF_SQUARE',
+              ),
               textAlign: TextAlign.left,
             ),
           ],

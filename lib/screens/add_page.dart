@@ -39,9 +39,7 @@ class _AddPageState extends State<AddPage> {
         context.watch<LanguageProvider>().currentLanguage == Language.ko;
 
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
         title: Text(
           isKorean ? "기억발전소" : "Memory Plant",
           style: const TextStyle(fontWeight: FontWeight.w700),
@@ -89,12 +87,8 @@ class _AddPageState extends State<AddPage> {
                       _focusedDay.value = focusedDay;
                     },
                     calendarStyle: CalendarStyle(
-                      todayDecoration: const BoxDecoration(
-                        color: Colors.transparent, // 오늘 날짜의 색상을 투명하게 처리
-                      ),
-                      todayTextStyle: const TextStyle(
-                        color: Colors.black, // 오늘 날짜 텍스트 색상 유지
-                      ),
+                      todayDecoration: const BoxDecoration(),
+                      todayTextStyle: const TextStyle(),
                       selectedDecoration: BoxDecoration(
                         color: AppStyles.maindeepblue,
                         shape: BoxShape.circle,
@@ -113,6 +107,13 @@ class _AddPageState extends State<AddPage> {
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
+                    ),
+                    daysOfWeekStyle: DaysOfWeekStyle(
+                      weekdayStyle:
+                          const TextStyle(color: Colors.black), // 요일 텍스트 스타일
+                      weekendStyle: TextStyle(
+                        color: AppStyles.maindeepblue,
+                      ), // 주말 텍스트 스타일
                     ),
                   );
                 },

@@ -13,7 +13,6 @@ class HomePage extends StatelessWidget {
     final isKorean =
         context.watch<LanguageProvider>().currentLanguage == Language.ko;
     return Scaffold(
-      backgroundColor: Colors.white,
       body: Consumer<MemoryLogProvider>(
         builder: (context, memoryLogProvider, child) {
           // 로딩 상태를 다루지 않고, 이미 로드된 상태에서 UI 갱신
@@ -90,7 +89,6 @@ class HomePage extends StatelessWidget {
         style: const TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
-          color: Colors.black87,
         ),
       ),
     );

@@ -32,7 +32,6 @@ class _BottomNavPageState extends State<BottomNavPage> {
     final isKorean =
         context.watch<LanguageProvider>().currentLanguage == Language.ko;
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: currentIndex == 1 ||
               currentIndex == 2 // addpage 랑 Chatbot 페이지에서는 AppBar를 숨김
           ? null
@@ -43,7 +42,6 @@ class _BottomNavPageState extends State<BottomNavPage> {
                   Navigator.pop(context);
                 },
               ),
-              backgroundColor: Colors.white,
               title: Text(
                 isKorean ? "기억발전소" : "Memory Plant",
                 style: const TextStyle(fontWeight: FontWeight.w700),
@@ -53,7 +51,6 @@ class _BottomNavPageState extends State<BottomNavPage> {
                 IconButton(
                   icon: const Icon(
                     FluentSystemIcons.ic_fluent_settings_regular,
-                    color: Colors.black,
                   ),
                   onPressed: () {
                     Navigator.pushNamed(context, "/settingPage");
@@ -63,11 +60,8 @@ class _BottomNavPageState extends State<BottomNavPage> {
             ),
       body: appScreens[currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
         currentIndex: currentIndex,
         onTap: _onItemTapped,
-        selectedItemColor: AppStyles.maindeepblue,
-        unselectedItemColor: AppStyles.textColor,
         showSelectedLabels: true,
         selectedFontSize: 10, // 선택된 아이템의 글씨 크기 줄임
         unselectedFontSize: 10,

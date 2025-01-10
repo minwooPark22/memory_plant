@@ -11,17 +11,16 @@ class PrivacyPage extends StatelessWidget {
     final isKorean =
         context.watch<LanguageProvider>().currentLanguage == Language.ko;
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         title: Text(
           isKorean ? "개인정보 보호 안내" : "Privacy Notice",
-          style:
-          const TextStyle(fontWeight: FontWeight.w700, color: Colors.black),
+          style: const TextStyle(fontWeight: FontWeight.w700),
         ),
         centerTitle: true,
-        iconTheme:
-        const IconThemeData(color: Colors.black), // 뒤로가기 아이콘 색상을 흰색으로 설정
       ),
       body: Stack(
         children: [
