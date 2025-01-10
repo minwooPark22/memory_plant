@@ -199,19 +199,13 @@ class _EditNamePageState extends State<EditNamePage> {
             const Spacer(),
             // 로그아웃 버튼
             TextButton(
-              onPressed: () async {
-                await _signOut(); // 로그아웃 처리
-
-                // context가 여전히 유효하다면 Navigator를 호출
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  if (mounted) {
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      "/",
-                      (Route<dynamic> route) => false,
-                    ); // StartPage로 이동
-                  }
-                });
+              onPressed: () {
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  "/",
+                  (Route<dynamic> route) => false,
+                ); // StartPage로 이동
+                _signOut(); // 로그아웃 처리
               },
               child: Text(
                 isKorean ? '로그아웃' : 'Log out', // 언어 설정

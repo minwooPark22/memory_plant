@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:memory_plant_application/providers/language_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:memory_plant_application/providers/name_provider.dart';
@@ -8,6 +10,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:memory_plant_application/services/apple_sign_in_service.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'dart:developer' as developer;
 
 // 사용자 정의 예외 클래스
 class EmptyNameException implements Exception {
@@ -111,9 +115,76 @@ class _StartPageState extends State<StartPage>
     'Please enter your name' // 영어: 이름 입력 페이지 메시지
   ];
 
+  List<ConnectivityResult> _connectionStatus = [ConnectivityResult.none];
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
+
   @override
   void initState() {
     super.initState();
+    initConnectivity();
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> initConnectivity() async {
+    late List<ConnectivityResult> result;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      developer.log('Couldn\'t check connectivity status', error: e);
+      return;
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) {
+      return Future.value(null);
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(List<ConnectivityResult> result) async {
+    setState(() {
+      _connectionStatus = result;
+    });
+    // ignore: avoid_print
+    print('Connectivity changed: $_connectionStatus');
+    if (_connectionStatus.contains(ConnectivityResult.none)) {
+      _showNetworkErrorDialog();
+    }
+  }
+
+  void _showNetworkErrorDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("네트워크 연결 끊김"),
+          content: const Text("인터넷 연결이 끊어졌습니다. 연결을 확인해주세요."),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop(); // 다이얼로그 닫기
+                await initConnectivity(); // 연결 상태 다시 확인
+              },
+              child: const Text("다시 시도"),
+            ),
+          ],
+        );
+      },
+      barrierDismissible: false, // 다이얼로그 밖을 눌러도 닫히지 않음
+    );
   }
 
   void changeButton() {
@@ -145,8 +216,6 @@ class _StartPageState extends State<StartPage>
           'nickname': name,
         });
       }
-
-      // SharedPreferences와 상태 업데이트
 
       // 다음 페이지로 이동
       if (mounted) {
