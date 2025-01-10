@@ -36,23 +36,32 @@ class _EditMemoryPageState extends State<EditMemoryPage> {
 
   void _updateSaveButtonState() {
     // 현재 제목과 내용이 초기 값과 다른지 확인
-    final isContentChanged =
-        _titleController.text != widget.memory.title ||
-            _contentController.text != widget.memory.contents;
+    final isContentChanged = _titleController.text != widget.memory.title ||
+        _contentController.text != widget.memory.contents;
 
     // 제목 또는 내용이 비어 있지 않고, 내용이 수정되었는지 확인
     setState(() {
       _isSaveEnabled = isContentChanged &&
-          (_titleController.text.isNotEmpty || _contentController.text.isNotEmpty);
+          (_titleController.text.isNotEmpty ||
+              _contentController.text.isNotEmpty);
     });
   }
 
   String _formatDate(String? timestamp) {
     // timestamp가 null인 경우 현재 날짜를 기본값으로 사용
     final date = timestamp != null ? DateTime.parse(timestamp) : DateTime.now();
-    final isKorean = context.watch<LanguageProvider>().currentLanguage == Language.ko;
+    final isKorean =
+        context.watch<LanguageProvider>().currentLanguage == Language.ko;
     final weekdaysKorean = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'];
-    final weekdaysEnglish = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    final weekdaysEnglish = [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday'
+    ];
 
     final weekday = date.weekday; // 날짜의 요일 계산
 
@@ -78,15 +87,12 @@ class _EditMemoryPageState extends State<EditMemoryPage> {
         context.watch<LanguageProvider>().currentLanguage == Language.ko;
 
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
         elevation: 0,
         title: Text(
           _formatDate(widget.memory.timestamp),
           style: const TextStyle(
             fontWeight: FontWeight.w700,
-            color: Colors.black,
           ),
         ),
         centerTitle: true,
@@ -136,7 +142,9 @@ class _EditMemoryPageState extends State<EditMemoryPage> {
                 expands: true,
                 style: const TextStyle(fontSize: 16),
                 decoration: InputDecoration(
-                  hintText: isKorean ? "내용을 입력하세요." : "Write the content.", // 힌트 텍스트 추가
+                  hintText: isKorean
+                      ? "내용을 입력하세요."
+                      : "Write the content.", // 힌트 텍스트 추가
                   border: InputBorder.none,
                   hintStyle: const TextStyle(color: Colors.grey),
                 ),

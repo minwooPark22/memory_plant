@@ -109,7 +109,6 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin>
         Navigator.pushNamed(context, "/bottomNavPage");
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
         body: Stack(
           children: [
             Center(
@@ -123,7 +122,6 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin>
                       child: Text(
                         '${DateTime.now().year}',
                         style: const TextStyle(
-                          color: Colors.black,
                           fontFamily: 'NanumFontSetup_TTF_SQUARE_Bold',
                           fontSize: 64,
                           fontWeight: FontWeight.w900,
@@ -140,7 +138,6 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin>
                       child: Text(
                         '${_getMonthAbbreviation(DateTime.now().month)} ${DateTime.now().day}',
                         style: const TextStyle(
-                          color: Colors.black,
                           fontFamily: 'NanumFontSetup_TTF_SQUARE_Bold',
                           fontSize: 50,
                           fontWeight: FontWeight.w600,
@@ -159,7 +156,6 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin>
                             ? '${nameProvider.name}님 환영합니다!'
                             : "Welcome ${nameProvider.name}!",
                         style: const TextStyle(
-                          color: Colors.black,
                           fontFamily: 'NanumFontSetup_TTF_SQUARE_Bold',
                           fontSize: 18,
                         ),
@@ -172,10 +168,9 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin>
                       alignment: Alignment.centerLeft,
                       child: Text(
                         isKorean
-                            ? "$memoryCount개의 일기" // 메모리 개수 표시
+                            ? "$memoryCount개의 기억" // 메모리 개수 표시
                             : "$memoryCount Memories",
                         style: const TextStyle(
-                          color: Colors.black,
                           fontFamily: 'NanumFontSetup_TTF_SQUARE_Bold',
                           fontWeight: FontWeight.w600,
                           fontSize: 30,
@@ -187,7 +182,6 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin>
                   Text(
                     isKorean ? "화면을 탭하여 시작하기" : "Tap the screen to start",
                     style: const TextStyle(
-                      color: Colors.black,
                       fontFamily: 'NanumFontSetup_TTF_SQUARE_Bold',
                       fontWeight: FontWeight.bold,
                       fontSize: 20,

@@ -5,6 +5,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:memory_plant_application/providers/chatbot_provider.dart';
 import 'package:memory_plant_application/providers/language_provider.dart';
 import 'package:memory_plant_application/providers/memory_log_provider.dart';
+import 'package:memory_plant_application/styles/app_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:memory_plant_application/screens/bottom_nav_page.dart';
 import 'package:memory_plant_application/screens/setting_page.dart';
@@ -50,6 +51,9 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
+        themeMode: ThemeMode.system, // 시스템에 맞는 테마
+        theme: AppTheme.lightTheme, // lightTheme 적용
+        darkTheme: AppTheme.darkTheme, // darkTheme 적용
         routes: {
           "/": (context) => user != null
               ? const StartPageAfterLogin() // 로그인 상태이면 StartPageAfterLogin

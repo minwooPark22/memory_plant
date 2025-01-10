@@ -11,17 +11,16 @@ class LearningPage extends StatelessWidget {
     final isKorean =
         context.watch<LanguageProvider>().currentLanguage == Language.ko;
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         title: Text(
           isKorean ? "기억발전소 알아보기" : "Learn About Memory Plant",
-          style:
-              const TextStyle(fontWeight: FontWeight.w700, color: Colors.black),
+          style: const TextStyle(fontWeight: FontWeight.w700),
         ),
         centerTitle: true,
-        iconTheme:
-            const IconThemeData(color: Colors.black), // 뒤로가기 아이콘 색상을 흰색으로 설정
       ),
       body: Stack(
         children: [

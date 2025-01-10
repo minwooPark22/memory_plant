@@ -137,18 +137,14 @@ class _EditNamePageState extends State<EditNamePage> {
         context.watch<LanguageProvider>().currentLanguage == Language.ko;
 
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+          icon: const Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
           isKorean ? "계정 관리" : "My Account",
-          style:
-              const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         actions: [
@@ -246,7 +242,6 @@ class _EditNamePageState extends State<EditNamePage> {
           nameLabel,
           style: const TextStyle(
             fontSize: 12,
-            color: Colors.black54,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -284,7 +279,6 @@ class _EditNamePageState extends State<EditNamePage> {
                 '$emailLabel: $email',
                 style: const TextStyle(
                   fontSize: 14,
-                  color: Colors.black54,
                 ),
               ),
             ],

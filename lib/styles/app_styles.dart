@@ -14,10 +14,6 @@ class AppStyles {
   static Color maindeepblue = deepblue;
   static Color maingray = gray; // 회색 상자 사용시
   static Color mainred = mred; // 삭제 시
-
-
-
-
   static TextStyle textStyle =
       TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: textColor);
 }

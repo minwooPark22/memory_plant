@@ -153,15 +153,12 @@ class _WritePageState extends State<WritePage> {
         context.watch<LanguageProvider>().currentLanguage == Language.ko;
 
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
         elevation: 0, // 그림자 제거
         title: Text(
           formattedDate(context, isKorean),
           style: const TextStyle(
             fontWeight: FontWeight.w700,
-            color: Colors.black,
           ),
         ),
         centerTitle: true,
