@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:memory_plant_application/providers/language_provider.dart';
+import 'package:memory_plant_application/styles/app_styles.dart';
 import 'package:provider/provider.dart';
 import 'package:memory_plant_application/providers/name_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -144,9 +145,6 @@ class _StartPageState extends State<StartPage>
       return;
     }
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
     if (!mounted) {
       return Future.value(null);
     }
@@ -170,15 +168,28 @@ class _StartPageState extends State<StartPage>
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("네트워크 연결 끊김"),
-          content: const Text("인터넷 연결이 끊어졌습니다. 연결을 확인해주세요."),
+          title: const Text(
+            "네트워크 연결 끊김",
+            style: TextStyle(
+              fontFamily: 'NanumFontSetup_TTF_SQUARE_ExtraBold',
+            ),
+          ),
+          content: const Text(
+            "인터넷 연결이 끊어졌습니다.\n연결을 확인해주세요.",
+            style: TextStyle(
+              fontFamily: 'NanumFontSetup_TTF_SQUARE',
+            ),
+          ),
           actions: [
             TextButton(
               onPressed: () async {
                 Navigator.of(context).pop(); // 다이얼로그 닫기
                 await initConnectivity(); // 연결 상태 다시 확인
               },
-              child: const Text("다시 시도"),
+              child: Text("다시 시도",
+                  style: TextStyle(
+                      fontFamily: 'NanumFontSetup_TTF_SQUARE',
+                      color: AppStyles.maindeepblue)),
             ),
           ],
         );

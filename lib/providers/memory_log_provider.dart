@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:memory_plant_application/services/memory_log.dart';
-import 'package:memory_plant_application/services/memory_log_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class MemoryLogProvider with ChangeNotifier {
   List<MemoryLog> memoryList = [];
-  final MemoryLogService memoryLogService = MemoryLogService();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // 메모리 정렬
@@ -22,21 +20,28 @@ class MemoryLogProvider with ChangeNotifier {
   Future<void> addMemory(MemoryLog newMemory) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      final docRef = await FirebaseFirestore.instance
+      final currentYear = DateTime.now().year.toString();
+      final docRef = _firestore
           .collection('users')
           .doc(user.uid)
           .collection('memories')
-          .add({
-        'userId': user.uid,
-        'title': newMemory.title,
-        'contents': newMemory.contents,
-        'timestamp': newMemory.timestamp,
-        'isUser': newMemory.isUser,
-      });
+          .doc(currentYear);
 
-      // 추가한 메모리에 memoryId 설정
-      newMemory.memoryId = docRef.id;
-
+      final docSnapshot = await docRef.get();
+      if (docSnapshot.exists) {
+        try {
+          await docRef.update({
+            'memorylists': FieldValue.arrayUnion([newMemory.toJson()])
+          });
+        } catch (e) {
+          // print("메모리 추가 중 오류 발생: $e");
+        }
+      } else {
+        // 해당 연도의 문서가 없는 경우
+        await docRef.set({
+          'memorylists': [newMemory.toJson()]
+        });
+      }
       // 메모리를 리스트에 추가
       memoryList.insert(0, newMemory);
       _sortMemoryList();
@@ -45,73 +50,70 @@ class MemoryLogProvider with ChangeNotifier {
   }
 
   // 메모리 삭제
-  Future<void> deleteMemory(String memoryId) async {
+  Future<void> deleteMemory(MemoryLog memory) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      await FirebaseFirestore.instance
+      final memoryYear = DateTime.parse(memory.timestamp!).year.toString();
+      final docRef = _firestore
           .collection('users')
           .doc(user.uid)
           .collection('memories')
-          .doc(memoryId)
-          .delete();
+          .doc(memoryYear);
 
-      memoryList.removeWhere((memory) => memory.memoryId == memoryId);
-      notifyListeners();
-    }
-  }
-
-  // 요약 삭제
-  Future<void> deleteSummary(String memoryId) async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .collection('summarized')
-          .doc(memoryId)
-          .delete();
-
-      memoryList.removeWhere((memory) => memory.memoryId == memoryId);
-      notifyListeners();
-    }
-  }
-
-  // 메모리 수정
-  Future<void> editMemory(String memoryId, MemoryLog updatedMemory) async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .collection('memories')
-          .doc(memoryId)
-          .update(updatedMemory.toJson());
-
-      final index =
-          memoryList.indexWhere((memory) => memory.memoryId == memoryId);
-      if (index != -1) {
-        memoryList[index] = updatedMemory;
-        notifyListeners();
+      final docSnapshot = await docRef.get();
+      if (docSnapshot.exists) {
+        await docRef.update({
+          'memorylists': FieldValue.arrayRemove([memory.toJson()])
+        });
       }
+
+      memoryList.removeWhere((m) =>
+          m.title == memory.title &&
+          m.contents == memory.contents &&
+          m.timestamp == memory.timestamp &&
+          m.isUser == memory.isUser);
+      notifyListeners();
     }
   }
 
-  // 요약 수정
-  Future<void> editSummary(String memoryId, MemoryLog updatedMemory) async {
+// 메모리 수정
+  Future<void> editMemory(MemoryLog memory, MemoryLog updatedMemory) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      await FirebaseFirestore.instance
+      final memoryYear = DateTime.parse(memory.timestamp!).year.toString();
+      final docRef = _firestore
           .collection('users')
           .doc(user.uid)
-          .collection('summarized')
-          .doc(memoryId)
-          .update(updatedMemory.toJson());
+          .collection('memories')
+          .doc(memoryYear);
 
-      final index =
-          memoryList.indexWhere((memory) => memory.memoryId == memoryId);
-      if (index != -1) {
-        memoryList[index] = updatedMemory;
-        notifyListeners();
+      try {
+        // Firestore 문서 가져오기
+        final docSnapshot = await docRef.get();
+        if (docSnapshot.exists) {
+          // 기존 메모리를 배열에서 제거
+          await docRef.update({
+            'memorylists': FieldValue.arrayRemove([memory.toJson()])
+          });
+
+          // 새로운 메모리를 배열에 추가
+          await docRef.update({
+            'memorylists': FieldValue.arrayUnion([updatedMemory.toJson()])
+          });
+        }
+
+        // 로컬 리스트에서 메모리 업데이트
+        final index = memoryList.indexWhere((m) =>
+            m.title == memory.title &&
+            m.contents == memory.contents &&
+            m.timestamp == memory.timestamp &&
+            m.isUser == memory.isUser);
+        if (index != -1) {
+          memoryList[index] = updatedMemory;
+          notifyListeners(); // UI 갱신
+        }
+      } catch (e) {
+        // print("Failed to edit memory: $e");
       }
     }
   }
@@ -122,34 +124,24 @@ class MemoryLogProvider with ChangeNotifier {
     if (user != null) {
       try {
         // memories 컬렉션에서 데이터 가져오기
-        final memoriesSnapshot = await FirebaseFirestore.instance
+        final memoriesSnapshot = await _firestore
             .collection('users')
             .doc(user.uid)
             .collection('memories')
             .get();
 
-        final memories = memoriesSnapshot.docs
-            .map((doc) => MemoryLog.fromJson(doc.data(), doc.id)) // doc.id 사용
-            .toList();
+        List<MemoryLog> loadedMemories = [];
 
-        // summarized 컬렉션에서 데이터 가져오기
-        final summarizedSnapshot = await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user.uid)
-            .collection('summarized')
-            .get();
+        for (var doc in memoriesSnapshot.docs) {
+          final memoryLists = doc.data()['memorylists'] as List<dynamic>;
+          for (var memory in memoryLists) {
+            loadedMemories.add(MemoryLog.fromJson(memory));
+          }
+        }
 
-        final summarized = summarizedSnapshot.docs
-            .map((doc) => MemoryLog.fromJson(doc.data(), doc.id)) // doc.id 사용
-            .toList();
+        memoryList = loadedMemories;
 
-        // 두 리스트를 병합
-        memoryList = [...memories, ...summarized];
-
-        // 정렬 (타임스탬프 기준 내림차순)
         _sortMemoryList();
-
-        // 상태 알림
         notifyListeners();
       } catch (e) {
         // print("Memory logs 로드 중 오류 발생: $e");
@@ -164,10 +156,8 @@ class MemoryLogProvider with ChangeNotifier {
       String monthSummaryTitle, String newContent, String timestamp) async {
     final adjustedTimestamp =
         _getSummaryTimestamp(timestamp); // 요약에 사용할 타임스탬프 계산
-    final monthKey = _getMonthKey(timestamp); // 요약의 월별 키 생성
 
     final newMemory = MemoryLog(
-      memoryId: monthKey,
       title: monthSummaryTitle,
       contents: '- Day ${DateTime.parse(timestamp).day} $newContent',
       timestamp: adjustedTimestamp,
@@ -182,61 +172,27 @@ class MemoryLogProvider with ChangeNotifier {
     }
 
     try {
-      // 요약 데이터의 기존 문서 검색
-      final doc = await _firestore
-          .collection('users')
-          .doc(user.uid)
-          .collection('summarized')
-          .doc(monthKey)
-          .get();
-
-      if (doc.exists) {
-        // 기존 요약이 있다면 내용을 갱신
-        final existingContent = doc.data()?['contents'] ?? "";
+      final index = memoryList.indexWhere(
+          (m) => m.timestamp == adjustedTimestamp && m.isUser == false);
+      if (index != -1) {
+        //이미 요약존재재
+        final targetMemory = memoryList[index];
+        final existingContent = targetMemory.contents;
         final updatedContent =
             '$existingContent\n\n- Day ${DateTime.parse(timestamp).day} $newContent';
-
-        await _firestore
-            .collection('users')
-            .doc(user.uid)
-            .collection('summarized')
-            .doc(monthKey)
-            .update({
-          'title': monthSummaryTitle,
-          'contents': updatedContent,
-          'timestamp': adjustedTimestamp,
-          'isUser': false
-        });
-        newMemory.memoryId = monthKey;
-        newMemory.contents = updatedContent;
-        editSummary(monthKey, newMemory);
+        final updatedMemory = MemoryLog(
+          title: monthSummaryTitle,
+          contents: updatedContent,
+          timestamp: adjustedTimestamp,
+          isUser: false,
+        );
+        editMemory(targetMemory, updatedMemory);
       } else {
-        // 기존 요약이 없다면 새로 생성
-        await _firestore
-            .collection('users')
-            .doc(user.uid)
-            .collection('summarized')
-            .doc(monthKey)
-            .set({
-          'title': monthSummaryTitle,
-          'contents': '- Day ${DateTime.parse(timestamp).day} $newContent',
-          'timestamp': adjustedTimestamp,
-          'isUser': false
-        });
-        memoryList.insert(0, newMemory);
+        addMemory(newMemory);
       }
     } catch (e) {
       // print("월간 요약 업데이트 오류: $e");
     }
-
-    _sortMemoryList();
-    notifyListeners(); // 상태 변경 알림
-  }
-
-  // 타임스탬프를 월별 키로 변환
-  String _getMonthKey(String timestamp) {
-    final date = DateTime.parse(timestamp);
-    return '${date.year}-${date.month.toString().padLeft(2, '0')}'; // 예: 2024-12
   }
 
   // 요약 타임스탬프 생성
@@ -245,6 +201,6 @@ class MemoryLogProvider with ChangeNotifier {
     final lastDayOfMonth = DateTime(date.year, date.month + 1, 0);
     final adjustedDate = DateTime(lastDayOfMonth.year, lastDayOfMonth.month,
         lastDayOfMonth.day, 23, 59, 59);
-    return adjustedDate.toIso8601String(); // ISO 형식으로 반환
+    return adjustedDate.toIso8601String();
   }
 }

@@ -43,8 +43,8 @@ class IntroCenter extends StatelessWidget {
                   ? '''안녕하세요! 저는 여러분들의 일상 기록을 관리하고
 보살피는 기억관리 소장입니다.
 
-기억발전소는 여러분의 소중한 하루하루를 담은 일기를 한 곳에서 정리하고,
-1주일 또는 한 달 단위로 요약된 특별한 보고서를 전달해드리는 공간입니다.
+기억발전소는 여러분의 소중한 하루하루를 담은 기억들을을 한 곳에서 정리하고,
+한 달 단위로 요약된 특별한 보고서를 전달해드리는 공간입니다.
 바쁜 일상 속에서 지나치기 쉬운 순간들도 저와 함께라면 다시 떠올릴 수 있는 보물로 남게 될거에요.
 
 또한, 저는 단순한 기록 보관을 넘어서 여러분과 대화를 나눌 수 있는 AI 친구이기도 합니다!
@@ -61,7 +61,7 @@ class IntroCenter extends StatelessWidget {
                   : '''
 Hello there! I’m your Memory Keeper, here to help you record and care for your daily moments.
 
-The Memory Plant is a special space where you can gather all your precious daily memories in one place, with weekly or monthly summaries delivered as unique memory reports. Even those fleeting moments you might otherwise overlook will transform into treasures you can revisit anytime, with me by your side.
+The Memory Plant is a special space where you can gather all your precious daily memories in one place, with monthly summaries delivered as unique memory reports. Even those fleeting moments you might otherwise overlook will transform into treasures you can revisit anytime, with me by your side.
 
 And here’s the fun part—I’m not just here to store your memories; I’m also your AI companion! Whether it’s happy news, tough days, or things weighing on your mind… I’m all ears. You’re welcome to share any story with me, and I’ll be here to cheer you on, listen closely, and even offer a fresh perspective now and then.
 

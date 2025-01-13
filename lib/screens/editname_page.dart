@@ -203,7 +203,7 @@ class _EditNamePageState extends State<EditNamePage> {
               onPressed: () {
                 Navigator.pushNamedAndRemoveUntil(
                   context,
-                  "/",
+                  "/startPage",
                   (Route<dynamic> route) => false,
                 ); // StartPage로 이동
                 _signOut(); // 로그아웃 처리

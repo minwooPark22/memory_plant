@@ -67,6 +67,13 @@ class _WritePageState extends State<WritePage> {
 
   Future<void> addMemory(bool isKorean) async {
     try {
+      final newMemory = MemoryLog(
+          title: _titleController.text,
+          contents: _contentController.text,
+          timestamp: widget.selectedDay.toString().substring(0, 10),
+          isUser: true // 작성 페이지에서 쓴 글은 무조건 isUser 가 true
+          );
+      context.read<MemoryLogProvider>().addMemory(newMemory);
       if (_selectedOption == 'summary') {
         setState(() {
           _isLoading = true;
@@ -87,13 +94,6 @@ class _WritePageState extends State<WritePage> {
       }
 
       if (mounted) {
-        final newMemory = MemoryLog(
-            title: _titleController.text,
-            contents: _contentController.text,
-            timestamp: widget.selectedDay.toString(),
-            isUser: true // 작성 페이지에서 쓴 글은 무조건 isUser 가 true
-            );
-        context.read<MemoryLogProvider>().addMemory(newMemory);
         context.read<NavigationProvider>().updateIndex(0); // HomePage 인덱스
         Navigator.of(context).pop();
       }
@@ -205,11 +205,13 @@ class _WritePageState extends State<WritePage> {
           crossAxisAlignment: CrossAxisAlignment.start, // 아이템 왼쪽 정렬
           children: [
             TextField(
+              maxLength: 500,
               controller: _titleController,
               style: const TextStyle(
                   fontFamily: 'NanumFontSetup_TTF_SQUARE_ExtraBold',
                   fontSize: 21),
               decoration: InputDecoration(
+                counterText: '', // 글자 수 카운트 제거
                 hintText: isKorean ? "제목" : "Title.",
                 border: InputBorder.none, // 밑줄 제거
                 hintStyle: const TextStyle(

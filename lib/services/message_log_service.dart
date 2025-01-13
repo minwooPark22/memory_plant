@@ -7,42 +7,71 @@ class MessageLogService {
 
   Future<void> saveMessageLog(MessageLog message) async {
     final user = FirebaseAuth.instance.currentUser;
+    final currentYear = DateTime.now().year.toString();
     if (user != null) {
-      final chatLogCollection = FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .collection('chatlog');
-      final docRef =
-          await chatLogCollection.add(message.toJson()); // Firestore에 메시지 추가
-      message.id = docRef.id; // 새로 생성된 문서의 ID 저장
-    }
-  }
-
-  // 메시지 불러오기
-  Future<List<MessageLog>> loadMessageLogs() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      final chatLogCollection = _firestore
+      final chatLogDoc = _firestore
           .collection('users')
           .doc(user.uid)
           .collection('chatlog')
-          .orderBy('date', descending: true);
+          .doc(currentYear);
 
-      final querySnapshot = await chatLogCollection.get();
-      return querySnapshot.docs
-          .map((doc) => MessageLog.fromJson(doc.data(), doc.id)) // doc.id 추가
-          .toList();
+      final docSnapshot = await chatLogDoc.get();
+      if (!docSnapshot.exists) {
+        await chatLogDoc.set({
+          'messages': [message.toJson()]
+        });
+      } else {
+        await chatLogDoc.update({
+          'messages': FieldValue.arrayUnion([message.toJson()])
+        });
+      }
+    }
+  }
+
+  // 메시지 불러오기 (역순)
+  Future<List<MessageLog>> loadMessageLogs() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final currentYear = DateTime.now().year.toString();
+      final doc = await _firestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('chatlog')
+          .doc(currentYear)
+          .get();
+
+      List<MessageLog> loadedMessages = [];
+      if (doc.exists) {
+        final data = doc.data();
+        if (data != null) {
+          final messages = data['messages'] as List;
+          loadedMessages =
+              messages.map((message) => MessageLog.fromJson(message)).toList();
+          loadedMessages = loadedMessages.reversed.toList();
+        }
+      }
+      return loadedMessages;
     }
     return [];
   }
 
   // 메시지 삭제
-  Future<void> deleteMessage(String messageId) async {
+  Future<void> deleteMessage(MessageLog message) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      final chatLogCollection =
-          _firestore.collection('users').doc(user.uid).collection('chatlog');
-      await chatLogCollection.doc(messageId).delete(); // Firestore에서 메시지 삭제
+      final memoryYear = DateTime.parse(message.timestamp!).year.toString();
+      final docRef = _firestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('chatlog')
+          .doc(memoryYear);
+
+      final docSnapshot = await docRef.get();
+      if (docSnapshot.exists) {
+        await docRef.update({
+          'messages': FieldValue.arrayRemove([message.toJson()])
+        });
+      } // Firestore에서 메시지 삭제
     }
   }
 }
