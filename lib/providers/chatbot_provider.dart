@@ -10,7 +10,16 @@ class ChatProvider with ChangeNotifier {
   FocusNode focusNode = FocusNode();
   bool _isTyping = false;
   final CohereService cohereService = CohereService();
-
+  MessageLog helpMessage = MessageLog(
+    content: '''
+안녕하세요! 저는 여러분의 일상을 기록하고 관리해 드리는 기억발전소 소장입니다.
+기억발전소는 하루하루의 소중한 순간들을 한곳에 정리하고, 한 달 단위로 특별한 요약 보고서를 제공하는 공간입니다.
+과거의 기억이나 미래의 계획을 작성하셨다면, 그 내용을 기반으로 과거에 어떤 일을 했는지, 앞으로 무엇을 해야 할지 함께 정리하고 이야기 나눌 수 있어요.
+저는 단순한 기록 관리자를 넘어, 여러분과 대화하며 기쁨, 슬픔, 고민까지 함께 나누는 AI 친구이기도 합니다.
+여러분의 이야기를 듣고 공감하며 새로운 시각을 제시해 드리겠습니다.''',
+    timestamp: DateTime.now().toIso8601String(),
+    isSentByMe: false,
+  );
   // 타이핑 상태 접근자
   bool get isTyping => _isTyping;
 
@@ -24,7 +33,7 @@ class ChatProvider with ChangeNotifier {
   Future<void> loadMessages() async {
     try {
       final loadedMessages = await messageLogService.loadMessageLogs();
-      messageList = loadedMessages; // Firestore 데이터 가져오기
+      messageList = [helpMessage, ...loadedMessages]; // Firestore 데이터 가져오기
       notifyListeners();
     } catch (e) {
       debugPrint("Failed to load messages: $e");
@@ -43,10 +52,10 @@ class ChatProvider with ChangeNotifier {
   }
 
   // 메시지 삭제
-  Future<void> deleteMessage(String messageId) async {
+  Future<void> deleteMessage(MessageLog message) async {
     try {
-      await messageLogService.deleteMessage(messageId); // Firestore에서 삭제
-      messageList.removeWhere((msg) => msg.id == messageId);
+      await messageLogService.deleteMessage(message); // Firestore에서 삭제
+      messageList.removeWhere((msg) => msg.timestamp == message.timestamp);
       notifyListeners();
     } catch (e) {
       debugPrint("Failed to delete message: $e");
@@ -59,7 +68,7 @@ class ChatProvider with ChangeNotifier {
 
     final userMessage = MessageLog(
       content: controller.text,
-      date: DateTime.now().toIso8601String(),
+      timestamp: DateTime.now().toIso8601String(),
       isSentByMe: true,
     );
 
@@ -88,7 +97,7 @@ class ChatProvider with ChangeNotifier {
       // 응답 메시지 추가
       final botMessage = MessageLog(
         content: response.isNotEmpty ? response : "Error: No response received",
-        date: DateTime.now().toIso8601String(),
+        timestamp: DateTime.now().toIso8601String(),
         isSentByMe: false,
       );
       addMessage(botMessage);
@@ -99,7 +108,7 @@ class ChatProvider with ChangeNotifier {
 
       final errorMessage = MessageLog(
         content: "Error: Unable to fetch response",
-        date: DateTime.now().toIso8601String(),
+        timestamp: DateTime.now().toIso8601String(),
         isSentByMe: false,
       );
       addMessage(errorMessage);

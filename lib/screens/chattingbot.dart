@@ -79,8 +79,8 @@ class Chatbot extends StatelessWidget {
                 showDateSeparator = true;
               } else {
                 final previousMessageDate =
-                    _formatDate(chatProvider.messageList[index + 1].date!);
-                final currentMessageDate = _formatDate(message.date!);
+                    _formatDate(chatProvider.messageList[index + 1].timestamp!);
+                final currentMessageDate = _formatDate(message.timestamp!);
                 if (previousMessageDate != currentMessageDate) {
                   showDateSeparator = true;
                 }
@@ -88,16 +88,11 @@ class Chatbot extends StatelessWidget {
 
               return Column(
                 children: [
-                  if (showDateSeparator) _buildDateSeparator(message.date!),
+                  if (showDateSeparator)
+                    _buildDateSeparator(message.timestamp!),
                   GestureDetector(
                     onLongPress: () {
-                      if (message.id != null) {
-                        // 메시지의 Firestore 문서 ID가 존재할 때만 삭제
-                        chatProvider
-                            .deleteMessage(message.id!); // Firestore에서 삭제
-                      } else {
-                        debugPrint("Message ID is null. Cannot delete.");
-                      }
+                      chatProvider.deleteMessage(message); // Firestore에서 삭제
                     },
                     child: _buildMessageBubble(message, isMe, context),
                   ),

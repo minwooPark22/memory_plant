@@ -66,39 +66,39 @@ class _BottomNavPageState extends State<BottomNavPage> {
         showSelectedLabels: true,
         selectedFontSize: 10, // 선택된 아이템의 글씨 크기 줄임
         unselectedFontSize: 10,
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Padding(
+            icon: const Padding(
               padding: EdgeInsets.only(top: 12.0), // 아이콘 위에 12.0 만큼의 여백 추가
               child: Icon(FluentSystemIcons.ic_fluent_home_regular),
             ),
-            activeIcon: Padding(
+            activeIcon: const Padding(
               padding: EdgeInsets.only(top: 12.0), // 아이콘 위에 12.0 만큼의 여백 추가
               child: Icon(FluentSystemIcons.ic_fluent_home_filled),
             ),
-            label: "Home",
+            label: isKorean ? "저장소" : "Home",
           ),
           BottomNavigationBarItem(
-            icon: Padding(
+            icon: const Padding(
               padding: EdgeInsets.only(top: 12.0), // 아이콘 위에 12.0 만큼의 여백 추가
               child: Icon(FluentSystemIcons.ic_fluent_add_regular),
             ),
-            activeIcon: Padding(
+            activeIcon: const Padding(
               padding: EdgeInsets.only(top: 12.0), // 아이콘 위에 12.0 만큼의 여백 추가
               child: Icon(FluentSystemIcons.ic_fluent_add_filled),
             ),
-            label: "Add",
+            label: isKorean ? "기록" : "Add",
           ),
           BottomNavigationBarItem(
-            icon: Padding(
+            icon: const Padding(
               padding: EdgeInsets.only(top: 12.0), // 아이콘 위에 12.0 만큼의 여백 추가
               child: Icon(FluentSystemIcons.ic_fluent_chat_regular),
             ),
-            activeIcon: Padding(
+            activeIcon: const Padding(
               padding: EdgeInsets.only(top: 12.0), // 아이콘 위에 12.0 만큼의 여백 추가
               child: Icon(FluentSystemIcons.ic_fluent_chat_filled),
             ),
-            label: "Chatting",
+            label: isKorean ? "면담" : "Chat",
           ),
         ],
       ),

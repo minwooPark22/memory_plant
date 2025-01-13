@@ -58,6 +58,7 @@ class MyApp extends StatelessWidget {
           "/": (context) => user != null
               ? const StartPageAfterLogin() // 로그인 상태이면 StartPageAfterLogin
               : const StartPage(), // 로그인 상태가 아니면 StartPage
+          "/startPage": (context) => const StartPage(),
           "/startPageAfterLogin": (context) => const StartPageAfterLogin(),
           "/bottomNavPage": (context) => const BottomNavPage(),
           "/settingPage": (context) => const SettingPage(),

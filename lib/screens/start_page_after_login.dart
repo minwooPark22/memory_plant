@@ -95,15 +95,28 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin>
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("네트워크 연결 끊김"),
-          content: const Text("인터넷 연결이 끊어졌습니다. 연결을 확인해주세요."),
+          title: const Text(
+            "네트워크 연결 끊김",
+            style: TextStyle(
+              fontFamily: 'NanumFontSetup_TTF_SQUARE_ExtraBold',
+            ),
+          ),
+          content: const Text(
+            "인터넷 연결이 끊어졌습니다.\n연결을 확인해주세요.",
+            style: TextStyle(
+              fontFamily: 'NanumFontSetup_TTF_SQUARE',
+            ),
+          ),
           actions: [
             TextButton(
               onPressed: () async {
                 Navigator.of(context).pop(); // 다이얼로그 닫기
                 await initConnectivity(); // 연결 상태 다시 확인
               },
-              child: const Text("다시 시도"),
+              child: Text("다시 시도",
+                  style: TextStyle(
+                      fontFamily: 'NanumFontSetup_TTF_SQUARE',
+                      color: AppStyles.maindeepblue)),
             ),
           ],
         );

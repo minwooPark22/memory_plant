@@ -55,9 +55,10 @@ class _SaveOptionDropdownState extends State<SaveOptionDropdown> {
                       Text(
                         isKorean ? 'AI 요약' : 'AI summary',
                         style: const TextStyle(
-                            fontSize: 12,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w400),
+                          fontFamily: 'NanumFontSetup_TTF_SQUARE_Bold',
+                          fontSize: 12,
+                          color: Colors.black,
+                        ),
                       ),
                     ],
                   ),
@@ -84,9 +85,10 @@ class _SaveOptionDropdownState extends State<SaveOptionDropdown> {
                       Text(
                         isKorean ? '메모만 저장' : 'Just memo',
                         style: const TextStyle(
-                            fontSize: 12,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w400),
+                          fontFamily: 'NanumFontSetup_TTF_SQUARE_Bold',
+                          fontSize: 12,
+                          color: Colors.black,
+                        ),
                       ),
                     ],
                   ),
