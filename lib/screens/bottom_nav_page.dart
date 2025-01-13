@@ -43,7 +43,9 @@ class _BottomNavPageState extends State<BottomNavPage> {
               ),
               title: Text(
                 isKorean ? "기억발전소" : "Memory Plant",
-                style: const TextStyle(fontWeight: FontWeight.w700),
+                style: const TextStyle(
+                    fontFamily: 'NanumFontSetup_TTF_SQUARE_Extrabold',
+                    fontWeight: FontWeight.w700),
               ),
               centerTitle: true,
               actions: [

@@ -158,7 +158,7 @@ class _WritePageState extends State<WritePage> {
         title: Text(
           formattedDate(context, isKorean),
           style: const TextStyle(
-            fontWeight: FontWeight.w700,
+            fontFamily: 'NanumFontSetup_TTF_SQUARE_ExtraBold',
           ),
         ),
         centerTitle: true,
@@ -187,11 +187,11 @@ class _WritePageState extends State<WritePage> {
                       Text(
                         isKorean ? "저장" : "Save",
                         style: TextStyle(
+                          fontFamily: 'NanumFontSetup_TTF_SQUARE_ExtraBold',
                           color: _isSaveEnabled
                               ? AppStyles.maindeepblue
                               : Colors.grey, // 비활성화 시 회색
                           fontSize: 16,
-                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
@@ -206,11 +206,15 @@ class _WritePageState extends State<WritePage> {
           children: [
             TextField(
               controller: _titleController,
-              style: const TextStyle(fontSize: 21, fontWeight: FontWeight.w600),
+              style: const TextStyle(
+                  fontFamily: 'NanumFontSetup_TTF_SQUARE_ExtraBold',
+                  fontSize: 21),
               decoration: InputDecoration(
                 hintText: isKorean ? "제목" : "Title.",
                 border: InputBorder.none, // 밑줄 제거
-                hintStyle: const TextStyle(color: Colors.grey),
+                hintStyle: const TextStyle(
+                    fontFamily: 'NanumFontSetup_TTF_SQUARE_ExtraBold',
+                    color: Colors.grey),
               ),
             ),
             // 얇은 회색 선
@@ -225,11 +229,14 @@ class _WritePageState extends State<WritePage> {
                 controller: _contentController,
                 maxLines: null,
                 expands: true,
-                style: const TextStyle(fontSize: 16),
+                style: const TextStyle(
+                    fontFamily: 'NanumFontSetup_TTF_SQUARE', fontSize: 16),
                 decoration: InputDecoration(
                   hintText: isKorean ? "내용을 입력하세요." : "Write the content.",
                   border: InputBorder.none,
-                  hintStyle: const TextStyle(color: Colors.grey),
+                  hintStyle: const TextStyle(
+                      fontFamily: 'NanumFontSetup_TTF_SQUARE_ExtraBold',
+                      color: Colors.grey),
                 ),
               ),
             ),

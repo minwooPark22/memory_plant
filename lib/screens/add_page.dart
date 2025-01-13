@@ -42,7 +42,8 @@ class _AddPageState extends State<AddPage> {
       appBar: AppBar(
         title: Text(
           isKorean ? "기억발전소" : "Memory Plant",
-          style: const TextStyle(fontWeight: FontWeight.w700),
+          style: const TextStyle(
+              fontFamily: 'NanumFontSetup_TTF_SQUARE_ExtraBold'),
         ),
         centerTitle: true,
         leading: IconButton(
@@ -60,10 +61,10 @@ class _AddPageState extends State<AddPage> {
             padding:
                 const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
             child: Text(
-              isKorean ? "날짜를 선택해주세요." : "Please select a date.",
+              isKorean ? "날짜를 선택해주세요" : "Please select a date",
               style: const TextStyle(
+                fontFamily: 'NanumFontSetup_TTF_SQUARE_Extrabold',
                 fontSize: 24,
-                fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.center,
             ),
@@ -145,8 +146,9 @@ class _AddPageState extends State<AddPage> {
                 child: Text(
                   isKorean ? "선택하기" : "Select Date",
                   style: const TextStyle(
+                    fontFamily: 'NanumFontSetup_TTF_SQUARE_Extrabold',
                     color: Colors.white,
-                    fontSize: 18,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

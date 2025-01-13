@@ -92,7 +92,7 @@ class _EditMemoryPageState extends State<EditMemoryPage> {
         title: Text(
           _formatDate(widget.memory.timestamp),
           style: const TextStyle(
-            fontWeight: FontWeight.w700,
+            fontFamily: 'NanumFontSetup_TTF_SQUARE_ExtraBold',
           ),
         ),
         centerTitle: true,
@@ -104,6 +104,7 @@ class _EditMemoryPageState extends State<EditMemoryPage> {
             child: Text(
               isKorean ? "저장" : "Save",
               style: TextStyle(
+                fontFamily: 'NanumFontSetup_TTF_SQUARE_ExtraBold',
                 color: _isSaveEnabled ? Colors.black : Colors.grey, // 비활성화 시 회색
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -120,13 +121,16 @@ class _EditMemoryPageState extends State<EditMemoryPage> {
             TextField(
               controller: _titleController,
               style: const TextStyle(
+                fontFamily: 'NanumFontSetup_TTF_SQUARE_ExtraBold',
                 fontSize: 21,
                 fontWeight: FontWeight.w600,
               ),
               decoration: InputDecoration(
                 hintText: isKorean ? "제목" : "Title", // 힌트 텍스트 추가
                 border: InputBorder.none,
-                hintStyle: const TextStyle(color: Colors.grey),
+                hintStyle: const TextStyle(
+                    fontFamily: 'NanumFontSetup_TTF_SQUARE_Extrabold',
+                    color: Colors.grey),
               ),
             ),
             const Divider(
@@ -140,13 +144,15 @@ class _EditMemoryPageState extends State<EditMemoryPage> {
                 controller: _contentController,
                 maxLines: null,
                 expands: true,
-                style: const TextStyle(fontSize: 16),
+                style: const TextStyle(fontFamily: 'NanumFontSetup_TTF_SQUARE'),
                 decoration: InputDecoration(
                   hintText: isKorean
                       ? "내용을 입력하세요."
                       : "Write the content.", // 힌트 텍스트 추가
                   border: InputBorder.none,
-                  hintStyle: const TextStyle(color: Colors.grey),
+                  hintStyle: const TextStyle(
+                      fontFamily: 'NanumFontSetup_TTF_SQUARE',
+                      color: Colors.grey),
                 ),
               ),
             ),

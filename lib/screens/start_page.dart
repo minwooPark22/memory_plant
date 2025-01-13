@@ -257,7 +257,7 @@ class _StartPageState extends State<StartPage>
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 50,
-                    fontFamily: 'NanumFontSetup_TTF_SQUARE',
+                    fontFamily: 'NanumFontSetup_TTF_SQUARE_Bold',
                     fontWeight: FontWeight.w900,
                   ),
                 ),
@@ -278,7 +278,7 @@ class _StartPageState extends State<StartPage>
                               : pageMessages[5]), // 영어: 이름 입력
                   style: const TextStyle(
                     fontSize: 18,
-                    fontFamily: 'NanumFontSetup_TTF_SQUARE',
+                    fontFamily: 'NanumFontSetup_TTF_SQUARE_Bold',
                     fontWeight: FontWeight.w400,
                   ),
                 ),

@@ -144,7 +144,8 @@ class _EditNamePageState extends State<EditNamePage> {
         ),
         title: Text(
           isKorean ? "계정 관리" : "My Account",
-          style: const TextStyle(fontWeight: FontWeight.bold),
+          style: const TextStyle(
+              fontFamily: 'NanumFontSetup_TTF_SQUARE_ExtraBold'),
         ),
         centerTitle: true,
         actions: [
@@ -153,8 +154,8 @@ class _EditNamePageState extends State<EditNamePage> {
             child: Text(
               isKorean ? '저장' : 'Save', // 언어 설정
               style: TextStyle(
+                fontFamily: 'NanumFontSetup_TTF_SQUARE_ExtraBold',
                 color: AppStyles.maindeepblue,
-                fontWeight: FontWeight.bold,
                 fontSize: 16,
               ),
             ),
@@ -190,7 +191,7 @@ class _EditNamePageState extends State<EditNamePage> {
             const SizedBox(height: 30),
             // 사용자 이름 및 이메일
             _buildNameAndEmailField(
-              nameLabel: isKorean ? '사용자 이름' : 'USER NAME',
+              nameLabel: isKorean ? '사용자 정보' : 'USER info',
               emailLabel: isKorean ? '로그인된 이메일' : 'Signed-in Email',
               controller: _nameController,
               email: _email ?? '',
@@ -210,9 +211,10 @@ class _EditNamePageState extends State<EditNamePage> {
               child: Text(
                 isKorean ? '로그아웃' : 'Log out', // 언어 설정
                 style: const TextStyle(
-                    color: Colors.red,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700),
+                  fontFamily: 'NanumFontSetup_TTF_SQUARE_ExtraBold',
+                  color: Colors.red,
+                  fontSize: 15,
+                ),
               ),
             ),
             const SizedBox(height: 10),
@@ -235,8 +237,8 @@ class _EditNamePageState extends State<EditNamePage> {
         Text(
           nameLabel,
           style: const TextStyle(
+            fontFamily: 'NanumFontSetup_TTF_SQUARE_ExtraBold',
             fontSize: 12,
-            fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 8),
@@ -244,7 +246,7 @@ class _EditNamePageState extends State<EditNamePage> {
           padding: const EdgeInsets.all(8.0),
           decoration: BoxDecoration(
             border: Border.all(color: Colors.grey, width: 1.5),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(20),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -253,11 +255,25 @@ class _EditNamePageState extends State<EditNamePage> {
                 children: [
                   Expanded(
                     child: TextField(
+                      maxLength: 8,
+                      style: const TextStyle(
+                        fontFamily: 'NanumFontSetup_TTF_SQUARE_Extrabold',
+                        fontSize: 16,
+                      ),
                       controller: controller,
                       decoration: InputDecoration(
-                        border: InputBorder.none,
-                        errorText: errorMessage,
-                      ),
+                          counterText: '', // 글자 수 표시 안 함
+                          hintText: '사용자 이름을 입력하세요.',
+                          hintStyle: const TextStyle(
+                            fontFamily: 'NanumFontSetup_TTF_SQUARE_Bold',
+                            color: Colors.grey,
+                          ),
+                          border: InputBorder.none,
+                          errorText: errorMessage,
+                          errorStyle: const TextStyle(
+                            fontFamily: 'NanumFontSetup_TTF_SQUARE_Bold',
+                            color: Colors.red,
+                          )),
                     ),
                   ),
                   IconButton(
@@ -272,6 +288,7 @@ class _EditNamePageState extends State<EditNamePage> {
               Text(
                 '$emailLabel: $email',
                 style: const TextStyle(
+                  fontFamily: 'NanumFontSetup_TTF_SQUARE',
                   fontSize: 14,
                 ),
               ),

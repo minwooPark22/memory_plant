@@ -57,8 +57,8 @@ class _SettingPageState extends State<SettingPage> {
           Text(
             isKorean ? '설정' : 'Settings',
             style: const TextStyle(
+              fontFamily: 'NanumFontSetup_TTF_SQUARE_ExtraBold',
               fontSize: 32, // 큰 폰트 크기
-              fontWeight: FontWeight.w700,
             ),
           ),
           MyBannerAdWidget(),
@@ -72,7 +72,8 @@ class _SettingPageState extends State<SettingPage> {
             ),
             title: Text(
               isKorean ? "계정 관리" : "My Account",
-              style: const TextStyle(fontSize: 14),
+              style: const TextStyle(
+                  fontFamily: 'NanumFontSetup_TTF_SQUARE', fontSize: 14),
             ),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
@@ -92,7 +93,8 @@ class _SettingPageState extends State<SettingPage> {
             ),
             title: Text(
               "ENG/KOR",
-              style: TextStyle(fontSize: 14),
+              style: TextStyle(
+                  fontFamily: 'NanumFontSetup_TTF_SQUARE', fontSize: 14),
             ),
             trailing: LanguageToggleSwitch(),
           ),
@@ -108,7 +110,8 @@ class _SettingPageState extends State<SettingPage> {
             ),
             title: Text(
               isKorean ? "센터에 대해 배우기" : "Learn About Centers",
-              style: const TextStyle(fontSize: 14),
+              style: const TextStyle(
+                  fontFamily: 'NanumFontSetup_TTF_SQUARE', fontSize: 14),
             ),
             onTap: () {
               Navigator.push(
@@ -123,7 +126,8 @@ class _SettingPageState extends State<SettingPage> {
             ),
             title: Text(
               isKorean ? "개인정보 보호 안내" : "Privacy Notice",
-              style: const TextStyle(fontSize: 14),
+              style: const TextStyle(
+                  fontFamily: 'NanumFontSetup_TTF_SQUARE', fontSize: 14),
             ),
             onTap: () {
               Navigator.push(
@@ -143,7 +147,8 @@ class _SettingPageState extends State<SettingPage> {
       padding: const EdgeInsets.symmetric(vertical: 12.0),
       child: Text(
         title,
-        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        style: const TextStyle(
+            fontFamily: 'NanumFontSetup_TTF_SQUARE_ExtraBold', fontSize: 16),
       ),
     );
   }
