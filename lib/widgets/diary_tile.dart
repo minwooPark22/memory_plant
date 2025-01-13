@@ -67,7 +67,10 @@ class DiaryTile extends StatelessWidget {
                 Icon(Icons.delete, color: Colors.white),
                 Text(
                   'Delete',
-                  style: TextStyle(color: Colors.white, fontSize: 12),
+                  style: TextStyle(
+                      fontFamily: 'NanumFontSetup_TTF_SQUARE',
+                      color: Colors.white,
+                      fontSize: 12),
                 ),
               ],
             ),
@@ -104,7 +107,10 @@ class DiaryTile extends StatelessWidget {
                 Icon(Icons.edit, color: Colors.white),
                 Text(
                   'Edit',
-                  style: TextStyle(color: Colors.white, fontSize: 12),
+                  style: TextStyle(
+                      fontFamily: 'NanumFontSetup_TTF_SQUARE',
+                      color: Colors.white,
+                      fontSize: 12),
                 ),
               ],
             ),
@@ -122,6 +128,7 @@ class DiaryTile extends StatelessWidget {
                   Text(
                     _formatDate(memory.timestamp!), // 날짜 표시
                     style: const TextStyle(
+                      fontFamily: 'NanumFontSetup_TTF_SQUARE_Bold',
                       fontSize: 11,
                       fontWeight: FontWeight.w400,
                       color: Colors.black,
@@ -130,6 +137,7 @@ class DiaryTile extends StatelessWidget {
                 Text(
                   memory.title ?? 'Untitled Memory', // 제목
                   style: const TextStyle(
+                    fontFamily: 'NanumFontSetup_TTF_SQUARE_Extrabold',
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
                   ),
@@ -140,7 +148,8 @@ class DiaryTile extends StatelessWidget {
               memory.contents ?? 'No content available',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(color: Colors.black),
+              style: const TextStyle(
+                  fontFamily: 'NanumFontSetup_TTF_SQUARE', color: Colors.black),
             ),
             trailing: const Icon(Icons.arrow_forward),
             onTap: () {

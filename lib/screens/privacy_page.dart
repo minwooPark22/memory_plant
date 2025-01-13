@@ -18,7 +18,8 @@ class PrivacyPage extends StatelessWidget {
         ),
         title: Text(
           isKorean ? "개인정보 보호 안내" : "Privacy Notice",
-          style: const TextStyle(fontWeight: FontWeight.w700),
+          style: const TextStyle(
+              fontFamily: 'NanumFontSetup_TTF_SQUARE_ExtraBold'),
         ),
         centerTitle: true,
       ),

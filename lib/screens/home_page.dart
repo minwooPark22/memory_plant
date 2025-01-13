@@ -68,7 +68,8 @@ class HomePage extends StatelessWidget {
           const SizedBox(height: 20),
           Text(
             isKorean ? "첫 기억을 추가해보세요" : "Add your first memory",
-            style: const TextStyle(fontSize: 18),
+            style: const TextStyle(
+                fontFamily: 'NanumFontSetup_TTF_SQUARE', fontSize: 18),
           ),
           const SizedBox(height: 20),
         ],
@@ -87,6 +88,7 @@ class HomePage extends StatelessWidget {
       child: Text(
         month,
         style: const TextStyle(
+          fontFamily: 'NanumFontSetup_TTF_SQUARE_Extrabold',
           fontSize: 18,
           fontWeight: FontWeight.bold,
         ),

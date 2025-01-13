@@ -53,7 +53,7 @@ class Chatbot extends StatelessWidget {
     return Text(
       isKorean ? "기억관리소장" : "Memory Curator",
       style: const TextStyle(
-        fontSize: 20,
+        fontFamily: 'NanumFontSetup_TTF_SQUARE_Extrabold',
         fontWeight: FontWeight.bold,
       ),
     );
@@ -145,6 +145,7 @@ class Chatbot extends StatelessWidget {
           Text(
             _formatDate(date),
             style: TextStyle(
+              fontFamily: 'NanumFontSetup_TTF_SQUARE',
               color: AppStyles.textColor,
               fontWeight: FontWeight.w400,
             ),
@@ -196,9 +197,13 @@ class Chatbot extends StatelessWidget {
               message.content ?? "(빈 메시지)",
               style: isMe
                   ? const TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.w400)
+                      fontFamily: 'NanumFontSetup_TTF_SQUARE',
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400)
                   : const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.w400),
+                      fontFamily: 'NanumFontSetup_TTF_SQUARE',
+                      color: Colors.white,
+                      fontWeight: FontWeight.w400),
             ),
           ),
         ],
@@ -223,6 +228,9 @@ class Chatbot extends StatelessWidget {
                 contentPadding: const EdgeInsets.symmetric(
                     vertical: 10.0, horizontal: 15.0),
                 hintText: isKorean ? "메세지 보내기" : "Enter your message",
+                hintStyle: const TextStyle(
+                  fontFamily: 'NanumFontSetup_TTF_SQUARE',
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20.0),
                   borderSide: BorderSide(color: AppStyles.primaryColor),

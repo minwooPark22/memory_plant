@@ -113,11 +113,15 @@ flutter:
         - asset: assets/fonts/NanumFontSetup_TTF_GOTHIC/NanumGothicBold.ttf
         - asset: assets/fonts/NanumFontSetup_TTF_GOTHIC/NanumGothicExtraBold.ttf
         - asset: assets/fonts/NanumFontSetup_TTF_GOTHIC/NanumGothicLight.ttf
-    - family: NanumFontSetup_TTF_SQUARE
+    - family: NanumFontSetup_TTF_SQUARE_Regular
+      fonts:
+        - asset: assets/fonts/NanumFontSetup_TTF_SQUARE/NanumSquare_acR.ttf
+        
+    - family: NanumFontSetup_TTF_SQUARE_Bold
       fonts:
         - asset: assets/fonts/NanumFontSetup_TTF_SQUARE/NanumSquare_acB.ttf
 
-    - family: NanumFontSetup_TTF_SQUARE_Bold
+    - family: NanumFontSetup_TTF_SQUARE_Extrabold
       fonts:
         - asset: assets/fonts/NanumFontSetup_TTF_SQUARE/NanumSquare_acEB.ttf
 

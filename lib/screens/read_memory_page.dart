@@ -55,7 +55,7 @@ class ReadMemoryPage extends StatelessWidget {
             : const Text(
                 "Summary",
                 style: TextStyle(
-                  fontWeight: FontWeight.w700,
+                  fontFamily: 'NanumFontSetup_TTF_SQUARE_Extrabold',
                 ),
               ),
         centerTitle: true,
@@ -69,8 +69,8 @@ class ReadMemoryPage extends StatelessWidget {
             Text(
               memory.title ?? "",
               style: const TextStyle(
+                fontFamily: 'NanumFontSetup_TTF_SQUARE_Extrabold',
                 fontSize: 21,
-                fontWeight: FontWeight.w700,
               ),
             ),
             const SizedBox(height: 8),

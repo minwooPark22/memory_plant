@@ -208,7 +208,7 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin>
                         style: const TextStyle(
                           fontFamily: 'NanumFontSetup_TTF_SQUARE_Bold',
                           fontSize: 50,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w900,
                           height: 1,
                         ),
                       ),
@@ -224,9 +224,9 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin>
                             ? '${nameProvider.name}님 환영합니다!'
                             : "Welcome ${nameProvider.name}!",
                         style: const TextStyle(
-                          fontFamily: 'NanumFontSetup_TTF_SQUARE_Bold',
-                          fontSize: 18,
-                        ),
+                            fontFamily: 'NanumFontSetup_TTF_SQUARE_Bold',
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700),
                       ),
                     ),
                   ),
@@ -240,7 +240,7 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin>
                             : "$memoryCount Memories",
                         style: const TextStyle(
                           fontFamily: 'NanumFontSetup_TTF_SQUARE_Bold',
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w900,
                           fontSize: 30,
                         ),
                       ),
@@ -251,7 +251,6 @@ class _StartPageAfterLoginState extends State<StartPageAfterLogin>
                     isKorean ? "화면을 탭하여 시작하기" : "Tap the screen to start",
                     style: const TextStyle(
                       fontFamily: 'NanumFontSetup_TTF_SQUARE_Bold',
-                      fontWeight: FontWeight.bold,
                       fontSize: 20,
                     ),
                   ),
