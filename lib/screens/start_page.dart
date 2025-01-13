@@ -89,6 +89,8 @@ class _StartPageState extends State<StartPage>
           if (mounted) {
             Navigator.pushReplacementNamed(context, "/startPageAfterLogin");
           }
+        } else {
+          changeButton();
         }
       } else {
         changeButton();
@@ -360,8 +362,11 @@ class _StartPageState extends State<StartPage>
                       width: 250,
                       height: 50,
                       child: TextField(
+                        autofocus: true,
+                        maxLength: 8,
                         controller: _nameController,
                         decoration: InputDecoration(
+                          counterText: '',
                           filled: true,
                           fillColor: Colors.white,
                           hintText: buttonTexts[2]
@@ -401,7 +406,7 @@ class _StartPageState extends State<StartPage>
                     style: OutlinedButton.styleFrom(
                       minimumSize: const Size(250, 50),
                       backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.white),
+                      side: const BorderSide(color: Colors.black),
                     ),
                     child: Text(
                       buttonTexts[3]
