@@ -1,3 +1,4 @@
+import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:memory_plant_application/providers/chatbot_provider.dart';
 import 'package:memory_plant_application/providers/language_provider.dart';
@@ -230,25 +231,29 @@ class Chatbot extends StatelessWidget {
               focusNode: chatProvider.focusNode,
               maxLines: 5,
               minLines: 1,
+              maxLength: 500,
               decoration: InputDecoration(
+                contentPadding: const EdgeInsets.symmetric(
+                    vertical: 10.0, horizontal: 15.0),
                 hintText: isKorean ? "메세지 보내기" : "Enter your message",
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
+                  borderRadius: BorderRadius.circular(20.0),
                   borderSide: BorderSide(color: AppStyles.primaryColor),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                  borderSide: BorderSide(color: AppStyles.primaryColor),
+                  borderRadius: BorderRadius.circular(20.0),
+                  borderSide: BorderSide(color: AppStyles.maindeepblue),
                 ),
+                counterText: "", // 글자수 카운트 제거
               ),
               onSubmitted: (_) => chatProvider.sendMessage(context),
             ),
           ),
           IconButton(
             icon: Transform.rotate(
-              angle: -30 * (3.14159 / 180), // 45도를 라디안 값으로 변환 (반시계 방향)
+              angle: -27 * (3.14159 / 180), // 45도를 라디안 값으로 변환 (반시계 방향)
               child: Icon(
-                Icons.send,
+                FluentSystemIcons.ic_fluent_send_regular,
                 color: AppStyles.maindeepblue,
               ),
             ),

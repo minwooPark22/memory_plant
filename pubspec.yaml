@@ -55,8 +55,30 @@ dependencies:
   sign_in_with_apple: ^6.1.4
   connectivity_plus: ^6.1.1
   google_mobile_ads: ^5.2.0
+  flutter_native_splash: ^2.4.4
+  flutter_launcher_icons: ^0.14.2
 
 
+flutter_launcher_icons:
+  android: true # 안드로이드 플랫폼에 런처 아이콘 적용 여부
+  ios: true # iOS 플랫폼에 런처 아이콘 적용 여부
+  image_path: "assets/images/app_icon.png" # 런처 아이콘으로 사용할 이미지 경로
+  adaptive_icon_background: "#000000" # 안드로이드 적응형 아이콘의 배경색 (검정색)
+  adaptive_icon_foreground: "assets/images/app_icon.png" # 안드로이드 적응형 아이콘의 전경 이미지 경로
+  min_sdk_android: 21 # 안드로이드 최소 SDK 버전 (API 21(Android 5.0) 이상)
+
+
+flutter_native_splash:
+  color: "#000000" # 배경 색상 (HTML 색상 코드 사용 가능)
+  image: "assets/images/splash_image.png" # 스플래시 화면에 표시할 이미지 경로
+  android: true # Android 스플래시 화면 활성화
+  ios: true # iOS 스플래시 화면 활성화
+  icon_background_color: "#000000" # 아이콘 배경색 (이미지가 원형으로 잘리는 문제 해결)
+  android_12: # Android 12 이상을 위한 추가 설정
+    color: "#000000" # Android 12 이상 스플래시 화면의 배경색 (검정색)
+    image: "assets/images/splash_image.png" # Android 12 이상 스플래시 화
+    icon_background_color: "#000000" # 아이콘 배경색 (이미지가 원형으로 잘리는 문제 해결)
+    
 dev_dependencies:
   flutter_test:
     sdk: flutter
