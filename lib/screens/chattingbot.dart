@@ -231,14 +231,16 @@ class Chatbot extends StatelessWidget {
               maxLines: 5,
               minLines: 1,
               decoration: InputDecoration(
+                contentPadding: const EdgeInsets.symmetric(
+                    vertical: 10.0, horizontal: 15.0),
                 hintText: isKorean ? "메세지 보내기" : "Enter your message",
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
+                  borderRadius: BorderRadius.circular(20.0),
                   borderSide: BorderSide(color: AppStyles.primaryColor),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                  borderSide: BorderSide(color: AppStyles.primaryColor),
+                  borderRadius: BorderRadius.circular(20.0),
+                  borderSide: BorderSide(color: AppStyles.maindeepblue),
                 ),
               ),
               onSubmitted: (_) => chatProvider.sendMessage(context),
