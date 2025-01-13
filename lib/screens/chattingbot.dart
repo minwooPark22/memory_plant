@@ -20,11 +20,9 @@ class Chatbot extends StatelessWidget {
             context.watch<LanguageProvider>().currentLanguage == Language.ko;
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: AppStyles.maindeepblue,
             leading: IconButton(
               icon: const Icon(
                 Icons.arrow_back_ios,
-                color: Colors.white,
               ),
               onPressed: () {
                 context
@@ -52,22 +50,12 @@ class Chatbot extends StatelessWidget {
   }
 
   Widget _buildAppBarTitle(bool isKorean) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Image.asset(
-          'assets/images/sojang.png',
-          height: 40,
-        ),
-        Text(
-          isKorean ? "기억관리소장" : "Memory Curator",
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ],
+    return Text(
+      isKorean ? "기억관리소장" : "Memory Curator",
+      style: const TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+      ),
     );
   }
 
@@ -101,14 +89,6 @@ class Chatbot extends StatelessWidget {
               return Column(
                 children: [
                   if (showDateSeparator) _buildDateSeparator(message.date!),
-                  /*GestureDetector(
-                    onLongPress: () => chatProvider.deleteMessage(index),
-                    child: Align(
-                      alignment:
-                          isMe ? Alignment.centerRight : Alignment.centerLeft,
-                      child: _buildMessageBubble(message, isMe, context),
-                    ),
-                  ),*/
                   GestureDetector(
                     onLongPress: () {
                       if (message.id != null) {
@@ -119,11 +99,7 @@ class Chatbot extends StatelessWidget {
                         debugPrint("Message ID is null. Cannot delete.");
                       }
                     },
-                    child: Align(
-                      alignment:
-                          isMe ? Alignment.centerRight : Alignment.centerLeft,
-                      child: _buildMessageBubble(message, isMe, context),
-                    ),
+                    child: _buildMessageBubble(message, isMe, context),
                   ),
                 ],
               );
@@ -189,32 +165,43 @@ class Chatbot extends StatelessWidget {
   Widget _buildMessageBubble(
       MessageLog message, bool isMe, BuildContext context) {
     return SafeArea(
-      child: Container(
-        constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width * 0.7,
-        ),
-        margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
-        padding: const EdgeInsets.all(10.0),
-        decoration: BoxDecoration(
-          color: isMe ? AppStyles.maingray : AppStyles.maindeepblue,
-          borderRadius: BorderRadius.circular(17.0),
-          /*boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 1,
-              blurRadius: 4,
-              offset: const Offset(0, 2),
+      child: Row(
+        mainAxisAlignment:
+            isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          if (!isMe)
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0, bottom: 12.0),
+              child: CircleAvatar(
+                radius: 15.0,
+                backgroundColor: const Color(0xFF000000),
+                child: Image.asset(
+                  'assets/images/app_icon.png',
+                  height: 40,
+                ),
+              ),
             ),
-          ],*/
-        ),
-        child: Text(
-          message.content ?? "(빈 메시지)",
-          style: isMe
-              ? const TextStyle(
-                  color: Colors.black, fontWeight: FontWeight.w400)
-              : const TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.w400),
-        ),
+          Container(
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width * 0.7,
+            ),
+            margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
+            padding: const EdgeInsets.all(10.0),
+            decoration: BoxDecoration(
+              color: isMe ? AppStyles.maingray : AppStyles.maindeepblue,
+              borderRadius: BorderRadius.circular(17.0),
+            ),
+            child: Text(
+              message.content ?? "(빈 메시지)",
+              style: isMe
+                  ? const TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.w400)
+                  : const TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.w400),
+            ),
+          ),
+        ],
       ),
     );
   }
