@@ -98,6 +98,15 @@ class _AddPageState extends State<AddPage> {
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
+                      defaultTextStyle: const TextStyle(
+                        fontFamily: 'NanumFontSetup_TTF_SQUARE',
+                      ),
+                      weekendTextStyle: const TextStyle(
+                        fontFamily: 'NanumFontSetup_TTF_SQUARE',
+                      ),
+                      holidayTextStyle: const TextStyle(
+                        fontFamily: 'NanumFontSetup_TTF_SQUARE',
+                      ),
                     ),
                     headerStyle: const HeaderStyle(
                       formatButtonVisible: false,
@@ -107,13 +116,17 @@ class _AddPageState extends State<AddPage> {
                       titleTextStyle: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
+                        fontFamily: 'NanumFontSetup_TTF_SQUARE',
                       ),
                     ),
                     daysOfWeekStyle: DaysOfWeekStyle(
-                      weekdayStyle:
-                          const TextStyle(color: Colors.black), // 요일 텍스트 스타일
+                      weekdayStyle: const TextStyle(
+                        color: Colors.black,
+                        fontFamily: 'NanumFontSetup_TTF_SQUARE',
+                      ), // 요일 텍스트 스타일
                       weekendStyle: TextStyle(
                         color: AppStyles.maindeepblue,
+                        fontFamily: 'NanumFontSetup_TTF_SQUARE',
                       ), // 주말 텍스트 스타일
                     ),
                   );
