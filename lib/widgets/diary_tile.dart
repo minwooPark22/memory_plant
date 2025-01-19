@@ -1,3 +1,4 @@
+import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 import 'package:memory_plant_application/providers/language_provider.dart';
@@ -56,16 +57,13 @@ class DiaryTile extends StatelessWidget {
               }
             },
             color: Colors.red,
-            content: Column(
+            content: const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.delete, color: Colors.white),
-                Text(
-                  isKorean ? '삭제' : 'Delete',
-                  style: const TextStyle(
-                      fontFamily: 'NanumFontSetup_TTF_SQUARE',
-                      color: Colors.white,
-                      fontSize: 12),
+                Icon(
+                  FluentSystemIcons.ic_fluent_delete_regular,
+                  color: Colors.white,
+                  size: 45,
                 ),
               ],
             ),
@@ -89,18 +87,12 @@ class DiaryTile extends StatelessWidget {
                 }
               }
             },
-            color: Colors.blue,
-            content: Column(
+            color: AppStyles.maindeepblue,
+            content: const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.edit, color: Colors.white),
-                Text(
-                  isKorean ? '수정' : 'Edit',
-                  style: const TextStyle(
-                      fontFamily: 'NanumFontSetup_TTF_SQUARE',
-                      color: Colors.white,
-                      fontSize: 12),
-                ),
+                Icon(FluentSystemIcons.ic_fluent_edit_regular,
+                    color: Colors.white, size: 45),
               ],
             ),
           ),
