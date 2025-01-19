@@ -372,9 +372,8 @@ class _EditNamePageState extends State<EditNamePage> {
 
       // 사용자 문서 삭제
       await userDoc.delete();
-      print("Firestore에서 사용자 데이터가 삭제되었습니다.");
     } catch (e) {
-      print("Firestore 데이터 삭제 중 오류 발생: $e");
+      // print("Firestore 데이터 삭제 중 오류 발생: $e");
     }
   }
 
@@ -394,12 +393,12 @@ class _EditNamePageState extends State<EditNamePage> {
         // 3. Firebase 사용자 삭제
         await user.delete();
 
-        print("사용자 탈퇴가 완료되었습니다.");
+        // print("사용자 탈퇴가 완료되었습니다.");
       } else {
-        print("로그인된 사용자가 없습니다.");
+        // print("로그인된 사용자가 없습니다.");
       }
     } catch (e) {
-      print("사용자 탈퇴 처리 중 오류 발생: $e");
+      // print("사용자 탈퇴 처리 중 오류 발생: $e");
     }
   }
 
