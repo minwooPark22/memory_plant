@@ -73,7 +73,7 @@ class _SettingPageState extends State<SettingPage> {
             title: Text(
               isKorean ? "계정 관리" : "My Account",
               style: const TextStyle(
-                  fontFamily: 'NanumFontSetup_TTF_SQUARE', fontSize: 14),
+                  fontFamily: 'NanumFontSetup_TTF_SQUARE_Bold', fontSize: 14),
             ),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
@@ -94,7 +94,7 @@ class _SettingPageState extends State<SettingPage> {
             title: Text(
               "ENG/KOR",
               style: TextStyle(
-                  fontFamily: 'NanumFontSetup_TTF_SQUARE', fontSize: 14),
+                  fontFamily: 'NanumFontSetup_TTF_SQUARE_Bold', fontSize: 14),
             ),
             trailing: LanguageToggleSwitch(),
           ),
@@ -111,7 +111,7 @@ class _SettingPageState extends State<SettingPage> {
             title: Text(
               isKorean ? "센터에 대해 배우기" : "Learn About Centers",
               style: const TextStyle(
-                  fontFamily: 'NanumFontSetup_TTF_SQUARE', fontSize: 14),
+                  fontFamily: 'NanumFontSetup_TTF_SQUARE_Bold', fontSize: 14),
             ),
             onTap: () {
               Navigator.push(
@@ -127,7 +127,7 @@ class _SettingPageState extends State<SettingPage> {
             title: Text(
               isKorean ? "이용약관" : "Privacy Policy",
               style: const TextStyle(
-                  fontFamily: 'NanumFontSetup_TTF_SQUARE', fontSize: 14),
+                  fontFamily: 'NanumFontSetup_TTF_SQUARE_Bold', fontSize: 14),
             ),
             onTap: () {
               Navigator.push(

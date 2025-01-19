@@ -43,7 +43,7 @@ class PrivacyPage extends StatelessWidget {
                   title: Text(
                     isKorean ? "서비스 이용약관" : "Terms of Service",
                     style: const TextStyle(
-                        fontFamily: 'NanumFontSetup_TTF_SQUARE', fontSize: 14),
+                        fontFamily: 'NanumFontSetup_TTF_SQUARE', fontSize: 16),
                   ),
                   onTap: () async {
                     const url =
@@ -54,6 +54,7 @@ class PrivacyPage extends StatelessWidget {
                       throw 'Could not launch $url';
                     }
                   },
+                  trailing: const Icon(Icons.arrow_forward),
                 ),
                 ListTile(
                   leading: const Icon(
@@ -62,7 +63,7 @@ class PrivacyPage extends StatelessWidget {
                   title: Text(
                     isKorean ? "개인정보 처리방침" : "Privacy Policy",
                     style: const TextStyle(
-                        fontFamily: 'NanumFontSetup_TTF_SQUARE', fontSize: 14),
+                        fontFamily: 'NanumFontSetup_TTF_SQUARE', fontSize: 16),
                   ),
                   onTap: () async {
                     const url =
@@ -73,6 +74,7 @@ class PrivacyPage extends StatelessWidget {
                       throw 'Could not launch $url';
                     }
                   },
+                  trailing: const Icon(Icons.arrow_forward),
                 ),
               ],
             ),
