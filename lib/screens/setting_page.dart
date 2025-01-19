@@ -125,7 +125,7 @@ class _SettingPageState extends State<SettingPage> {
               Icons.security,
             ),
             title: Text(
-              isKorean ? "개인정보 보호 안내" : "Privacy Notice",
+              isKorean ? "이용약관" : "Privacy Policy",
               style: const TextStyle(
                   fontFamily: 'NanumFontSetup_TTF_SQUARE', fontSize: 14),
             ),
