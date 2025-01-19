@@ -3,6 +3,7 @@ import 'package:memory_plant_application/providers/language_provider.dart';
 import 'package:memory_plant_application/providers/navigation_provider.dart';
 import 'package:memory_plant_application/screens/write_page.dart';
 import 'package:memory_plant_application/styles/app_styles.dart';
+import 'package:memory_plant_application/widgets/my_banner_ad_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -56,6 +57,7 @@ class _AddPageState extends State<AddPage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          MyBannerAdWidget(),
           // 제목
           Padding(
             padding:

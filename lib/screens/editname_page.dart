@@ -197,25 +197,13 @@ class _EditNamePageState extends State<EditNamePage> {
               email: _email ?? '',
               errorMessage: _errorMessage,
             ),
-            const Spacer(),
+            const SizedBox(height: 20),
             // 로그아웃 버튼
-            TextButton(
-              onPressed: () {
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  "/startPage",
-                  (Route<dynamic> route) => false,
-                ); // StartPage로 이동
-                _signOut(); // 로그아웃 처리
-              },
-              child: Text(
-                isKorean ? '로그아웃' : 'Log out', // 언어 설정
-                style: const TextStyle(
-                  fontFamily: 'NanumFontSetup_TTF_SQUARE_ExtraBold',
-                  color: Colors.red,
-                  fontSize: 15,
-                ),
-              ),
+            _buildDoubleButton(
+              nameLabel: isKorean ? '계정 관리' : 'Account',
+              firstButtonName: isKorean ? '로그아웃' : 'Sign Out',
+              secondButtonName: isKorean ? '계정 삭제' : 'Delete Account',
+              isKorean: isKorean,
             ),
             const SizedBox(height: 10),
           ],
@@ -243,7 +231,7 @@ class _EditNamePageState extends State<EditNamePage> {
         ),
         const SizedBox(height: 8),
         Container(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.only(top: 4.0, left: 12.0, bottom: 8.0),
           decoration: BoxDecoration(
             border: Border.all(color: Colors.grey, width: 1.5),
             borderRadius: BorderRadius.circular(20),
@@ -296,6 +284,170 @@ class _EditNamePageState extends State<EditNamePage> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildDoubleButton({
+    required String nameLabel,
+    required String firstButtonName,
+    required String secondButtonName,
+    required bool isKorean,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          nameLabel,
+          style: const TextStyle(
+            fontFamily: 'NanumFontSetup_TTF_SQUARE_ExtraBold',
+            fontSize: 12,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Container(
+          padding: const EdgeInsets.all(4.0),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey, width: 1.5),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TextButton(
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  alignment: Alignment.centerLeft,
+                ),
+                onPressed: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    "/startPage",
+                    (Route<dynamic> route) => false,
+                  ); // StartPage로 이동
+                  _signOut(); // 로그아웃 처리
+                },
+                child: Text(
+                  firstButtonName, // 언어 설정
+                  style: const TextStyle(
+                    fontFamily: 'NanumFontSetup_TTF_SQUARE_ExtraBold',
+                    color: Colors.red,
+                    fontSize: 15,
+                  ),
+                ),
+              ),
+              const Divider(color: Colors.grey),
+              TextButton(
+                onPressed: () {
+                  _showConfirm(
+                      isKorean ? "계정 삭제" : "Delete Account", // 언어 설정
+                      isKorean
+                          ? "계정을 삭제하시겠습니까?"
+                          : "Are you sure you want to delete your account?",
+                      isKorean);
+                },
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  alignment: Alignment.centerLeft,
+                ),
+                child: Text(
+                  secondButtonName, // 언어 설정
+                  style: const TextStyle(
+                    fontFamily: 'NanumFontSetup_TTF_SQUARE_ExtraBold',
+                    color: Colors.grey,
+                    fontSize: 15,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> deleteUserDataFromFirestore(String uid) async {
+    try {
+      // 사용자 데이터가 저장된 컬렉션 경로
+      final userDoc = FirebaseFirestore.instance.collection('users').doc(uid);
+
+      // 사용자 문서 삭제
+      await userDoc.delete();
+      print("Firestore에서 사용자 데이터가 삭제되었습니다.");
+    } catch (e) {
+      print("Firestore 데이터 삭제 중 오류 발생: $e");
+    }
+  }
+
+  Future<void> handleAccountDeletion() async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        final uid = user.uid;
+
+        // 1. Firestore 데이터 삭제
+        await deleteUserDataFromFirestore(uid);
+
+        // 2. Google 계정 연결 해제
+        final GoogleSignIn googleSignIn = GoogleSignIn();
+        await googleSignIn.disconnect();
+
+        // 3. Firebase 사용자 삭제
+        await user.delete();
+
+        print("사용자 탈퇴가 완료되었습니다.");
+      } else {
+        print("로그인된 사용자가 없습니다.");
+      }
+    } catch (e) {
+      print("사용자 탈퇴 처리 중 오류 발생: $e");
+    }
+  }
+
+  void _showConfirm(String title, String content, bool isKorean) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            title,
+            style: const TextStyle(
+              fontFamily: 'NanumFontSetup_TTF_SQUARE_ExtraBold',
+            ),
+          ),
+          content: Text(
+            content,
+            style: const TextStyle(
+              fontFamily: 'NanumFontSetup_TTF_SQUARE',
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop(); // 다이얼로그 닫기
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  "/startPage",
+                  (Route<dynamic> route) => false,
+                ); // StartPage로 이동
+                handleAccountDeletion(); // 계정 삭제 처리
+              },
+              child: Text("확인",
+                  style: TextStyle(
+                      fontFamily: 'NanumFontSetup_TTF_SQUARE',
+                      color: AppStyles.maindeepblue)),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop(); // 다이얼로그 닫기
+              },
+              child: Text("취소",
+                  style: TextStyle(
+                      fontFamily: 'NanumFontSetup_TTF_SQUARE',
+                      color: AppStyles.maindeepblue)),
+            ),
+          ],
+        );
+      },
     );
   }
 }
