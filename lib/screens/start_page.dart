@@ -315,9 +315,24 @@ class _StartPageState extends State<StartPage>
                       backgroundColor: Colors.white,
                       side: const BorderSide(color: Colors.black),
                     ),
-                    child: Text(
-                      buttonTexts[currentButtonIndex][0],
-                      style: const TextStyle(color: Colors.black),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (currentButtonIndex == 1)
+                          Image.asset(
+                            'assets/images/google.png',
+                            width: 20,
+                            height: 20,
+                          ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          buttonTexts[currentButtonIndex][0],
+                          style: const TextStyle(color: Colors.black),
+                        ),
+                      ],
                     ),
                   ),
                   SizedBox(
@@ -332,13 +347,16 @@ class _StartPageState extends State<StartPage>
                         changeButton();
                       } else if (currentButtonIndex == 1) {
                         if (Platform.isAndroid) {
-                          // 안드로이드에서만 애플 로그인 버튼 표시
-                          try {
-                            await AppleSignInService.signInWithApple(
-                                context); // 애플 로그인
-                          } catch (e) {
-                            debugPrint("Apple Sign-In failed: $e");
-                          }
+                          // 안드로이드에서는 애플 로그인을 막고 스낵바 표시
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                isKorean
+                                    ? '안드로이드에서는 애플 로그인을 사용할 수 없습니다.'
+                                    : 'Apple Sign-In is not available on Android.',
+                              ),
+                            ),
+                          );
                         } else {
                           // iOS에서는 구글 로그인으로 대체 나중에 apple 로그인 구현시 바꿀 것
                           await _signInWithGoogle();
@@ -350,9 +368,24 @@ class _StartPageState extends State<StartPage>
                       backgroundColor: Colors.white,
                       side: const BorderSide(color: Colors.black),
                     ),
-                    child: Text(
-                      buttonTexts[currentButtonIndex][1],
-                      style: const TextStyle(color: Colors.black),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (currentButtonIndex == 1)
+                          Image.asset(
+                            'assets/images/apple.png',
+                            width: 20,
+                            height: 20,
+                          ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          buttonTexts[currentButtonIndex][1],
+                          style: const TextStyle(color: Colors.black),
+                        ),
+                      ],
                     ),
                   ),
                 ] else ...[
