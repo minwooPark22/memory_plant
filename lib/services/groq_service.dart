@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 class CohereService {
   final String apiKey =
-      "rwuT6dbTLpwAdjfLI0hitujs1bgsSaSFFD8Yv9iu"; // Cohere에서 발급받은 API 키로 교체하세요.
+      ""; // Cohere에서 발급받은 API 키로 교체하세요.
 
   Future<String> sendMessage(
       BuildContext context, String messageContent) async {
